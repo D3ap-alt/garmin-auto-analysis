@@ -1,11 +1,10 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v5)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v6)
 
-v5変更点 (デバッグ強化):
-  - Notion DBのスキーマを起動時にログ出力（実際のプロパティ名・型を確認可能）
-  - プロパティ書き込みに失敗してもページ作成は続行
-  - 各プロパティの書き込み試行を個別にログ
-  - 取得した summary の主要値もログ出力
+v6変更点:
+  - Notion API バージョン明示（2025-09-03）でデータソース概念に対応
+  - databases.retrieve でプロパティが取れない場合のフォールバック実装
+  - スキーマ取得に失敗してもハードコードのプロパティで進める
 """
 
 from __future__ import annotations
@@ -45,6 +44,18 @@ NOTION_API_KEY = os.environ["NOTION_API_KEY"]
 NOTION_DATABASE_ID = os.environ["NOTION_DATABASE_ID"]
 GARMIN_TOKENS_BASE64 = os.environ.get("GARMIN_TOKENS_BASE64", "")
 TARGET_DATE = os.environ.get("TARGET_DATE", "").strip()
+
+# 想定するスキーマ（フォールバック用）
+# Notion DBのプロパティ名と型がここと一致している必要があります
+EXPECTED_SCHEMA = {
+    "名前": "title",
+    "日付": "date",
+    "種目": "select",
+    "距離 (km)": "number",
+    "タイム": "rich_text",
+    "平均HR": "number",
+    "TE": "number",
+}
 
 
 # ====================== Garmin認証 ======================
@@ -97,13 +108,14 @@ def fetch_activity_detail(client: Garmin, activity_id: int) -> dict[str, Any]:
     
     try:
         detail["summary"] = client.get_activity(activity_id)
+        print(f"  ✅ Got summary: {len(detail['summary'])} fields")
     except Exception as e:
-        print(f"  summary取得失敗: {e}")
+        print(f"  ❌ summary取得失敗: {e}")
     
     try:
         detail["laps"] = client.get_activity_splits(activity_id)
     except Exception as e:
-        print(f"  laps取得失敗: {e}")
+        print(f"  ❌ laps取得失敗: {e}")
     
     return detail
 
@@ -181,25 +193,55 @@ def _trim_summary(s: dict) -> dict:
 
 # ====================== Notion ======================
 def fetch_notion_schema(notion: NotionClient) -> dict[str, str]:
-    """データベースのプロパティ名→タイプのマッピングを取得し、ログ出力する"""
-    db = notion.databases.retrieve(database_id=NOTION_DATABASE_ID)
-    schema = {}
-    print("\n📋 Notion Database Schema (実際の状態):")
-    print("=" * 60)
-    for name, prop in db.get("properties", {}).items():
-        ptype = prop.get("type")
-        schema[name] = ptype
-        # 名前を repr で出すと不可視文字も見える
-        print(f"  {repr(name):40} → {ptype}")
-    print("=" * 60 + "\n")
-    return schema
+    """
+    データベースのプロパティを取得。失敗時は EXPECTED_SCHEMA をフォールバックとして使う。
+    
+    Notion API 2025-09-03 ではデータソース対応により、databases.retrieve のレスポンス形式が
+    若干変わっている可能性があるため、複数のキーをチェック。
+    """
+    print("\n📋 Fetching Notion Database Schema...")
+    
+    try:
+        db = notion.databases.retrieve(database_id=NOTION_DATABASE_ID)
+        
+        # デバッグ：レスポンスの構造をログ出力
+        print(f"  Response keys: {list(db.keys())}")
+        
+        # 通常のレスポンス形式
+        properties = db.get("properties", {})
+        
+        # データソース対応のフォールバック
+        if not properties and "data_sources" in db:
+            ds = db["data_sources"]
+            if ds and isinstance(ds, list) and len(ds) > 0:
+                first_ds = ds[0]
+                print(f"  Found data_sources, using first one: {first_ds.get('id')}")
+                # データソースから取得
+                ds_detail = notion.request(
+                    f"/data_sources/{first_ds['id']}", method="GET"
+                )
+                properties = ds_detail.get("properties", {})
+        
+        if properties:
+            schema = {}
+            print("  ✅ Schema retrieved from API:")
+            for name, prop in properties.items():
+                ptype = prop.get("type")
+                schema[name] = ptype
+                print(f"     {repr(name):40} → {ptype}")
+            return schema
+    except Exception as e:
+        print(f"  ⚠️ databases.retrieve failed: {e}")
+    
+    # フォールバック
+    print("  🔧 Using hardcoded EXPECTED_SCHEMA as fallback:")
+    for name, ptype in EXPECTED_SCHEMA.items():
+        print(f"     {repr(name):40} → {ptype}")
+    return EXPECTED_SCHEMA.copy()
 
 
 def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
-    """
-    Notionスキーマに基づいてプロパティ辞書を構築。
-    スクリプトが想定する論理名 → Notion上の実プロパティ名 を曖昧マッチで探す。
-    """
+    """Notionスキーマに基づいてプロパティ辞書を構築。"""
     activity_name = summary.get("activityName") or "アクティビティ"
     start_time = summary.get("startTimeLocal") or ""
     sport_key = (summary.get("activityType") or {}).get("typeKey") or ""
@@ -213,7 +255,6 @@ def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
     avg_hr = summary.get("averageHR")
     te = summary.get("aerobicTrainingEffect")
     
-    # 日付（YYYY-MM-DD）
     date_only = ""
     if start_time:
         try:
@@ -224,17 +265,15 @@ def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
     
     sport_jp = _SPORT_MAP.get(sport_key, sport_key)
     
-    # 取得した生データのログ
     print(f"  📝 抽出した値:")
     print(f"     名前: {activity_name}")
     print(f"     日付: {date_only}")
-    print(f"     種目(key→jp): {sport_key} → {sport_jp}")
+    print(f"     種目(key→jp): {sport_key!r} → {sport_jp!r}")
     print(f"     距離(km): {distance_km}")
     print(f"     タイム: {time_str}")
     print(f"     平均HR: {avg_hr}")
     print(f"     TE: {te}")
     
-    # 論理名 → 値, タイプ
     desired = {
         "名前": ("title", activity_name[:200]),
         "日付": ("date", date_only),
@@ -247,14 +286,12 @@ def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
     
     properties: dict[str, Any] = {}
     for logical_name, (expected_type, value) in desired.items():
-        # 空値はスキップ
         if value is None or value == "":
             continue
         
-        # Notion上の実プロパティ名を曖昧マッチで探す
         actual_name = _find_property_name(logical_name, schema)
         if not actual_name:
-            print(f"     ⚠️ Property not found in Notion: {logical_name!r}")
+            print(f"     ⚠️ Property not found in schema: {logical_name!r}")
             continue
         
         actual_type = schema[actual_name]
@@ -262,7 +299,6 @@ def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
             print(f"     ⚠️ Type mismatch for {actual_name!r}: expected {expected_type}, got {actual_type}")
             continue
         
-        # 型ごとに値を組み立て
         try:
             if expected_type == "title":
                 properties[actual_name] = {"title": [{"text": {"content": str(value)[:200]}}]}
@@ -282,25 +318,15 @@ def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
 
 
 def _find_property_name(logical: str, schema: dict[str, str]) -> str | None:
-    """
-    論理名にマッチするNotion上の実プロパティ名を曖昧探索。
-    完全一致 → 空白無視一致 → 部分一致 の順。
-    """
-    # 完全一致
     if logical in schema:
         return logical
-    
-    # 空白を除去して比較
     norm_logical = re.sub(r"\s+", "", logical)
     for name in schema:
         if re.sub(r"\s+", "", name) == norm_logical:
             return name
-    
-    # 部分一致（最後の砦）
     for name in schema:
         if logical in name or name in logical:
             return name
-    
     return None
 
 
@@ -496,14 +522,6 @@ def _build_table_block(table_lines: list[str]) -> dict | None:
 def create_notion_page(notion: NotionClient, schema: dict[str, str], summary: dict, analysis_md: str) -> None:
     properties = build_properties(summary, schema)
     
-    # 名前が抽出できなかった場合の保険
-    if not any(schema.get(k) == "title" for k in properties):
-        # スキーマからtitleプロパティを探して、無理やり名前をセット
-        for name, ptype in schema.items():
-            if ptype == "title":
-                properties[name] = {"title": [{"text": {"content": (summary.get("activityName") or "Unknown")[:200]}}]}
-                break
-    
     children = md_to_notion_blocks(analysis_md)
     
     print(f"  📤 Creating page with {len(properties)} properties, {len(children)} blocks")
@@ -520,20 +538,18 @@ def create_notion_page(notion: NotionClient, schema: dict[str, str], summary: di
         page_id = page["id"]
         print(f"  ✅ Page created: {page_id}")
     except Exception as e:
-        print(f"  ❌ Page creation failed: {e}")
-        # プロパティが原因なら、最小構成で再試行
-        print(f"  🔄 Retrying with minimal properties only...")
-        title_name = next((n for n, t in schema.items() if t == "title"), None)
-        if not title_name:
-            raise
-        minimal = {title_name: properties[title_name]}
+        print(f"  ❌ Page creation failed with all properties: {e}")
+        # 最小構成で再試行
+        print(f"  🔄 Retrying with title only...")
+        title_name = next((n for n, t in schema.items() if t == "title"), "名前")
+        minimal = {title_name: {"title": [{"text": {"content": (summary.get("activityName") or "Unknown")[:200]}}]}}
         page = notion.pages.create(
             parent={"database_id": NOTION_DATABASE_ID},
             properties=minimal,
             children=first_batch,
         )
         page_id = page["id"]
-        print(f"  ⚠️ Created with minimal properties: {page_id}")
+        print(f"  ⚠️ Created with minimal: {page_id}")
     
     while remaining:
         batch = remaining[:100]
@@ -575,14 +591,9 @@ def main() -> int:
         print(f"ℹ️ No activities on {target_date}. Done.")
         return 0
     
-    # Notion クライアントとスキーマを準備
-    notion = NotionClient(auth=NOTION_API_KEY)
-    try:
-        schema = fetch_notion_schema(notion)
-    except Exception as e:
-        print(f"❌ Failed to fetch Notion schema: {e}", file=sys.stderr)
-        traceback.print_exc()
-        return 1
+    # Notion クライアント（最新APIバージョン明示）
+    notion = NotionClient(auth=NOTION_API_KEY, notion_version="2022-06-28")
+    schema = fetch_notion_schema(notion)
     
     new_count = 0
     for act in activities:
