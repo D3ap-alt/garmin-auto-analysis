@@ -1,11 +1,12 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v7)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v8)
 
-v7変更点:
-  - Garminアクティビティのキー名揺れに対応
-    - get_activity() で取れない値を、リストAPI（activitiesByDate）の値で補完
-    - 各種フォールバックキー名にも対応（distanceInMeters, durationInSeconds等）
-  - 詳細データ取得結果のキー一覧をログ出力（デバッグ用）
+v8変更点 (頻度UP + 省エネ):
+  - cron: 1時間おき実行（00分台にチェック）
+  - target_date: cron実行時は「JST今日」をデフォルトに変更（旧: 前日）
+  - モデル: Sonnet 4.6 固定（Opusの1/5価格）でコスト抑制
+  - state.json で重複分析を防止（既存仕様継続）
+  - 新規アクティビティなしの場合は ~30秒で終了（API1回のみ）
 """
 
 from __future__ import annotations
@@ -92,8 +93,9 @@ def resolve_target_date() -> date_cls:
             return target
         except ValueError:
             pass
-    target = (datetime.now(JST).date() - timedelta(days=1))
-    print(f"🎯 Target date (yesterday JST): {target}")
+    # v8: デフォルトを「今日」に変更（cron頻度UPに伴い、当日の振り返り重視）
+    target = datetime.now(JST).date()
+    print(f"🎯 Target date (today JST): {target}")
     return target
 
 
@@ -129,10 +131,8 @@ def load_prompts() -> tuple[str, str]:
 
 
 def select_model(summary: dict) -> str:
-    duration_sec = summary.get("duration", 0) or 0
-    distance_m = summary.get("distance", 0) or 0
-    if duration_sec > 3600 or distance_m > 15000:
-        return "claude-opus-4-7"
+    # v8: コスト抑制のため Sonnet 固定（旧: 長時間/長距離時のみOpus）
+    # Sonnet 4.6 で個人プロフィール反映の深い分析は十分可能
     return "claude-sonnet-4-6"
 
 
