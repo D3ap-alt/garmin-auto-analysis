@@ -1,0 +1,4 @@
+garth>=0.4.46
+anthropic>=0.40.0
+google-api-python-client>=2.150.0
+google-auth>=2.35.0

@@ -1,0 +1,15 @@
+# 認証トークン（絶対にコミットしない）
+.garth/
+.env
+*.token
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
