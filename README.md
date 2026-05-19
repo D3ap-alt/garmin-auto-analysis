@@ -1,6 +1,6 @@
 # Garmin Auto Analysis
 
-毎朝、Garminに記録した前日のトレーニングをClaudeが自動分析し、Googleドキュメントに追記する仕組み。
+毎時、Garminに記録されたトレーニングをClaudeが自動分析し、Notionデータベースに追記する仕組み。
 
 ## セットアップ
 
@@ -8,10 +8,10 @@
 
 ## 構成
 
-- **GitHub Actions** (cron): 毎日 07:00 JST に発火
-- **garth**: Garmin Connect API クライアント（非公式）
-- **Anthropic Claude API**: 分析エンジン（Opus 4.7 / Sonnet 4.6 自動切替）
-- **Google Docs API**: 分析結果の追記先
+- **GitHub Actions** (cron): 毎時45分に発火（1時間ごと）
+- **python-garminconnect**: Garmin Connect API クライアント（非公式）
+- **Anthropic Claude API**: Sonnet 4.6 で分析
+- **Notion API**: 分析結果をデータベースに自動追加
 
 ## ファイル構成
 
