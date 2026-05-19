@@ -1,10 +1,11 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v6)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v7)
 
-v6変更点:
-  - Notion API バージョン明示（2025-09-03）でデータソース概念に対応
-  - databases.retrieve でプロパティが取れない場合のフォールバック実装
-  - スキーマ取得に失敗してもハードコードのプロパティで進める
+v7変更点:
+  - Garminアクティビティのキー名揺れに対応
+    - get_activity() で取れない値を、リストAPI（activitiesByDate）の値で補完
+    - 各種フォールバックキー名にも対応（distanceInMeters, durationInSeconds等）
+  - 詳細データ取得結果のキー一覧をログ出力（デバッグ用）
 """
 
 from __future__ import annotations
@@ -240,20 +241,45 @@ def fetch_notion_schema(notion: NotionClient) -> dict[str, str]:
     return EXPECTED_SCHEMA.copy()
 
 
+def _get_nested(d: dict, *keys) -> Any:
+    """複数のキー候補からまず非Noneの値を返す"""
+    for k in keys:
+        v = d.get(k)
+        if v is not None and v != "":
+            return v
+    return None
+
+
 def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
-    """Notionスキーマに基づいてプロパティ辞書を構築。"""
-    activity_name = summary.get("activityName") or "アクティビティ"
-    start_time = summary.get("startTimeLocal") or ""
-    sport_key = (summary.get("activityType") or {}).get("typeKey") or ""
+    """Notionスキーマに基づいてプロパティ辞書を構築。キー名揺れに対応。"""
+    # デバッグ：summaryのキー一覧を表示
+    print(f"  🔑 summary keys ({len(summary)}): {sorted(summary.keys())}")
     
-    distance_m = summary.get("distance") or 0
+    activity_name = _get_nested(summary, "activityName", "name") or "アクティビティ"
+    start_time = _get_nested(summary, "startTimeLocal", "startTimeGMT", "beginTimestamp") or ""
+    
+    # 種目情報の取得（ネストがいくつかパターンある）
+    activity_type = summary.get("activityType") or {}
+    sport_key = ""
+    if isinstance(activity_type, dict):
+        sport_key = activity_type.get("typeKey") or activity_type.get("type_key") or ""
+    elif isinstance(activity_type, str):
+        sport_key = activity_type
+    if not sport_key:
+        sport_key = _get_nested(summary, "activityTypeName", "sportType") or ""
+    
+    # 距離（複数のキー名候補）
+    distance_m = _get_nested(summary, "distance", "distanceInMeters")
     distance_km = round(distance_m / 1000, 2) if distance_m else None
     
-    duration_sec = summary.get("duration") or 0
+    # 時間（複数のキー名候補、ミリ秒の場合も考慮）
+    duration_sec = _get_nested(summary, "duration", "durationInSeconds", "elapsedDuration", "movingDuration")
+    if duration_sec and duration_sec > 100000:  # ミリ秒っぽい場合は秒に変換
+        duration_sec = duration_sec / 1000
     time_str = _format_duration(duration_sec) if duration_sec else ""
     
-    avg_hr = summary.get("averageHR")
-    te = summary.get("aerobicTrainingEffect")
+    avg_hr = _get_nested(summary, "averageHR", "avgHr", "averageHeartRate")
+    te = _get_nested(summary, "aerobicTrainingEffect", "trainingEffect")
     
     date_only = ""
     if start_time:
@@ -605,8 +631,14 @@ def main() -> int:
         print(f"\n🏃 Activity: {act.get('activityName')} (id={activity_id})")
         try:
             detail = fetch_activity_detail(client, activity_id)
-            if not detail.get("summary"):
-                detail["summary"] = act
+            # actのデータをsummaryにマージ（actにある値で、summaryにないorNoneのものを補完）
+            merged_summary = dict(act)  # actのコピーから始める
+            if detail.get("summary"):
+                # detail['summary']で上書き（より詳細なデータが優先）
+                for k, v in detail["summary"].items():
+                    if v is not None and v != "":
+                        merged_summary[k] = v
+            detail["summary"] = merged_summary
             
             analysis = analyze_with_claude(detail)
             create_notion_page(notion, schema, detail["summary"], analysis)
