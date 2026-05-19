@@ -1,21 +1,11 @@
 """
-Garmin Connect → Claude → Google Docs 自動分析パイプライン
-GitHub Actionsで毎朝実行される本番スクリプト
+Garmin Connect → Claude → Google Docs 自動分析パイプライン (v3)
 
-ライブラリ:
-  - garminconnect 0.3.3+ (curl_cffi でCloudflare bypass、自動TLS偽装)
-  - anthropic
-  - google-api-python-client
-
-処理フロー:
-  1. Garmin Connect から前日分のアクティビティ一覧取得
-     - 保存済みトークンがあれば再利用 → ログインスキップ（重要：429防止）
-     - なければ新規ログイン
-  2. 既に分析済みのIDをstate.jsonでチェック → 重複防止
-  3. 各アクティビティのラップ詳細・統計を取得
-  4. Claude APIに送信
-  5. Google Docs API で「トレーニング分析ログ」ドキュメントに追記
-  6. トークンを保存（次回ログイン省略のため）
+v3変更点:
+  - garminconnect 0.3.3 の正しいトークン保存API
+  - 環境変数 TARGET_DATE で日付指定可能（YYYY-MM-DD形式）
+    指定なし → 前日（JST）を自動選択
+    手動実行時に「今日」や「特定日」を分析できる
 """
 
 from __future__ import annotations
@@ -28,7 +18,7 @@ import sys
 import tarfile
 import time
 import traceback
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date as date_cls
 from pathlib import Path
 from typing import Any
 
@@ -47,30 +37,21 @@ JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).parent.parent
 STATE_PATH = ROOT / "state.json"
 PROMPTS_DIR = ROOT / "prompts"
-TOKEN_DIR = ROOT / ".garmintokens"
+TOKEN_DIR = Path.home() / ".garminconnect"
 
-# 環境変数
 GARMIN_EMAIL = os.environ["GARMIN_EMAIL"]
 GARMIN_PASSWORD = os.environ["GARMIN_PASSWORD"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 GOOGLE_DOC_ID = os.environ["GOOGLE_DOC_ID"]
 GOOGLE_SERVICE_ACCOUNT_JSON = os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]
 GARMIN_TOKENS_BASE64 = os.environ.get("GARMIN_TOKENS_BASE64", "")
+TARGET_DATE = os.environ.get("TARGET_DATE", "").strip()  # YYYY-MM-DD or empty
 
 
 # ====================== Garmin認証 ======================
 def garmin_login() -> Garmin:
-    """
-    Garminにログイン。トークン永続化により429エラーを大幅に抑制。
-
-    優先順位:
-      1. 環境変数 GARMIN_TOKENS_BASE64 にトークンがあれば復元
-      2. ローカルにトークンファイルがあれば再利用
-      3. 上記が無効なら新規ログイン（最終手段）
-    """
     TOKEN_DIR.mkdir(exist_ok=True)
     
-    # === 戦略1: 環境変数からトークン復元 ===
     if GARMIN_TOKENS_BASE64:
         try:
             tar_bytes = base64.b64decode(GARMIN_TOKENS_BASE64)
@@ -78,46 +59,46 @@ def garmin_login() -> Garmin:
                 tar.extractall(TOKEN_DIR)
             
             client = Garmin()
-            client.login(str(TOKEN_DIR))  # 引数にディレクトリ → トークン読み込み
-            print("✅ Resumed session from saved tokens (no fresh login)")
+            client.login(str(TOKEN_DIR))
+            print("✅ Resumed session from saved tokens (no fresh login needed)")
             return client
         except Exception as e:
             print(f"⚠️ Token resume failed: {e}")
             print("   → Falling back to fresh login")
     
-    # === 戦略2: 新規ログイン（429リスクあり） ===
-    print("🔐 Attempting fresh login...")
+    print("🔐 Attempting fresh login (this may take 10-30s)...")
     client = Garmin(email=GARMIN_EMAIL, password=GARMIN_PASSWORD)
     
     try:
-        client.login()
+        client.login(str(TOKEN_DIR))
     except GarminConnectTooManyRequestsError as e:
         print(f"❌ 429 Too Many Requests: {e}", file=sys.stderr)
-        print("   Garmin has rate-limited this account. Wait several hours and retry.", file=sys.stderr)
+        print("   Account is rate-limited. Wait 6-24 hours and retry.", file=sys.stderr)
         raise
     except GarminConnectAuthenticationError as e:
         print(f"❌ Authentication failed: {e}", file=sys.stderr)
         raise
     
-    # トークンを保存（次回以降の再利用のため）
-    try:
-        client.garth.dump(str(TOKEN_DIR))
-        # base64エンコードして表示（手動でSecretsに保存する用）
-        _print_token_for_secrets()
-    except Exception as e:
-        print(f"⚠️ Failed to save tokens: {e}")
-    
     print("✅ Fresh login succeeded")
+    _print_token_for_secrets()
     return client
 
 
 def _print_token_for_secrets() -> None:
-    """トークンをbase64化してログ出力。次回手動でGARMIN_TOKENS_BASE64として登録する用。"""
+    """トークンをbase64化してログ出力。手動でSecretsに登録するため。"""
     try:
+        token_files = list(TOKEN_DIR.glob("*"))
+        if not token_files:
+            print("⚠️ No token files found in", TOKEN_DIR)
+            return
+        
+        print(f"   Token files saved: {[f.name for f in token_files]}")
+        
         buf = io.BytesIO()
         with tarfile.open(fileobj=buf, mode="w:gz") as tar:
             tar.add(TOKEN_DIR, arcname=".")
         b64 = base64.b64encode(buf.getvalue()).decode()
+        
         print("\n" + "=" * 70)
         print("📋 SAVE THIS TO GitHub Secrets as GARMIN_TOKENS_BASE64:")
         print("=" * 70)
@@ -125,29 +106,40 @@ def _print_token_for_secrets() -> None:
         print("=" * 70)
         print("(Adding this Secret will skip login on future runs, avoiding 429.)\n")
     except Exception as e:
-        print(f"Could not export token for Secrets: {e}")
+        print(f"⚠️ Could not export token for Secrets: {e}")
+        traceback.print_exc()
 
 
 # ====================== Garmin データ取得 ======================
-def fetch_yesterday_activities(client: Garmin) -> list[dict[str, Any]]:
-    """前日（JST 0:00〜23:59）に開始されたアクティビティを取得"""
-    now_jst = datetime.now(JST)
-    yesterday = now_jst.date() - timedelta(days=1)
-    start_str = yesterday.isoformat()
-    end_str = yesterday.isoformat()
+def resolve_target_date() -> date_cls:
+    """分析対象の日付を決定。TARGET_DATE環境変数が優先。"""
+    if TARGET_DATE:
+        try:
+            target = datetime.strptime(TARGET_DATE, "%Y-%m-%d").date()
+            print(f"🎯 Target date (manual): {target}")
+            return target
+        except ValueError:
+            print(f"⚠️ Invalid TARGET_DATE format: {TARGET_DATE}, falling back to yesterday")
     
+    # デフォルト: 前日（JST）
+    target = (datetime.now(JST).date() - timedelta(days=1))
+    print(f"🎯 Target date (yesterday JST): {target}")
+    return target
+
+
+def fetch_target_activities(client: Garmin, target_date: date_cls) -> list[dict[str, Any]]:
+    date_str = target_date.isoformat()
     try:
-        activities = client.get_activities_by_date(start_str, end_str)
+        activities = client.get_activities_by_date(date_str, date_str)
     except Exception as e:
         print(f"❌ Failed to fetch activities: {e}", file=sys.stderr)
         return []
     
-    print(f"📊 Found {len(activities)} activities on {start_str}")
+    print(f"📊 Found {len(activities)} activities on {date_str}")
     return activities
 
 
 def fetch_activity_detail(client: Garmin, activity_id: int) -> dict[str, Any]:
-    """ラップ・統計含む詳細データを取得"""
     detail: dict[str, Any] = {}
     
     try:
@@ -165,11 +157,6 @@ def fetch_activity_detail(client: Garmin, activity_id: int) -> dict[str, Any]:
     except Exception:
         pass
     
-    try:
-        detail["details"] = client.get_activity_details(activity_id)
-    except Exception:
-        pass
-    
     return detail
 
 
@@ -181,7 +168,6 @@ def load_prompts() -> tuple[str, str]:
 
 
 def select_model(activity_summary: dict) -> str:
-    """活動内容に応じてモデルを自動選択"""
     duration_sec = activity_summary.get("duration", 0) or 0
     distance_m = activity_summary.get("distance", 0) or 0
     activity_type = (activity_summary.get("activityType", {}) or {}).get("typeKey", "")
@@ -217,7 +203,7 @@ def analyze_with_claude(activity_data: dict) -> str:
     
     user_prompt = f"""## 本日の分析対象
 
-以下は前日のアクティビティです。スキル定義の「出力形式」テンプレートに完全準拠して分析してください。
+以下はアクティビティデータです。スキル定義の「出力形式」テンプレートに完全準拠して分析してください。
 
 - 「ラップ深掘り」「個別の発見（Lap X現象 等）」「改善余地と限界」「次回トレーニング提案」を必ず含める
 - 数字は必ずベンチマーク比較とコンテキストつきで提示
@@ -299,21 +285,22 @@ def main() -> int:
     try:
         client = garmin_login()
     except GarminConnectTooManyRequestsError:
-        print("\n💡 Hint: Wait 6-24 hours, then retry. Garmin's rate limit is per-account.", file=sys.stderr)
         return 1
     except Exception as e:
         print(f"❌ Garmin login failed: {e}", file=sys.stderr)
         traceback.print_exc()
         return 1
     
+    target_date = resolve_target_date()
+    
     try:
-        activities = fetch_yesterday_activities(client)
+        activities = fetch_target_activities(client, target_date)
     except Exception as e:
         print(f"❌ Failed to fetch activities: {e}", file=sys.stderr)
         return 1
     
     if not activities:
-        print("ℹ️ No activities yesterday. Done.")
+        print(f"ℹ️ No activities on {target_date}. Done.")
         return 0
     
     new_count = 0

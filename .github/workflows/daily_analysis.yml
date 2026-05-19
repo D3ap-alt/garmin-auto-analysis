@@ -4,10 +4,16 @@ on:
   schedule:
     # 毎日 朝7:00 JST (= 前日22:00 UTC)に実行
     - cron: '0 22 * * *'
-  workflow_dispatch:  # 手動実行も可能（テスト用）
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: '分析対象日 (YYYY-MM-DD, 空欄なら前日)'
+        required: false
+        default: ''
+        type: string
 
 permissions:
-  contents: write  # state.jsonをcommitするため
+  contents: write
 
 jobs:
   analyze:
@@ -37,6 +43,7 @@ jobs:
           GOOGLE_DOC_ID: ${{ secrets.GOOGLE_DOC_ID }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GARMIN_TOKENS_BASE64: ${{ secrets.GARMIN_TOKENS_BASE64 }}
+          TARGET_DATE: ${{ inputs.target_date }}
         run: python scripts/run_analysis.py
 
       - name: Commit state changes
