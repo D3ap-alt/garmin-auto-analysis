@@ -1,11 +1,11 @@
 """
-Garmin Connect → Claude → Google Docs 自動分析パイプライン (v3)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v4)
 
-v3変更点:
-  - garminconnect 0.3.3 の正しいトークン保存API
-  - 環境変数 TARGET_DATE で日付指定可能（YYYY-MM-DD形式）
-    指定なし → 前日（JST）を自動選択
-    手動実行時に「今日」や「特定日」を分析できる
+v4変更点:
+  - 出力先を Google Docs → Notion データベースに変更
+  - 1アクティビティ = 1Notionページ として追加
+  - プロパティ自動入力: 名前/日付/種目/距離(km)/タイム/平均HR/TE
+  - 分析結果本文は MarkdownブロックとしてNotionページ内に展開
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ import base64
 import io
 import json
 import os
+import re
 import sys
 import tarfile
 import time
@@ -29,8 +30,7 @@ from garminconnect import (
     GarminConnectTooManyRequestsError,
 )
 from anthropic import Anthropic
-from google.oauth2.service_account import Credentials
-from googleapiclient.discovery import build
+from notion_client import Client as NotionClient
 
 # ====================== 設定 ======================
 JST = timezone(timedelta(hours=9))
@@ -42,10 +42,10 @@ TOKEN_DIR = Path.home() / ".garminconnect"
 GARMIN_EMAIL = os.environ["GARMIN_EMAIL"]
 GARMIN_PASSWORD = os.environ["GARMIN_PASSWORD"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
-GOOGLE_DOC_ID = os.environ["GOOGLE_DOC_ID"]
-GOOGLE_SERVICE_ACCOUNT_JSON = os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]
+NOTION_API_KEY = os.environ["NOTION_API_KEY"]
+NOTION_DATABASE_ID = os.environ["NOTION_DATABASE_ID"]
 GARMIN_TOKENS_BASE64 = os.environ.get("GARMIN_TOKENS_BASE64", "")
-TARGET_DATE = os.environ.get("TARGET_DATE", "").strip()  # YYYY-MM-DD or empty
+TARGET_DATE = os.environ.get("TARGET_DATE", "").strip()
 
 
 # ====================== Garmin認証 ======================
@@ -60,20 +60,18 @@ def garmin_login() -> Garmin:
             
             client = Garmin()
             client.login(str(TOKEN_DIR))
-            print("✅ Resumed session from saved tokens (no fresh login needed)")
+            print("✅ Resumed session from saved tokens")
             return client
         except Exception as e:
             print(f"⚠️ Token resume failed: {e}")
-            print("   → Falling back to fresh login")
     
-    print("🔐 Attempting fresh login (this may take 10-30s)...")
+    print("🔐 Attempting fresh login...")
     client = Garmin(email=GARMIN_EMAIL, password=GARMIN_PASSWORD)
     
     try:
         client.login(str(TOKEN_DIR))
     except GarminConnectTooManyRequestsError as e:
         print(f"❌ 429 Too Many Requests: {e}", file=sys.stderr)
-        print("   Account is rate-limited. Wait 6-24 hours and retry.", file=sys.stderr)
         raise
     except GarminConnectAuthenticationError as e:
         print(f"❌ Authentication failed: {e}", file=sys.stderr)
@@ -85,14 +83,10 @@ def garmin_login() -> Garmin:
 
 
 def _print_token_for_secrets() -> None:
-    """トークンをbase64化してログ出力。手動でSecretsに登録するため。"""
     try:
         token_files = list(TOKEN_DIR.glob("*"))
         if not token_files:
-            print("⚠️ No token files found in", TOKEN_DIR)
             return
-        
-        print(f"   Token files saved: {[f.name for f in token_files]}")
         
         buf = io.BytesIO()
         with tarfile.open(fileobj=buf, mode="w:gz") as tar:
@@ -103,25 +97,21 @@ def _print_token_for_secrets() -> None:
         print("📋 SAVE THIS TO GitHub Secrets as GARMIN_TOKENS_BASE64:")
         print("=" * 70)
         print(b64)
-        print("=" * 70)
-        print("(Adding this Secret will skip login on future runs, avoiding 429.)\n")
+        print("=" * 70 + "\n")
     except Exception as e:
-        print(f"⚠️ Could not export token for Secrets: {e}")
-        traceback.print_exc()
+        print(f"⚠️ Could not export token: {e}")
 
 
 # ====================== Garmin データ取得 ======================
 def resolve_target_date() -> date_cls:
-    """分析対象の日付を決定。TARGET_DATE環境変数が優先。"""
     if TARGET_DATE:
         try:
             target = datetime.strptime(TARGET_DATE, "%Y-%m-%d").date()
             print(f"🎯 Target date (manual): {target}")
             return target
         except ValueError:
-            print(f"⚠️ Invalid TARGET_DATE format: {TARGET_DATE}, falling back to yesterday")
+            print(f"⚠️ Invalid TARGET_DATE: {TARGET_DATE}, fallback to yesterday")
     
-    # デフォルト: 前日（JST）
     target = (datetime.now(JST).date() - timedelta(days=1))
     print(f"🎯 Target date (yesterday JST): {target}")
     return target
@@ -183,7 +173,9 @@ def analyze_with_claude(activity_data: dict) -> str:
     
     system_prompt = f"""あなたはGarminトレーニング分析の専門家です。
 以下のスキル定義と個人プロフィールに**完全に従って**分析してください。
-出力は Google ドキュメントに貼り付ける Markdown 形式。簡潔すぎる回答は不可。
+出力はNotionに貼り付ける Markdown 形式。簡潔すぎる回答は不可。
+- 見出しは ## (h2) または ### (h3) を使う（# は使わない、ページタイトル扱いのため）
+- 表は Markdownテーブル形式（| ... |）で出力 → Notionが自動でテーブルブロックに変換
 
 ---
 ## スキル定義
@@ -208,6 +200,7 @@ def analyze_with_claude(activity_data: dict) -> str:
 - 「ラップ深掘り」「個別の発見（Lap X現象 等）」「改善余地と限界」「次回トレーニング提案」を必ず含める
 - 数字は必ずベンチマーク比較とコンテキストつきで提示
 - Lap 9 がある場合は個人プロフィールの「Lap 9 練習パターン」を踏まえる
+- 見出しは ## (h2) または ### (h3) を使用、# は使わない
 
 ```json
 {json.dumps(payload, ensure_ascii=False, default=str)[:80000]}
@@ -238,32 +231,320 @@ def _trim_summary(s: dict) -> dict:
     return {k: s.get(k) for k in keys if k in s}
 
 
-# ====================== Google Docs 追記 ======================
-def append_to_google_doc(activity_summary: dict, analysis_md: str) -> None:
-    creds_info = json.loads(GOOGLE_SERVICE_ACCOUNT_JSON)
-    credentials = Credentials.from_service_account_info(
-        creds_info, scopes=["https://www.googleapis.com/auth/documents"]
+# ====================== Notion: Markdownブロック変換 ======================
+def md_to_notion_blocks(markdown: str) -> list[dict]:
+    """
+    MarkdownテキストをNotionブロックの配列に変換する。
+    対応: h2, h3, paragraph, bulleted_list_item, numbered_list_item, table, code, divider
+    """
+    blocks: list[dict] = []
+    lines = markdown.split("\n")
+    i = 0
+    
+    while i < len(lines):
+        line = lines[i].rstrip()
+        
+        # 空行
+        if not line.strip():
+            i += 1
+            continue
+        
+        # 区切り線
+        if line.strip() in ("---", "___", "***"):
+            blocks.append({"object": "block", "type": "divider", "divider": {}})
+            i += 1
+            continue
+        
+        # 見出し（## h2）
+        if line.startswith("## ") and not line.startswith("### "):
+            text = line[3:].strip()
+            blocks.append({
+                "object": "block", "type": "heading_2",
+                "heading_2": {"rich_text": _rich_text(text)}
+            })
+            i += 1
+            continue
+        
+        # 見出し（### h3）
+        if line.startswith("### "):
+            text = line[4:].strip()
+            blocks.append({
+                "object": "block", "type": "heading_3",
+                "heading_3": {"rich_text": _rich_text(text)}
+            })
+            i += 1
+            continue
+        
+        # 見出し（# h1）→ NotionはページタイトルがH1なので、本文ではH2扱い
+        if line.startswith("# "):
+            text = line[2:].strip()
+            blocks.append({
+                "object": "block", "type": "heading_2",
+                "heading_2": {"rich_text": _rich_text(text)}
+            })
+            i += 1
+            continue
+        
+        # コードブロック
+        if line.startswith("```"):
+            lang = line[3:].strip() or "plain text"
+            code_lines = []
+            i += 1
+            while i < len(lines) and not lines[i].startswith("```"):
+                code_lines.append(lines[i])
+                i += 1
+            i += 1  # 閉じる```をスキップ
+            code_text = "\n".join(code_lines)
+            blocks.append({
+                "object": "block", "type": "code",
+                "code": {
+                    "rich_text": [{"type": "text", "text": {"content": code_text[:2000]}}],
+                    "language": lang if lang in _NOTION_LANGS else "plain text"
+                }
+            })
+            continue
+        
+        # テーブル
+        if line.startswith("|") and i + 1 < len(lines) and re.match(r"^\|[\s\-:|]+\|$", lines[i+1].rstrip()):
+            table_lines = [line]
+            i += 1  # ヘッダ行
+            # 区切り行をスキップ
+            sep_line = lines[i].rstrip()
+            i += 1
+            # データ行を集める
+            while i < len(lines) and lines[i].rstrip().startswith("|"):
+                table_lines.append(lines[i].rstrip())
+                i += 1
+            
+            table_block = _build_table_block(table_lines)
+            if table_block:
+                blocks.append(table_block)
+            continue
+        
+        # 箇条書き
+        if re.match(r"^[\-\*]\s+", line):
+            text = re.sub(r"^[\-\*]\s+", "", line)
+            blocks.append({
+                "object": "block", "type": "bulleted_list_item",
+                "bulleted_list_item": {"rich_text": _rich_text(text)}
+            })
+            i += 1
+            continue
+        
+        # 番号付きリスト
+        if re.match(r"^\d+\.\s+", line):
+            text = re.sub(r"^\d+\.\s+", "", line)
+            blocks.append({
+                "object": "block", "type": "numbered_list_item",
+                "numbered_list_item": {"rich_text": _rich_text(text)}
+            })
+            i += 1
+            continue
+        
+        # 引用
+        if line.startswith("> "):
+            text = line[2:]
+            blocks.append({
+                "object": "block", "type": "quote",
+                "quote": {"rich_text": _rich_text(text)}
+            })
+            i += 1
+            continue
+        
+        # 通常の段落
+        blocks.append({
+            "object": "block", "type": "paragraph",
+            "paragraph": {"rich_text": _rich_text(line)}
+        })
+        i += 1
+    
+    return blocks
+
+
+_NOTION_LANGS = {
+    "plain text", "abap", "arduino", "bash", "basic", "c", "clojure", "coffeescript",
+    "c++", "c#", "css", "dart", "diff", "docker", "elixir", "elm", "erlang", "flow",
+    "fortran", "f#", "gherkin", "glsl", "go", "graphql", "groovy", "haskell", "html",
+    "java", "javascript", "json", "julia", "kotlin", "latex", "less", "lisp", "livescript",
+    "lua", "makefile", "markdown", "markup", "matlab", "mermaid", "nix", "objective-c",
+    "ocaml", "pascal", "perl", "php", "powershell", "prolog", "protobuf", "python", "r",
+    "reason", "ruby", "rust", "sass", "scala", "scheme", "scss", "shell", "sql", "swift",
+    "typescript", "vb.net", "verilog", "vhdl", "visual basic", "webassembly", "xml", "yaml",
+}
+
+
+def _rich_text(text: str) -> list[dict]:
+    """Notionのrich_text配列を作る。最大2000文字制限。**bold**, *italic*, `code` 簡易対応。"""
+    if not text:
+        return []
+    
+    # 簡易マークダウン処理（**bold**, `code`）
+    segments = []
+    pattern = re.compile(r"(\*\*[^*]+\*\*|`[^`]+`)")
+    last_end = 0
+    
+    for match in pattern.finditer(text):
+        if match.start() > last_end:
+            segments.append((text[last_end:match.start()], {}))
+        
+        m = match.group()
+        if m.startswith("**") and m.endswith("**"):
+            segments.append((m[2:-2], {"bold": True}))
+        elif m.startswith("`") and m.endswith("`"):
+            segments.append((m[1:-1], {"code": True}))
+        
+        last_end = match.end()
+    
+    if last_end < len(text):
+        segments.append((text[last_end:], {}))
+    
+    if not segments:
+        segments = [(text, {})]
+    
+    result = []
+    for content, annotations in segments:
+        if content:
+            result.append({
+                "type": "text",
+                "text": {"content": content[:2000]},
+                "annotations": annotations,
+            })
+    return result
+
+
+def _build_table_block(table_lines: list[str]) -> dict | None:
+    """Markdownテーブル行をNotionのtableブロックに変換"""
+    rows = []
+    for line in table_lines:
+        # |col1|col2|col3| → ['col1', 'col2', 'col3']
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        rows.append(cells)
+    
+    if not rows:
+        return None
+    
+    table_width = max(len(r) for r in rows)
+    # 行の長さを揃える
+    rows = [r + [""] * (table_width - len(r)) for r in rows]
+    
+    children = []
+    for idx, row in enumerate(rows):
+        children.append({
+            "object": "block", "type": "table_row",
+            "table_row": {
+                "cells": [_rich_text(c) for c in row]
+            }
+        })
+    
+    return {
+        "object": "block", "type": "table",
+        "table": {
+            "table_width": table_width,
+            "has_column_header": True,
+            "has_row_header": False,
+            "children": children,
+        }
+    }
+
+
+# ====================== Notion: ページ作成 ======================
+def create_notion_page(activity_summary: dict, analysis_md: str) -> None:
+    """Notionデータベースに新規ページを作成して分析結果を書き込む"""
+    notion = NotionClient(auth=NOTION_API_KEY)
+    
+    # プロパティ抽出
+    activity_name = activity_summary.get("activityName") or "アクティビティ"
+    start_time = activity_summary.get("startTimeLocal") or ""
+    sport_key = (activity_summary.get("activityType") or {}).get("typeKey") or ""
+    
+    distance_m = activity_summary.get("distance") or 0
+    distance_km = round(distance_m / 1000, 2) if distance_m else None
+    
+    duration_sec = activity_summary.get("duration") or 0
+    time_str = _format_duration(duration_sec) if duration_sec else ""
+    
+    avg_hr = activity_summary.get("averageHR")
+    te = activity_summary.get("aerobicTrainingEffect")
+    
+    # 日付（YYYY-MM-DD）
+    date_only = ""
+    if start_time:
+        try:
+            date_only = start_time.split("T")[0][:10]
+            if " " in date_only:
+                date_only = date_only.split(" ")[0]
+        except Exception:
+            pass
+    
+    # 種目を日本語化
+    sport_jp = _SPORT_MAP.get(sport_key, sport_key)
+    
+    # プロパティを構築
+    properties: dict[str, Any] = {
+        "名前": {"title": [{"text": {"content": activity_name[:200]}}]},
+    }
+    if date_only:
+        properties["日付"] = {"date": {"start": date_only}}
+    if sport_jp:
+        properties["種目"] = {"select": {"name": sport_jp[:100]}}
+    if distance_km is not None:
+        properties["距離 (km)"] = {"number": distance_km}
+    if time_str:
+        properties["タイム"] = {"rich_text": [{"text": {"content": time_str}}]}
+    if avg_hr:
+        properties["平均HR"] = {"number": round(avg_hr)}
+    if te:
+        properties["TE"] = {"number": round(te, 1)}
+    
+    # 本文ブロックに変換
+    children = md_to_notion_blocks(analysis_md)
+    
+    # Notion APIは1リクエストあたり100ブロックまで → 分割対応
+    first_batch = children[:100]
+    remaining = children[100:]
+    
+    page = notion.pages.create(
+        parent={"database_id": NOTION_DATABASE_ID},
+        properties=properties,
+        children=first_batch,
     )
-    service = build("docs", "v1", credentials=credentials)
     
-    activity_name = activity_summary.get("activityName", "アクティビティ")
-    start_time = activity_summary.get("startTimeLocal", "")
-    sport = (activity_summary.get("activityType") or {}).get("typeKey", "")
+    # 残りのブロックは追記
+    page_id = page["id"]
+    while remaining:
+        batch = remaining[:100]
+        remaining = remaining[100:]
+        notion.blocks.children.append(block_id=page_id, children=batch)
     
-    header = f"\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-    header += f"# {start_time}  {activity_name}({sport})\n"
-    header += f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-    
-    content = header + analysis_md + "\n"
-    
-    doc = service.documents().get(documentId=GOOGLE_DOC_ID).execute()
-    end_index = doc["body"]["content"][-1]["endIndex"] - 1
-    
-    requests = [{"insertText": {"location": {"index": end_index}, "text": content}}]
-    service.documents().batchUpdate(
-        documentId=GOOGLE_DOC_ID, body={"requests": requests}
-    ).execute()
-    print(f"  ✅ Appended to Google Doc")
+    print(f"  ✅ Created Notion page: {activity_name}")
+
+
+_SPORT_MAP = {
+    "running": "ラン",
+    "trail_running": "トレイルラン",
+    "treadmill_running": "トレッドミル",
+    "track_running": "トラック",
+    "cycling": "バイク",
+    "road_biking": "ロードバイク",
+    "mountain_biking": "MTB",
+    "indoor_cycling": "Zwift/室内バイク",
+    "virtual_ride": "Zwift",
+    "lap_swimming": "プールスイム",
+    "open_water_swimming": "OWS",
+    "swimming": "スイム",
+    "multi_sport": "マルチスポーツ",
+    "strength_training": "筋トレ",
+    "walking": "ウォーキング",
+}
+
+
+def _format_duration(sec: float) -> str:
+    sec = int(sec)
+    h, rem = divmod(sec, 3600)
+    m, s = divmod(rem, 60)
+    if h > 0:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m}:{s:02d}"
 
 
 # ====================== 状態管理 ======================
@@ -317,7 +598,7 @@ def main() -> int:
                 detail["summary"] = act
             
             analysis = analyze_with_claude(detail)
-            append_to_google_doc(detail["summary"], analysis)
+            create_notion_page(detail["summary"], analysis)
             
             analyzed_ids.add(activity_id)
             new_count += 1
