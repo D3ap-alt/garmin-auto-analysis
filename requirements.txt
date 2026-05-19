@@ -1,4 +1,6 @@
-garth>=0.4.46
+garminconnect>=0.3.3
+curl-cffi
+ua-generator
 anthropic>=0.40.0
 google-api-python-client>=2.150.0
 google-auth>=2.35.0
