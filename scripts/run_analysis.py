@@ -1,11 +1,11 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v4)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v5)
 
-v4変更点:
-  - 出力先を Google Docs → Notion データベースに変更
-  - 1アクティビティ = 1Notionページ として追加
-  - プロパティ自動入力: 名前/日付/種目/距離(km)/タイム/平均HR/TE
-  - 分析結果本文は MarkdownブロックとしてNotionページ内に展開
+v5変更点 (デバッグ強化):
+  - Notion DBのスキーマを起動時にログ出力（実際のプロパティ名・型を確認可能）
+  - プロパティ書き込みに失敗してもページ作成は続行
+  - 各プロパティの書き込み試行を個別にログ
+  - 取得した summary の主要値もログ出力
 """
 
 from __future__ import annotations
@@ -32,7 +32,6 @@ from garminconnect import (
 from anthropic import Anthropic
 from notion_client import Client as NotionClient
 
-# ====================== 設定 ======================
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).parent.parent
 STATE_PATH = ROOT / "state.json"
@@ -67,39 +66,9 @@ def garmin_login() -> Garmin:
     
     print("🔐 Attempting fresh login...")
     client = Garmin(email=GARMIN_EMAIL, password=GARMIN_PASSWORD)
-    
-    try:
-        client.login(str(TOKEN_DIR))
-    except GarminConnectTooManyRequestsError as e:
-        print(f"❌ 429 Too Many Requests: {e}", file=sys.stderr)
-        raise
-    except GarminConnectAuthenticationError as e:
-        print(f"❌ Authentication failed: {e}", file=sys.stderr)
-        raise
-    
+    client.login(str(TOKEN_DIR))
     print("✅ Fresh login succeeded")
-    _print_token_for_secrets()
     return client
-
-
-def _print_token_for_secrets() -> None:
-    try:
-        token_files = list(TOKEN_DIR.glob("*"))
-        if not token_files:
-            return
-        
-        buf = io.BytesIO()
-        with tarfile.open(fileobj=buf, mode="w:gz") as tar:
-            tar.add(TOKEN_DIR, arcname=".")
-        b64 = base64.b64encode(buf.getvalue()).decode()
-        
-        print("\n" + "=" * 70)
-        print("📋 SAVE THIS TO GitHub Secrets as GARMIN_TOKENS_BASE64:")
-        print("=" * 70)
-        print(b64)
-        print("=" * 70 + "\n")
-    except Exception as e:
-        print(f"⚠️ Could not export token: {e}")
 
 
 # ====================== Garmin データ取得 ======================
@@ -110,8 +79,7 @@ def resolve_target_date() -> date_cls:
             print(f"🎯 Target date (manual): {target}")
             return target
         except ValueError:
-            print(f"⚠️ Invalid TARGET_DATE: {TARGET_DATE}, fallback to yesterday")
-    
+            pass
     target = (datetime.now(JST).date() - timedelta(days=1))
     print(f"🎯 Target date (yesterday JST): {target}")
     return target
@@ -119,12 +87,7 @@ def resolve_target_date() -> date_cls:
 
 def fetch_target_activities(client: Garmin, target_date: date_cls) -> list[dict[str, Any]]:
     date_str = target_date.isoformat()
-    try:
-        activities = client.get_activities_by_date(date_str, date_str)
-    except Exception as e:
-        print(f"❌ Failed to fetch activities: {e}", file=sys.stderr)
-        return []
-    
+    activities = client.get_activities_by_date(date_str, date_str)
     print(f"📊 Found {len(activities)} activities on {date_str}")
     return activities
 
@@ -142,11 +105,6 @@ def fetch_activity_detail(client: Garmin, activity_id: int) -> dict[str, Any]:
     except Exception as e:
         print(f"  laps取得失敗: {e}")
     
-    try:
-        detail["typed_splits"] = client.get_activity_typed_splits(activity_id)
-    except Exception:
-        pass
-    
     return detail
 
 
@@ -157,12 +115,10 @@ def load_prompts() -> tuple[str, str]:
     return skill, profile
 
 
-def select_model(activity_summary: dict) -> str:
-    duration_sec = activity_summary.get("duration", 0) or 0
-    distance_m = activity_summary.get("distance", 0) or 0
-    activity_type = (activity_summary.get("activityType", {}) or {}).get("typeKey", "")
-    
-    if duration_sec > 3600 or distance_m > 15000 or "race" in str(activity_type).lower():
+def select_model(summary: dict) -> str:
+    duration_sec = summary.get("duration", 0) or 0
+    distance_m = summary.get("distance", 0) or 0
+    if duration_sec > 3600 or distance_m > 15000:
         return "claude-opus-4-7"
     return "claude-sonnet-4-6"
 
@@ -172,19 +128,16 @@ def analyze_with_claude(activity_data: dict) -> str:
     model = select_model(activity_data.get("summary", {}))
     
     system_prompt = f"""あなたはGarminトレーニング分析の専門家です。
-以下のスキル定義と個人プロフィールに**完全に従って**分析してください。
-出力はNotionに貼り付ける Markdown 形式。簡潔すぎる回答は不可。
-- 見出しは ## (h2) または ### (h3) を使う（# は使わない、ページタイトル扱いのため）
-- 表は Markdownテーブル形式（| ... |）で出力 → Notionが自動でテーブルブロックに変換
+スキル定義と個人プロフィールに完全に従って分析。出力はNotion用のMarkdown。
+- 見出しは ## (h2) または ### (h3) を使用、# は使わない
+- 表は Markdownテーブル形式
 
 ---
 ## スキル定義
-
 {skill_md}
 
 ---
 ## 個人プロフィール
-
 {profile_md}
 """
     
@@ -193,14 +146,9 @@ def analyze_with_claude(activity_data: dict) -> str:
         "laps": activity_data.get("laps", {}),
     }
     
-    user_prompt = f"""## 本日の分析対象
+    user_prompt = f"""## 分析対象
 
 以下はアクティビティデータです。スキル定義の「出力形式」テンプレートに完全準拠して分析してください。
-
-- 「ラップ深掘り」「個別の発見（Lap X現象 等）」「改善余地と限界」「次回トレーニング提案」を必ず含める
-- 数字は必ずベンチマーク比較とコンテキストつきで提示
-- Lap 9 がある場合は個人プロフィールの「Lap 9 練習パターン」を踏まえる
-- 見出しは ## (h2) または ### (h3) を使用、# は使わない
 
 ```json
 {json.dumps(payload, ensure_ascii=False, default=str)[:80000]}
@@ -231,292 +179,129 @@ def _trim_summary(s: dict) -> dict:
     return {k: s.get(k) for k in keys if k in s}
 
 
-# ====================== Notion: Markdownブロック変換 ======================
-def md_to_notion_blocks(markdown: str) -> list[dict]:
+# ====================== Notion ======================
+def fetch_notion_schema(notion: NotionClient) -> dict[str, str]:
+    """データベースのプロパティ名→タイプのマッピングを取得し、ログ出力する"""
+    db = notion.databases.retrieve(database_id=NOTION_DATABASE_ID)
+    schema = {}
+    print("\n📋 Notion Database Schema (実際の状態):")
+    print("=" * 60)
+    for name, prop in db.get("properties", {}).items():
+        ptype = prop.get("type")
+        schema[name] = ptype
+        # 名前を repr で出すと不可視文字も見える
+        print(f"  {repr(name):40} → {ptype}")
+    print("=" * 60 + "\n")
+    return schema
+
+
+def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
     """
-    MarkdownテキストをNotionブロックの配列に変換する。
-    対応: h2, h3, paragraph, bulleted_list_item, numbered_list_item, table, code, divider
+    Notionスキーマに基づいてプロパティ辞書を構築。
+    スクリプトが想定する論理名 → Notion上の実プロパティ名 を曖昧マッチで探す。
     """
-    blocks: list[dict] = []
-    lines = markdown.split("\n")
-    i = 0
+    activity_name = summary.get("activityName") or "アクティビティ"
+    start_time = summary.get("startTimeLocal") or ""
+    sport_key = (summary.get("activityType") or {}).get("typeKey") or ""
     
-    while i < len(lines):
-        line = lines[i].rstrip()
-        
-        # 空行
-        if not line.strip():
-            i += 1
-            continue
-        
-        # 区切り線
-        if line.strip() in ("---", "___", "***"):
-            blocks.append({"object": "block", "type": "divider", "divider": {}})
-            i += 1
-            continue
-        
-        # 見出し（## h2）
-        if line.startswith("## ") and not line.startswith("### "):
-            text = line[3:].strip()
-            blocks.append({
-                "object": "block", "type": "heading_2",
-                "heading_2": {"rich_text": _rich_text(text)}
-            })
-            i += 1
-            continue
-        
-        # 見出し（### h3）
-        if line.startswith("### "):
-            text = line[4:].strip()
-            blocks.append({
-                "object": "block", "type": "heading_3",
-                "heading_3": {"rich_text": _rich_text(text)}
-            })
-            i += 1
-            continue
-        
-        # 見出し（# h1）→ NotionはページタイトルがH1なので、本文ではH2扱い
-        if line.startswith("# "):
-            text = line[2:].strip()
-            blocks.append({
-                "object": "block", "type": "heading_2",
-                "heading_2": {"rich_text": _rich_text(text)}
-            })
-            i += 1
-            continue
-        
-        # コードブロック
-        if line.startswith("```"):
-            lang = line[3:].strip() or "plain text"
-            code_lines = []
-            i += 1
-            while i < len(lines) and not lines[i].startswith("```"):
-                code_lines.append(lines[i])
-                i += 1
-            i += 1  # 閉じる```をスキップ
-            code_text = "\n".join(code_lines)
-            blocks.append({
-                "object": "block", "type": "code",
-                "code": {
-                    "rich_text": [{"type": "text", "text": {"content": code_text[:2000]}}],
-                    "language": lang if lang in _NOTION_LANGS else "plain text"
-                }
-            })
-            continue
-        
-        # テーブル
-        if line.startswith("|") and i + 1 < len(lines) and re.match(r"^\|[\s\-:|]+\|$", lines[i+1].rstrip()):
-            table_lines = [line]
-            i += 1  # ヘッダ行
-            # 区切り行をスキップ
-            sep_line = lines[i].rstrip()
-            i += 1
-            # データ行を集める
-            while i < len(lines) and lines[i].rstrip().startswith("|"):
-                table_lines.append(lines[i].rstrip())
-                i += 1
-            
-            table_block = _build_table_block(table_lines)
-            if table_block:
-                blocks.append(table_block)
-            continue
-        
-        # 箇条書き
-        if re.match(r"^[\-\*]\s+", line):
-            text = re.sub(r"^[\-\*]\s+", "", line)
-            blocks.append({
-                "object": "block", "type": "bulleted_list_item",
-                "bulleted_list_item": {"rich_text": _rich_text(text)}
-            })
-            i += 1
-            continue
-        
-        # 番号付きリスト
-        if re.match(r"^\d+\.\s+", line):
-            text = re.sub(r"^\d+\.\s+", "", line)
-            blocks.append({
-                "object": "block", "type": "numbered_list_item",
-                "numbered_list_item": {"rich_text": _rich_text(text)}
-            })
-            i += 1
-            continue
-        
-        # 引用
-        if line.startswith("> "):
-            text = line[2:]
-            blocks.append({
-                "object": "block", "type": "quote",
-                "quote": {"rich_text": _rich_text(text)}
-            })
-            i += 1
-            continue
-        
-        # 通常の段落
-        blocks.append({
-            "object": "block", "type": "paragraph",
-            "paragraph": {"rich_text": _rich_text(line)}
-        })
-        i += 1
-    
-    return blocks
-
-
-_NOTION_LANGS = {
-    "plain text", "abap", "arduino", "bash", "basic", "c", "clojure", "coffeescript",
-    "c++", "c#", "css", "dart", "diff", "docker", "elixir", "elm", "erlang", "flow",
-    "fortran", "f#", "gherkin", "glsl", "go", "graphql", "groovy", "haskell", "html",
-    "java", "javascript", "json", "julia", "kotlin", "latex", "less", "lisp", "livescript",
-    "lua", "makefile", "markdown", "markup", "matlab", "mermaid", "nix", "objective-c",
-    "ocaml", "pascal", "perl", "php", "powershell", "prolog", "protobuf", "python", "r",
-    "reason", "ruby", "rust", "sass", "scala", "scheme", "scss", "shell", "sql", "swift",
-    "typescript", "vb.net", "verilog", "vhdl", "visual basic", "webassembly", "xml", "yaml",
-}
-
-
-def _rich_text(text: str) -> list[dict]:
-    """Notionのrich_text配列を作る。最大2000文字制限。**bold**, *italic*, `code` 簡易対応。"""
-    if not text:
-        return []
-    
-    # 簡易マークダウン処理（**bold**, `code`）
-    segments = []
-    pattern = re.compile(r"(\*\*[^*]+\*\*|`[^`]+`)")
-    last_end = 0
-    
-    for match in pattern.finditer(text):
-        if match.start() > last_end:
-            segments.append((text[last_end:match.start()], {}))
-        
-        m = match.group()
-        if m.startswith("**") and m.endswith("**"):
-            segments.append((m[2:-2], {"bold": True}))
-        elif m.startswith("`") and m.endswith("`"):
-            segments.append((m[1:-1], {"code": True}))
-        
-        last_end = match.end()
-    
-    if last_end < len(text):
-        segments.append((text[last_end:], {}))
-    
-    if not segments:
-        segments = [(text, {})]
-    
-    result = []
-    for content, annotations in segments:
-        if content:
-            result.append({
-                "type": "text",
-                "text": {"content": content[:2000]},
-                "annotations": annotations,
-            })
-    return result
-
-
-def _build_table_block(table_lines: list[str]) -> dict | None:
-    """Markdownテーブル行をNotionのtableブロックに変換"""
-    rows = []
-    for line in table_lines:
-        # |col1|col2|col3| → ['col1', 'col2', 'col3']
-        cells = [c.strip() for c in line.strip("|").split("|")]
-        rows.append(cells)
-    
-    if not rows:
-        return None
-    
-    table_width = max(len(r) for r in rows)
-    # 行の長さを揃える
-    rows = [r + [""] * (table_width - len(r)) for r in rows]
-    
-    children = []
-    for idx, row in enumerate(rows):
-        children.append({
-            "object": "block", "type": "table_row",
-            "table_row": {
-                "cells": [_rich_text(c) for c in row]
-            }
-        })
-    
-    return {
-        "object": "block", "type": "table",
-        "table": {
-            "table_width": table_width,
-            "has_column_header": True,
-            "has_row_header": False,
-            "children": children,
-        }
-    }
-
-
-# ====================== Notion: ページ作成 ======================
-def create_notion_page(activity_summary: dict, analysis_md: str) -> None:
-    """Notionデータベースに新規ページを作成して分析結果を書き込む"""
-    notion = NotionClient(auth=NOTION_API_KEY)
-    
-    # プロパティ抽出
-    activity_name = activity_summary.get("activityName") or "アクティビティ"
-    start_time = activity_summary.get("startTimeLocal") or ""
-    sport_key = (activity_summary.get("activityType") or {}).get("typeKey") or ""
-    
-    distance_m = activity_summary.get("distance") or 0
+    distance_m = summary.get("distance") or 0
     distance_km = round(distance_m / 1000, 2) if distance_m else None
     
-    duration_sec = activity_summary.get("duration") or 0
+    duration_sec = summary.get("duration") or 0
     time_str = _format_duration(duration_sec) if duration_sec else ""
     
-    avg_hr = activity_summary.get("averageHR")
-    te = activity_summary.get("aerobicTrainingEffect")
+    avg_hr = summary.get("averageHR")
+    te = summary.get("aerobicTrainingEffect")
     
     # 日付（YYYY-MM-DD）
     date_only = ""
     if start_time:
         try:
-            date_only = start_time.split("T")[0][:10]
-            if " " in date_only:
-                date_only = date_only.split(" ")[0]
+            s = str(start_time)
+            date_only = s.split("T")[0].split(" ")[0][:10]
         except Exception:
             pass
     
-    # 種目を日本語化
     sport_jp = _SPORT_MAP.get(sport_key, sport_key)
     
-    # プロパティを構築
-    properties: dict[str, Any] = {
-        "名前": {"title": [{"text": {"content": activity_name[:200]}}]},
+    # 取得した生データのログ
+    print(f"  📝 抽出した値:")
+    print(f"     名前: {activity_name}")
+    print(f"     日付: {date_only}")
+    print(f"     種目(key→jp): {sport_key} → {sport_jp}")
+    print(f"     距離(km): {distance_km}")
+    print(f"     タイム: {time_str}")
+    print(f"     平均HR: {avg_hr}")
+    print(f"     TE: {te}")
+    
+    # 論理名 → 値, タイプ
+    desired = {
+        "名前": ("title", activity_name[:200]),
+        "日付": ("date", date_only),
+        "種目": ("select", sport_jp),
+        "距離 (km)": ("number", distance_km),
+        "タイム": ("rich_text", time_str),
+        "平均HR": ("number", round(avg_hr) if avg_hr else None),
+        "TE": ("number", round(te, 1) if te else None),
     }
-    if date_only:
-        properties["日付"] = {"date": {"start": date_only}}
-    if sport_jp:
-        properties["種目"] = {"select": {"name": sport_jp[:100]}}
-    if distance_km is not None:
-        properties["距離 (km)"] = {"number": distance_km}
-    if time_str:
-        properties["タイム"] = {"rich_text": [{"text": {"content": time_str}}]}
-    if avg_hr:
-        properties["平均HR"] = {"number": round(avg_hr)}
-    if te:
-        properties["TE"] = {"number": round(te, 1)}
     
-    # 本文ブロックに変換
-    children = md_to_notion_blocks(analysis_md)
+    properties: dict[str, Any] = {}
+    for logical_name, (expected_type, value) in desired.items():
+        # 空値はスキップ
+        if value is None or value == "":
+            continue
+        
+        # Notion上の実プロパティ名を曖昧マッチで探す
+        actual_name = _find_property_name(logical_name, schema)
+        if not actual_name:
+            print(f"     ⚠️ Property not found in Notion: {logical_name!r}")
+            continue
+        
+        actual_type = schema[actual_name]
+        if actual_type != expected_type:
+            print(f"     ⚠️ Type mismatch for {actual_name!r}: expected {expected_type}, got {actual_type}")
+            continue
+        
+        # 型ごとに値を組み立て
+        try:
+            if expected_type == "title":
+                properties[actual_name] = {"title": [{"text": {"content": str(value)[:200]}}]}
+            elif expected_type == "date":
+                properties[actual_name] = {"date": {"start": value}}
+            elif expected_type == "select":
+                properties[actual_name] = {"select": {"name": str(value)[:100]}}
+            elif expected_type == "number":
+                properties[actual_name] = {"number": value}
+            elif expected_type == "rich_text":
+                properties[actual_name] = {"rich_text": [{"text": {"content": str(value)[:2000]}}]}
+            print(f"     ✅ Will set {actual_name!r} = {value!r}")
+        except Exception as e:
+            print(f"     ❌ Failed to build {actual_name!r}: {e}")
     
-    # Notion APIは1リクエストあたり100ブロックまで → 分割対応
-    first_batch = children[:100]
-    remaining = children[100:]
+    return properties
+
+
+def _find_property_name(logical: str, schema: dict[str, str]) -> str | None:
+    """
+    論理名にマッチするNotion上の実プロパティ名を曖昧探索。
+    完全一致 → 空白無視一致 → 部分一致 の順。
+    """
+    # 完全一致
+    if logical in schema:
+        return logical
     
-    page = notion.pages.create(
-        parent={"database_id": NOTION_DATABASE_ID},
-        properties=properties,
-        children=first_batch,
-    )
+    # 空白を除去して比較
+    norm_logical = re.sub(r"\s+", "", logical)
+    for name in schema:
+        if re.sub(r"\s+", "", name) == norm_logical:
+            return name
     
-    # 残りのブロックは追記
-    page_id = page["id"]
-    while remaining:
-        batch = remaining[:100]
-        remaining = remaining[100:]
-        notion.blocks.children.append(block_id=page_id, children=batch)
+    # 部分一致（最後の砦）
+    for name in schema:
+        if logical in name or name in logical:
+            return name
     
-    print(f"  ✅ Created Notion page: {activity_name}")
+    return None
 
 
 _SPORT_MAP = {
@@ -527,7 +312,7 @@ _SPORT_MAP = {
     "cycling": "バイク",
     "road_biking": "ロードバイク",
     "mountain_biking": "MTB",
-    "indoor_cycling": "Zwift/室内バイク",
+    "indoor_cycling": "Zwift",
     "virtual_ride": "Zwift",
     "lap_swimming": "プールスイム",
     "open_water_swimming": "OWS",
@@ -547,7 +332,220 @@ def _format_duration(sec: float) -> str:
     return f"{m}:{s:02d}"
 
 
-# ====================== 状態管理 ======================
+# ====================== Markdown → Notion blocks ======================
+def md_to_notion_blocks(markdown: str) -> list[dict]:
+    blocks: list[dict] = []
+    lines = markdown.split("\n")
+    i = 0
+    
+    while i < len(lines):
+        line = lines[i].rstrip()
+        
+        if not line.strip():
+            i += 1
+            continue
+        
+        if line.strip() in ("---", "___", "***"):
+            blocks.append({"object": "block", "type": "divider", "divider": {}})
+            i += 1
+            continue
+        
+        if line.startswith("## ") and not line.startswith("### "):
+            blocks.append({
+                "object": "block", "type": "heading_2",
+                "heading_2": {"rich_text": _rich_text(line[3:].strip())}
+            })
+            i += 1
+            continue
+        
+        if line.startswith("### "):
+            blocks.append({
+                "object": "block", "type": "heading_3",
+                "heading_3": {"rich_text": _rich_text(line[4:].strip())}
+            })
+            i += 1
+            continue
+        
+        if line.startswith("# "):
+            blocks.append({
+                "object": "block", "type": "heading_2",
+                "heading_2": {"rich_text": _rich_text(line[2:].strip())}
+            })
+            i += 1
+            continue
+        
+        if line.startswith("```"):
+            lang = line[3:].strip() or "plain text"
+            code_lines = []
+            i += 1
+            while i < len(lines) and not lines[i].startswith("```"):
+                code_lines.append(lines[i])
+                i += 1
+            i += 1
+            blocks.append({
+                "object": "block", "type": "code",
+                "code": {
+                    "rich_text": [{"type": "text", "text": {"content": "\n".join(code_lines)[:2000]}}],
+                    "language": lang if lang in _NOTION_LANGS else "plain text"
+                }
+            })
+            continue
+        
+        if line.startswith("|") and i + 1 < len(lines) and re.match(r"^\|[\s\-:|]+\|$", lines[i+1].rstrip()):
+            table_lines = [line]
+            i += 2
+            while i < len(lines) and lines[i].rstrip().startswith("|"):
+                table_lines.append(lines[i].rstrip())
+                i += 1
+            tb = _build_table_block(table_lines)
+            if tb:
+                blocks.append(tb)
+            continue
+        
+        if re.match(r"^[\-\*]\s+", line):
+            blocks.append({
+                "object": "block", "type": "bulleted_list_item",
+                "bulleted_list_item": {"rich_text": _rich_text(re.sub(r"^[\-\*]\s+", "", line))}
+            })
+            i += 1
+            continue
+        
+        if re.match(r"^\d+\.\s+", line):
+            blocks.append({
+                "object": "block", "type": "numbered_list_item",
+                "numbered_list_item": {"rich_text": _rich_text(re.sub(r"^\d+\.\s+", "", line))}
+            })
+            i += 1
+            continue
+        
+        if line.startswith("> "):
+            blocks.append({
+                "object": "block", "type": "quote",
+                "quote": {"rich_text": _rich_text(line[2:])}
+            })
+            i += 1
+            continue
+        
+        blocks.append({
+            "object": "block", "type": "paragraph",
+            "paragraph": {"rich_text": _rich_text(line)}
+        })
+        i += 1
+    
+    return blocks
+
+
+_NOTION_LANGS = {
+    "plain text", "bash", "c", "c++", "c#", "css", "diff", "docker", "go", "html",
+    "java", "javascript", "json", "kotlin", "markdown", "python", "ruby", "rust",
+    "shell", "sql", "swift", "typescript", "yaml",
+}
+
+
+def _rich_text(text: str) -> list[dict]:
+    if not text:
+        return []
+    segments = []
+    pattern = re.compile(r"(\*\*[^*]+\*\*|`[^`]+`)")
+    last_end = 0
+    for match in pattern.finditer(text):
+        if match.start() > last_end:
+            segments.append((text[last_end:match.start()], {}))
+        m = match.group()
+        if m.startswith("**"):
+            segments.append((m[2:-2], {"bold": True}))
+        elif m.startswith("`"):
+            segments.append((m[1:-1], {"code": True}))
+        last_end = match.end()
+    if last_end < len(text):
+        segments.append((text[last_end:], {}))
+    if not segments:
+        segments = [(text, {})]
+    return [
+        {"type": "text", "text": {"content": c[:2000]}, "annotations": a}
+        for c, a in segments if c
+    ]
+
+
+def _build_table_block(table_lines: list[str]) -> dict | None:
+    rows = []
+    for line in table_lines:
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        rows.append(cells)
+    if not rows:
+        return None
+    table_width = max(len(r) for r in rows)
+    rows = [r + [""] * (table_width - len(r)) for r in rows]
+    children = [
+        {"object": "block", "type": "table_row",
+         "table_row": {"cells": [_rich_text(c) for c in row]}}
+        for row in rows
+    ]
+    return {
+        "object": "block", "type": "table",
+        "table": {
+            "table_width": table_width,
+            "has_column_header": True,
+            "has_row_header": False,
+            "children": children,
+        }
+    }
+
+
+# ====================== Notion ページ作成 ======================
+def create_notion_page(notion: NotionClient, schema: dict[str, str], summary: dict, analysis_md: str) -> None:
+    properties = build_properties(summary, schema)
+    
+    # 名前が抽出できなかった場合の保険
+    if not any(schema.get(k) == "title" for k in properties):
+        # スキーマからtitleプロパティを探して、無理やり名前をセット
+        for name, ptype in schema.items():
+            if ptype == "title":
+                properties[name] = {"title": [{"text": {"content": (summary.get("activityName") or "Unknown")[:200]}}]}
+                break
+    
+    children = md_to_notion_blocks(analysis_md)
+    
+    print(f"  📤 Creating page with {len(properties)} properties, {len(children)} blocks")
+    
+    first_batch = children[:100]
+    remaining = children[100:]
+    
+    try:
+        page = notion.pages.create(
+            parent={"database_id": NOTION_DATABASE_ID},
+            properties=properties,
+            children=first_batch,
+        )
+        page_id = page["id"]
+        print(f"  ✅ Page created: {page_id}")
+    except Exception as e:
+        print(f"  ❌ Page creation failed: {e}")
+        # プロパティが原因なら、最小構成で再試行
+        print(f"  🔄 Retrying with minimal properties only...")
+        title_name = next((n for n, t in schema.items() if t == "title"), None)
+        if not title_name:
+            raise
+        minimal = {title_name: properties[title_name]}
+        page = notion.pages.create(
+            parent={"database_id": NOTION_DATABASE_ID},
+            properties=minimal,
+            children=first_batch,
+        )
+        page_id = page["id"]
+        print(f"  ⚠️ Created with minimal properties: {page_id}")
+    
+    while remaining:
+        batch = remaining[:100]
+        remaining = remaining[100:]
+        try:
+            notion.blocks.children.append(block_id=page_id, children=batch)
+        except Exception as e:
+            print(f"  ⚠️ Failed to append blocks: {e}")
+            break
+
+
+# ====================== 状態 ======================
 def load_state() -> dict:
     if STATE_PATH.exists():
         return json.loads(STATE_PATH.read_text())
@@ -565,24 +563,26 @@ def main() -> int:
     
     try:
         client = garmin_login()
-    except GarminConnectTooManyRequestsError:
-        return 1
     except Exception as e:
         print(f"❌ Garmin login failed: {e}", file=sys.stderr)
         traceback.print_exc()
         return 1
     
     target_date = resolve_target_date()
-    
-    try:
-        activities = fetch_target_activities(client, target_date)
-    except Exception as e:
-        print(f"❌ Failed to fetch activities: {e}", file=sys.stderr)
-        return 1
+    activities = fetch_target_activities(client, target_date)
     
     if not activities:
         print(f"ℹ️ No activities on {target_date}. Done.")
         return 0
+    
+    # Notion クライアントとスキーマを準備
+    notion = NotionClient(auth=NOTION_API_KEY)
+    try:
+        schema = fetch_notion_schema(notion)
+    except Exception as e:
+        print(f"❌ Failed to fetch Notion schema: {e}", file=sys.stderr)
+        traceback.print_exc()
+        return 1
     
     new_count = 0
     for act in activities:
@@ -598,7 +598,7 @@ def main() -> int:
                 detail["summary"] = act
             
             analysis = analyze_with_claude(detail)
-            create_notion_page(detail["summary"], analysis)
+            create_notion_page(notion, schema, detail["summary"], analysis)
             
             analyzed_ids.add(activity_id)
             new_count += 1
