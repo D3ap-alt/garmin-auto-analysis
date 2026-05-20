@@ -2,9 +2,9 @@ name: Garmin Analysis
 
 on:
   schedule:
-    # 1時間おきに実行（毎時45分・GitHub混雑回避）
+    # 1時間おきに実行（毎時00分・UTC基準。JSTでも毎時00分）
     # 新規アクティビティがなければ ~30秒で終了するので低コスト
-    - cron: '45 * * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
     inputs:
       target_date:

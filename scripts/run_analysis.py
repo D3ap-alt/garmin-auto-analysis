@@ -1,12 +1,11 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v8)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v9)
 
-v8変更点 (頻度UP + 省エネ):
-  - cron: 1時間おき実行（00分台にチェック）
-  - target_date: cron実行時は「JST今日」をデフォルトに変更（旧: 前日）
-  - モデル: Sonnet 4.6 固定（Opusの1/5価格）でコスト抑制
-  - state.json で重複分析を防止（既存仕様継続）
-  - 新規アクティビティなしの場合は ~30秒で終了（API1回のみ）
+v9変更点 (シーズン視点の分析):
+  - Notion DB から過去1週間のトレーニング履歴を自動取得
+  - 大会日程を profile.md から読み込み、「次の大会まで何日」を自動計算
+  - 周期化フェーズ判定（Base/Build/Peak/Taper/Race）を自動判定
+  - Claude プロンプトに上記コンテキストを注入 → シーズン位置づけを踏まえた分析
 """
 
 from __future__ import annotations
@@ -123,6 +122,178 @@ def fetch_activity_detail(client: Garmin, activity_id: int) -> dict[str, Any]:
     return detail
 
 
+# ====================== シーズン分析機能 (v9) ======================
+RACE_SCHEDULE = [
+    {"name": "渡良瀬", "date": "2026-05-24", "distance": "OD", "goal": "2:20", "tier": "B"},
+    {"name": "海の森", "date": "2026-06-14", "distance": "OD", "goal": "2:18", "tier": "A"},
+    {"name": "諏訪子", "date": "2026-06-28", "distance": "ミドル", "goal": "4:30", "tier": "B"},
+    {"name": "潮来", "date": "2026-07-12", "distance": "OD", "goal": "2:17", "tier": "A"},
+    {"name": "大井川", "date": "2026-07-19", "distance": "OD", "goal": "2:17", "tier": "A"},
+    {"name": "いわき", "date": "2026-08-22", "distance": "OD", "goal": "2:17", "tier": "A"},
+    {"name": "富士", "date": "2026-09-06", "distance": "OD", "goal": "2:17", "tier": "A"},
+    {"name": "村上", "date": "2026-09-27", "distance": "OD", "goal": "2:15", "tier": "A+"},
+]
+
+
+def get_season_context(today: date_cls) -> str:
+    """次の大会までの日数と周期化フェーズを計算"""
+    # 次の大会を見つける
+    next_race = None
+    next_a_race = None
+    for race in RACE_SCHEDULE:
+        race_date = datetime.strptime(race["date"], "%Y-%m-%d").date()
+        if race_date >= today:
+            if next_race is None:
+                next_race = (race, race_date, (race_date - today).days)
+            if race["tier"].startswith("A") and next_a_race is None:
+                next_a_race = (race, race_date, (race_date - today).days)
+                break
+    
+    if not next_race:
+        return "シーズン終了後（オフシーズン）"
+    
+    race, race_date, days_to_race = next_race
+    
+    # 周期化フェーズ判定
+    if days_to_race <= 7:
+        phase = "Race期（試合直前・刺激のみ）"
+    elif days_to_race <= 14:
+        phase = "Taper期（量60-70%減・強度維持）"
+    elif days_to_race <= 28:
+        phase = "Peak期（試合に近い質の刺激）"
+    elif days_to_race <= 56:
+        phase = "Build期（強度上昇・SST/閾値中心）"
+    else:
+        phase = "Base期（量重視・有酸素持久力構築）"
+    
+    context = f"""### 次の大会
+- **{race['name']}**: {race['date']} ({race['distance']}, 目標 {race['goal']}, 重要度 {race['tier']})
+- **あと {days_to_race} 日**
+
+### 現在のシーズン位置づけ
+- **{phase}**
+"""
+    
+    if next_a_race and next_a_race[0]["name"] != race["name"]:
+        a_race, _, a_days = next_a_race
+        context += f"""
+### 次のA戦
+- **{a_race['name']}**: {a_race['date']} (あと {a_days} 日, 目標 {a_race['goal']})
+"""
+    
+    return context
+
+
+def fetch_recent_history(notion: NotionClient, today: date_cls, days: int = 7) -> str:
+    """Notion DBから過去N日間のトレーニング履歴を取得して要約"""
+    start_date = (today - timedelta(days=days)).isoformat()
+    
+    try:
+        # Notionデータベースをフィルタリングして取得
+        # 「日付」プロパティで降順、過去N日間のもの
+        response = notion.databases.query(
+            database_id=NOTION_DATABASE_ID,
+            filter={
+                "property": "日付",
+                "date": {
+                    "on_or_after": start_date,
+                }
+            },
+            sorts=[{"property": "日付", "direction": "descending"}],
+            page_size=20,
+        )
+        
+        pages = response.get("results", [])
+        if not pages:
+            return "過去1週間のトレーニング履歴: データなし"
+        
+        rows = []
+        for p in pages:
+            props = p.get("properties", {})
+            name = _extract_text(props.get("名前", {}), "title")
+            date = _extract_date(props.get("日付", {}))
+            sport = _extract_select(props.get("種目", {}))
+            distance = _extract_number(props.get("距離 (km)", {})) or _extract_number(props.get("距離 (km) ", {}))
+            time_str = _extract_text(props.get("タイム", {}), "rich_text")
+            hr = _extract_number(props.get("平均HR", {}))
+            te = _extract_number(props.get("TE", {}))
+            
+            rows.append({
+                "date": date,
+                "name": name,
+                "sport": sport,
+                "distance": distance,
+                "time": time_str,
+                "hr": hr,
+                "te": te,
+            })
+        
+        # 表形式で整形
+        lines = ["| 日付 | 種目 | 名前 | 距離(km) | タイム | HR | TE |", "|---|---|---|---|---|---|---|"]
+        for r in rows:
+            lines.append(
+                f"| {r['date'] or '-'} | {r['sport'] or '-'} | {r['name'] or '-'} | "
+                f"{r['distance'] if r['distance'] is not None else '-'} | "
+                f"{r['time'] or '-'} | {r['hr'] if r['hr'] is not None else '-'} | "
+                f"{r['te'] if r['te'] is not None else '-'} |"
+            )
+        
+        # 種目別の集計
+        sport_counts = {}
+        for r in rows:
+            s = r['sport'] or "その他"
+            sport_counts[s] = sport_counts.get(s, 0) + 1
+        sport_summary = ", ".join(f"{k}: {v}回" for k, v in sport_counts.items())
+        
+        return f"""### 過去{days}日間のトレーニング履歴（Notion DB から自動取得）
+
+{chr(10).join(lines)}
+
+### 種目別頻度（過去{days}日）
+{sport_summary}
+"""
+    except Exception as e:
+        print(f"  ⚠️ 過去履歴取得失敗: {e}")
+        return f"過去履歴取得失敗: {e}"
+
+
+def _extract_text(prop: dict, type_key: str) -> str:
+    """Notionのtitle/rich_textプロパティからテキスト抽出"""
+    if not prop:
+        return ""
+    items = prop.get(type_key, [])
+    if not items:
+        return ""
+    return "".join(it.get("text", {}).get("content", "") for it in items)
+
+
+def _extract_date(prop: dict) -> str:
+    """Notionのdateプロパティから日付文字列抽出"""
+    if not prop:
+        return ""
+    date_obj = prop.get("date", {})
+    if not date_obj:
+        return ""
+    return date_obj.get("start", "")
+
+
+def _extract_select(prop: dict) -> str:
+    """Notionのselectプロパティから名前抽出"""
+    if not prop:
+        return ""
+    sel = prop.get("select")
+    if not sel:
+        return ""
+    return sel.get("name", "")
+
+
+def _extract_number(prop: dict) -> Any:
+    """Notionのnumberプロパティから数値抽出"""
+    if not prop:
+        return None
+    return prop.get("number")
+
+
 # ====================== Claude 分析 ======================
 def load_prompts() -> tuple[str, str]:
     skill = (PROMPTS_DIR / "garmin_analyzer_skill.md").read_text(encoding="utf-8")
@@ -136,7 +307,7 @@ def select_model(summary: dict) -> str:
     return "claude-sonnet-4-6"
 
 
-def analyze_with_claude(activity_data: dict) -> str:
+def analyze_with_claude(activity_data: dict, season_context: str, history_context: str) -> str:
     skill_md, profile_md = load_prompts()
     model = select_model(activity_data.get("summary", {}))
     
@@ -144,6 +315,10 @@ def analyze_with_claude(activity_data: dict) -> str:
 スキル定義と個人プロフィールに完全に従って分析。出力はNotion用のMarkdown。
 - 見出しは ## (h2) または ### (h3) を使用、# は使わない
 - 表は Markdownテーブル形式
+- **必ず分析冒頭で「シーズン位置づけ（次の大会まで何日、現在のフェーズ）」を明示すること**
+- **過去1週間のトレーニング履歴を踏まえた相対的な評価を行うこと**
+  - 例: 「今週はラン3回でやや少なめ」「先週同種目より平均HR-5bpm」など
+- **次の大会への準備度合いを評価し、残り日数に合わせた次回提案を行うこと**
 
 ---
 ## スキル定義
@@ -159,9 +334,24 @@ def analyze_with_claude(activity_data: dict) -> str:
         "laps": activity_data.get("laps", {}),
     }
     
-    user_prompt = f"""## 分析対象
+    user_prompt = f"""## シーズンコンテキスト
+
+{season_context}
+
+---
+
+## 過去のトレーニング履歴
+
+{history_context}
+
+---
+
+## 本日の分析対象
 
 以下はアクティビティデータです。スキル定義の「出力形式」テンプレートに完全準拠して分析してください。
+**冒頭に「シーズン位置づけ」セクションを必ず追加し、「次の大会まで○日（{{大会名}}）、現在は{{フェーズ}}」を明記してください。**
+**「過去1週間との比較」セクションも追加し、相対評価を行ってください。**
+**最後の「次回トレーニング提案」では、次の大会までの残り日数に合わせた具体的なメニュー（曜日別）を提示してください。**
 
 ```json
 {json.dumps(payload, ensure_ascii=False, default=str)[:80000]}
@@ -621,6 +811,13 @@ def main() -> int:
     notion = NotionClient(auth=NOTION_API_KEY, notion_version="2022-06-28")
     schema = fetch_notion_schema(notion)
     
+    # v9: シーズンコンテキストと過去履歴を取得
+    season_context = get_season_context(target_date)
+    print(f"\n📅 Season Context:\n{season_context}")
+    
+    history_context = fetch_recent_history(notion, target_date, days=7)
+    print(f"\n📊 Recent History fetched ({len(history_context)} chars)")
+    
     new_count = 0
     for act in activities:
         activity_id = act.get("activityId")
@@ -640,7 +837,7 @@ def main() -> int:
                         merged_summary[k] = v
             detail["summary"] = merged_summary
             
-            analysis = analyze_with_claude(detail)
+            analysis = analyze_with_claude(detail, season_context, history_context)
             create_notion_page(notion, schema, detail["summary"], analysis)
             
             analyzed_ids.add(activity_id)
