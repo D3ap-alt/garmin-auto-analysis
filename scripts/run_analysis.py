@@ -121,6 +121,26 @@ def fetch_activity_detail(client: Garmin, activity_id: int) -> dict[str, Any]:
     return detail
 
 
+# ====================== 日付・曜日ユーティリティ ======================
+_WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
+
+
+def jp_weekday(d: date_cls) -> str:
+    """date → '月'〜'日'（date.weekday() は月曜=0）"""
+    return _WEEKDAY_JP[d.weekday()]
+
+
+def build_date_anchor(today: date_cls, days_ahead: int = 16) -> str:
+    """モデルに曜日を推定させず、正しい曜日カレンダーを明示的に渡す。
+    日別トレーニング提案の曜日ズレ（モデルの曜日自力計算ミス）を防ぐ。"""
+    lines = [f"- **本日: {today.isoformat()}（{jp_weekday(today)}）**", "", "今後の曜日対応表（提案の曜日は必ずこの表に一致させること）:"]
+    for i in range(days_ahead + 1):
+        d = today + timedelta(days=i)
+        mark = " ← 本日" if i == 0 else ""
+        lines.append(f"  - {d.isoformat()}（{jp_weekday(d)}）{mark}")
+    return "\n".join(lines)
+
+
 # ====================== シーズン分析機能 (v9) ======================
 RACE_SCHEDULE = [
     {"name": "渡良瀬", "date": "2026-05-24", "distance": "OD", "goal": "2:20", "tier": "B"},
@@ -166,7 +186,7 @@ def get_season_context(today: date_cls) -> str:
         phase = "Base期（量重視・有酸素持久力構築）"
     
     context = f"""### 次の大会
-- **{race['name']}**: {race['date']} ({race['distance']}, 目標 {race['goal']}, 重要度 {race['tier']})
+- **{race['name']}**: {race['date']}（{jp_weekday(race_date)}） ({race['distance']}, 目標 {race['goal']}, 重要度 {race['tier']})
 - **あと {days_to_race} 日**
 
 ### 現在のシーズン位置づけ
@@ -174,10 +194,10 @@ def get_season_context(today: date_cls) -> str:
 """
     
     if next_a_race and next_a_race[0]["name"] != race["name"]:
-        a_race, _, a_days = next_a_race
+        a_race, a_race_date, a_days = next_a_race
         context += f"""
 ### 次のA戦
-- **{a_race['name']}**: {a_race['date']} (あと {a_days} 日, 目標 {a_race['goal']})
+- **{a_race['name']}**: {a_race['date']}（{jp_weekday(a_race_date)}） (あと {a_days} 日, 目標 {a_race['goal']})
 """
     
     return context
@@ -350,7 +370,7 @@ def select_model(summary: dict) -> str:
     return "claude-sonnet-4-6"
 
 
-def analyze_with_claude(activity_data: dict, season_context: str, history_context: str) -> str:
+def analyze_with_claude(activity_data: dict, season_context: str, history_context: str, target_date: date_cls) -> str:
     skill_md, profile_md = load_prompts()
     model = select_model(activity_data.get("summary", {}))
     
@@ -362,6 +382,7 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
 - **過去1週間のトレーニング履歴を踏まえた相対的な評価を行うこと**
   - 例: 「今週はラン3回でやや少なめ」「先週同種目より平均HR-5bpm」など
 - **次の大会への準備度合いを評価し、残り日数に合わせた次回提案を行うこと**
+- **曜日は絶対に自分で計算しないこと。ユーザープロンプトの「日付・曜日対応表」に記載された曜日のみを使用すること。** 表にない日付の曜日には言及しない。
 
 ---
 ## スキル定義
@@ -377,7 +398,17 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
         "laps": activity_data.get("laps", {}),
     }
     
-    user_prompt = f"""## シーズンコンテキスト
+    date_anchor = build_date_anchor(target_date)
+    
+    user_prompt = f"""## 日付・曜日対応表（最優先・厳守）
+
+{date_anchor}
+
+> ⚠️ 提案メニューの曜日表記は、必ず上記の対応表と一致させること。曜日を推定で書かない。
+
+---
+
+## シーズンコンテキスト
 
 {season_context}
 
@@ -394,7 +425,7 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
 以下はアクティビティデータです。スキル定義の「出力形式」テンプレートに完全準拠して分析してください。
 **冒頭に「シーズン位置づけ」セクションを必ず追加し、「次の大会まで○日（{{大会名}}）、現在は{{フェーズ}}」を明記してください。**
 **「過去1週間との比較」セクションも追加し、相対評価を行ってください。**
-**最後の「次回トレーニング提案」では、次の大会までの残り日数に合わせた具体的なメニュー（曜日別）を提示してください。**
+**最後の「次回トレーニング提案」では、次の大会までの残り日数に合わせた具体的なメニュー（曜日別）を提示してください。各メニューの曜日は上記「日付・曜日対応表」に厳密に従うこと。**
 
 ```json
 {json.dumps(payload, ensure_ascii=False, default=str)[:80000]}
@@ -937,7 +968,7 @@ def main() -> int:
                         merged_summary[k] = v
             detail["summary"] = merged_summary
             
-            analysis = analyze_with_claude(detail, season_context, history_context)
+            analysis = analyze_with_claude(detail, season_context, history_context, target_date)
             create_notion_page(notion, schema, detail["summary"], analysis)
             
             analyzed_ids.add(activity_id)
