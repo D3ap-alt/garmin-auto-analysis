@@ -403,13 +403,70 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
     
     print(f"  🤖 Analyzing with {model}...")
     anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY)
-    msg = anthropic_client.messages.create(
+    return _generate_complete(
+        anthropic_client,
         model=model,
-        max_tokens=8192,
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_prompt}],
+        system_prompt=system_prompt,
+        user_prompt=user_prompt,
     )
-    return msg.content[0].text
+
+
+# Sonnet 4.6 は最大出力 64K トークン対応。1回の上限を引き上げつつ、
+# それでも max_tokens で止まった場合は続きを生成してつなぐ。
+MAX_TOKENS_PER_CALL = 16000
+MAX_CONTINUATIONS = 5  # 安全弁（無限ループ・暴走コスト防止）
+
+
+def _join_text_blocks(content: list) -> str:
+    """レスポンスの全 text ブロックを結合する。
+    content[0] が必ず text とは限らず、複数ブロックに分かれる場合もあるため、
+    先頭ブロック決め打ちをやめて type=='text' を全て拾う。"""
+    return "".join(
+        getattr(block, "text", "") for block in content
+        if getattr(block, "type", None) == "text"
+    )
+
+
+def _generate_complete(
+    client: Anthropic,
+    *,
+    model: str,
+    system_prompt: str,
+    user_prompt: str,
+) -> str:
+    """stop_reason == 'max_tokens' で打ち切られた場合に継続生成して結合する。
+    これが「分析が途中で切れる問題」の根本対策。max_tokens 増量は補助に過ぎない。"""
+    messages: list[dict[str, Any]] = [{"role": "user", "content": user_prompt}]
+    full_text = ""
+
+    for attempt in range(MAX_CONTINUATIONS + 1):
+        msg = client.messages.create(
+            model=model,
+            max_tokens=MAX_TOKENS_PER_CALL,
+            system=system_prompt,
+            messages=messages,
+        )
+        chunk = _join_text_blocks(msg.content)
+        full_text += chunk
+
+        if msg.stop_reason != "max_tokens":
+            if attempt > 0:
+                print(f"  ✅ Completed after {attempt} continuation(s) "
+                      f"(stop_reason={msg.stop_reason}, total {len(full_text)} chars)")
+            return full_text
+
+        # max_tokens で打ち切られた → 続きを生成させる
+        print(f"  ↪️ Hit max_tokens (attempt {attempt + 1}); continuing generation...")
+        messages.append({"role": "assistant", "content": chunk})
+        messages.append({
+            "role": "user",
+            "content": "続きを、途中で切れた箇所から自然につなげて出力してください。"
+                       "前置きや「続きです」等のメタ発言は不要。本文のみ。",
+        })
+
+    print(f"  ⚠️ Reached MAX_CONTINUATIONS={MAX_CONTINUATIONS}; "
+          f"output may still be truncated (total {len(full_text)} chars)")
+    return full_text
 
 
 def _trim_summary(s: dict) -> dict:
