@@ -362,7 +362,7 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
     anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY)
     msg = anthropic_client.messages.create(
         model=model,
-        max_tokens=4096,
+        max_tokens=8192,
         system=system_prompt,
         messages=[{"role": "user", "content": user_prompt}],
     )
