@@ -1,11 +1,10 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v9)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v10)
 
-v9変更点 (シーズン視点の分析):
-  - Notion DB から過去1週間のトレーニング履歴を自動取得
-  - 大会日程を profile.md から読み込み、「次の大会まで何日」を自動計算
-  - 周期化フェーズ判定（Base/Build/Peak/Taper/Race）を自動判定
-  - Claude プロンプトに上記コンテキストを注入 → シーズン位置づけを踏まえた分析
+v10変更点 (バグ修正・改善):
+  - max_tokens を 4096 → 8192 に増量（分析が途中で切れる問題を解決）
+  - Notion API の databases.query() を 廃止/旧API両対応に修正
+    - data_sources.query → databases.query → notion.request の順でフォールバック
 """
 
 from __future__ import annotations
@@ -185,24 +184,66 @@ def get_season_context(today: date_cls) -> str:
 
 
 def fetch_recent_history(notion: NotionClient, today: date_cls, days: int = 7) -> str:
-    """Notion DBから過去N日間のトレーニング履歴を取得して要約"""
+    """Notion DBから過去N日間のトレーニング履歴を取得して要約。
+    
+    notion-client のバージョンによって API が変わるため、3段階でフォールバック:
+    1. data_sources.query  (新API, Notion-Version 2025-09-03 以降)
+    2. databases.query     (旧API, Notion-Version 2022-06-28)
+    3. notion.request      (raw request、ライブラリのメソッドに依存しない最終手段)
+    """
     start_date = (today - timedelta(days=days)).isoformat()
     
+    query_params = {
+        "filter": {
+            "property": "日付",
+            "date": {
+                "on_or_after": start_date,
+            }
+        },
+        "sorts": [{"property": "日付", "direction": "descending"}],
+        "page_size": 20,
+    }
+    
+    response = None
+    
+    # 試行1: 新APIの data_sources.query
     try:
-        # Notionデータベースをフィルタリングして取得
-        # 「日付」プロパティで降順、過去N日間のもの
-        response = notion.databases.query(
-            database_id=NOTION_DATABASE_ID,
-            filter={
-                "property": "日付",
-                "date": {
-                    "on_or_after": start_date,
-                }
-            },
-            sorts=[{"property": "日付", "direction": "descending"}],
-            page_size=20,
-        )
-        
+        if hasattr(notion, 'data_sources') and hasattr(notion.data_sources, 'query'):
+            response = notion.data_sources.query(
+                data_source_id=NOTION_DATABASE_ID,
+                **query_params,
+            )
+            print("  ℹ️ Using data_sources.query (new API)")
+    except Exception as e:
+        print(f"  ℹ️ data_sources.query failed: {e}")
+        response = None
+    
+    # 試行2: 旧APIの databases.query
+    if response is None:
+        try:
+            response = notion.databases.query(
+                database_id=NOTION_DATABASE_ID,
+                **query_params,
+            )
+            print("  ℹ️ Using databases.query (legacy API)")
+        except Exception as e:
+            print(f"  ℹ️ databases.query failed: {e}")
+            response = None
+    
+    # 試行3: 直接 raw request を投げる（最も堅牢）
+    if response is None:
+        try:
+            response = notion.request(
+                path=f"databases/{NOTION_DATABASE_ID}/query",
+                method="POST",
+                body=query_params,
+            )
+            print("  ℹ️ Using raw request (fallback)")
+        except Exception as e:
+            print(f"  ⚠️ All Notion query methods failed: {e}")
+            return "過去1週間のトレーニング履歴: 取得失敗（Notion APIエラー）"
+    
+    try:
         pages = response.get("results", [])
         if not pages:
             return "過去1週間のトレーニング履歴: データなし"
@@ -245,6 +286,8 @@ def fetch_recent_history(notion: NotionClient, today: date_cls, days: int = 7) -
             sport_counts[s] = sport_counts.get(s, 0) + 1
         sport_summary = ", ".join(f"{k}: {v}回" for k, v in sport_counts.items())
         
+        print(f"  ✅ Retrieved {len(rows)} activities from past {days} days")
+        
         return f"""### 過去{days}日間のトレーニング履歴（Notion DB から自動取得）
 
 {chr(10).join(lines)}
@@ -253,8 +296,8 @@ def fetch_recent_history(notion: NotionClient, today: date_cls, days: int = 7) -
 {sport_summary}
 """
     except Exception as e:
-        print(f"  ⚠️ 過去履歴取得失敗: {e}")
-        return f"過去履歴取得失敗: {e}"
+        print(f"  ⚠️ 過去履歴の整形失敗: {e}")
+        return f"過去履歴の整形失敗: {e}"
 
 
 def _extract_text(prop: dict, type_key: str) -> str:
@@ -362,7 +405,7 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
     anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY)
     msg = anthropic_client.messages.create(
         model=model,
-        max_tokens=4096,
+        max_tokens=8192,
         system=system_prompt,
         messages=[{"role": "user", "content": user_prompt}],
     )
