@@ -1,5 +1,14 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v10)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v13)
+
+v13変更点 (ラップ構造誤認バグの根本対策):
+  - summarize_laps() を新設。ラップ配列を機械集計し、距離別の連続ブロック
+    （例: 100m×12本, 300m×5本）と合計距離の検算結果をプロンプトに同梱。
+    → モデルに本数・距離を目視で数え直させない（300m×5本→×4本の数え違い防止）。
+  - システムプロンプトにガード追加:
+    - 本数・距離・合計は機械集計を正とする
+    - 用具(パドル/プル等)・セット種別(ドリル/レスト/テンポ)をラップデータから断定しない
+      （ペース差だけからブロックの意味づけを創作するのを禁止）
 
 v10変更点 (バグ修正・改善):
   - max_tokens を 4096 → 8192 に増量（分析が途中で切れる問題を解決）
@@ -383,6 +392,12 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
   - 例: 「今週はラン3回でやや少なめ」「先週同種目より平均HR-5bpm」など
 - **次の大会への準備度合いを評価し、残り日数に合わせた次回提案を行うこと**
 - **曜日は絶対に自分で計算しないこと。ユーザープロンプトの「日付・曜日対応表」に記載された曜日のみを使用すること。** 表にない日付の曜日には言及しない。
+- **ラップの本数・距離・合計は、ユーザープロンプトの「ラップ機械集計」セクションの値を正とすること。** 自分でラップを数え直したり、距離を推定で書き換えたりしない（例: 300m×5本を×4本と書く等の数え違いを禁止）。集計と矛盾する本文は書かない。
+- **ラップデータから判別できないことを断定しないこと。** 具体的には次を推測で確定させない:
+  - 用具（パドル/プル/フィン/ビート板など）の有無 — APIラップに用具情報は含まれない
+  - セット種別（ドリル/レスト/テンポ/メイン等のラベル）
+  - ペースが速い/遅い理由（用具補助・流し・全力など）
+  これらは本人補足がない限り「ペースの近いラップ群」「速い区間/遅い区間」と中立に記述するに留め、用具やセット名を創作しない。ペース差だけからブロックの意味づけ（例「ここはドリル」「ここはパドル」）を断定するのは禁止。
 
 ---
 ## スキル定義
@@ -397,7 +412,12 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
         "summary": _trim_summary(activity_data.get("summary", {})),
         "laps": activity_data.get("laps", {}),
     }
-    
+
+    laps_digest = summarize_laps(
+        activity_data.get("laps", {}),
+        activity_data.get("summary", {}),
+    )
+
     date_anchor = build_date_anchor(target_date)
     
     user_prompt = f"""## 日付・曜日対応表（最優先・厳守）
@@ -426,6 +446,10 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
 **冒頭に「シーズン位置づけ」セクションを必ず追加し、「次の大会まで○日（{{大会名}}）、現在は{{フェーズ}}」を明記してください。**
 **「過去1週間との比較」セクションも追加し、相対評価を行ってください。**
 **最後の「次回トレーニング提案」では、次の大会までの残り日数に合わせた具体的なメニュー（曜日別）を提示してください。各メニューの曜日は上記「日付・曜日対応表」に厳密に従うこと。**
+
+{laps_digest}
+
+> ⚠️ 上の機械集計と、下の生JSON（laps）が食い違って見えても、**本数・距離・合計は機械集計を正**とすること。生JSONはペースやHR等の詳細を読むために使う。
 
 ```json
 {json.dumps(payload, ensure_ascii=False, default=str)[:80000]}
@@ -498,6 +522,88 @@ def _generate_complete(
     print(f"  ⚠️ Reached MAX_CONTINUATIONS={MAX_CONTINUATIONS}; "
           f"output may still be truncated (total {len(full_text)} chars)")
     return full_text
+
+
+def _coerce_laps_list(laps: Any) -> list[dict]:
+    """get_activity_splits の返却から実ラップ配列を取り出す。
+    返却形は {'lapDTOs': [...]} が標準だが、まれに list 直、'laps' キー等もあるため吸収。"""
+    if isinstance(laps, list):
+        return [x for x in laps if isinstance(x, dict)]
+    if isinstance(laps, dict):
+        for key in ("lapDTOs", "laps", "splits", "splitSummaries"):
+            v = laps.get(key)
+            if isinstance(v, list):
+                return [x for x in v if isinstance(x, dict)]
+    return []
+
+
+def _lap_distance_m(lap: dict) -> float | None:
+    for k in ("distance", "distanceInMeters", "totalDistance"):
+        v = lap.get(k)
+        if isinstance(v, (int, float)) and v > 0:
+            return float(v)
+    return None
+
+
+def summarize_laps(laps: Any, summary: dict) -> str:
+    """ラップ配列を *機械的に* 集計し、モデルに渡す検算済みサマリを作る。
+
+    これが構造誤認（300m×5本→4本の数え違い、ペース差でのブロック創作）への
+    根本対策。モデルにはこの集計結果を「集計の正」として渡し、本数・距離・合計を
+    モデルに目視で数え直させない。
+    """
+    rows = _coerce_laps_list(laps)
+    if not rows:
+        return "（ラップ詳細データなし。summaryの距離・時間のみで分析すること）"
+
+    # 距離を 25m 単位に丸めて「同一距離のラップが連続する塊」を検出
+    def rounded(m: float | None) -> int | None:
+        if m is None:
+            return None
+        return int(round(m / 25.0) * 25)
+
+    seq: list[int | None] = [rounded(_lap_distance_m(l)) for l in rows]
+
+    # 連続する同一距離をグループ化（例: [350], [100]*12, [300]*5, [25]）
+    groups: list[tuple[int | None, int]] = []
+    for d in seq:
+        if groups and groups[-1][0] == d:
+            groups[-1] = (d, groups[-1][1] + 1)
+        else:
+            groups.append((d, 1))
+
+    total_from_laps = sum((_lap_distance_m(l) or 0.0) for l in rows)
+    summary_dist = summary.get("distance") or summary.get("distanceInMeters")
+
+    lines = [
+        "### ラップ機械集計（このパイプラインが配列から算出。**本数・距離・合計はこの値を正とすること**）",
+        "",
+        f"- 総ラップ数: {len(rows)}",
+        "- 距離別の連続ブロック（ラップ順）:",
+    ]
+    lap_cursor = 1
+    for dist, count in groups:
+        start, end = lap_cursor, lap_cursor + count - 1
+        rng = f"Lap{start}" if count == 1 else f"Lap{start}〜{end}"
+        if dist is None:
+            lines.append(f"  - {rng}: 距離不明 × {count}本")
+        else:
+            lines.append(f"  - {rng}: {dist}m × {count}本（計 {dist * count}m）")
+        lap_cursor += count
+
+    lines.append("")
+    lines.append(f"- ラップ合計距離: {int(total_from_laps)}m")
+    if summary_dist:
+        diff = total_from_laps - float(summary_dist)
+        ok = "✅ 一致" if abs(diff) <= 30 else f"⚠️ 不一致（差 {int(diff)}m）"
+        lines.append(f"- summary距離: {int(float(summary_dist))}m → 検算 {ok}")
+
+    lines.append("")
+    lines.append(
+        "> 注意: 上の本数・距離は配列から機械集計した確定値。分析本文で本数を"
+        "数え直したり、距離を推定で書き換えたりしないこと。"
+    )
+    return "\n".join(lines)
 
 
 def _trim_summary(s: dict) -> dict:
