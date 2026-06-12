@@ -379,7 +379,32 @@ def select_model(summary: dict) -> str:
     return "claude-sonnet-4-6"
 
 
-def analyze_with_claude(activity_data: dict, season_context: str, history_context: str, target_date: date_cls) -> str:
+def load_sleep_context(target_date: date_cls) -> str:
+    """v13: sleep_state.json から当日朝の睡眠サマリ1行を返す（無ければ空文字）。"""
+    path = ROOT / "sleep_state.json"
+    if not path.exists():
+        return ""
+    try:
+        hist = json.loads(path.read_text(encoding="utf-8")).get("history", [])
+        rec = next((r for r in hist if r.get("date") == target_date.isoformat()), None)
+        if not rec:
+            return ""
+        t = rec.get("total_min")
+        dur = f"{t // 60}h{t % 60:02d}m" if t else "—"
+        return (
+            f"睡眠スコア{rec.get('score', '—')}／総睡眠{dur}"
+            f"（深い{rec.get('deep_min', '—')}分・REM{rec.get('rem_min', '—')}分）"
+            f"／夜間HRV {rec.get('hrv_avg', '—')}ms"
+            f"（週平均{rec.get('hrv_weekly_avg', '—')}ms・{rec.get('hrv_status', '—')}）"
+            f"／安静時HR {rec.get('rhr', '—')}bpm"
+            f"／Body Battery変化 {rec.get('bb_change', '—')}"
+        )
+    except Exception as e:
+        print(f"  ⚠️ sleep context読込失敗: {e}")
+        return ""
+
+
+def analyze_with_claude(activity_data: dict, season_context: str, history_context: str, target_date: date_cls, sleep_context: str = "") -> str:
     skill_md, profile_md = load_prompts()
     model = select_model(activity_data.get("summary", {}))
     
@@ -419,6 +444,21 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
     )
 
     date_anchor = build_date_anchor(target_date)
+
+    # v13: 当日朝の睡眠サマリがあれば注入
+    condition_section = ""
+    if sleep_context:
+        condition_section = f"""## 今朝のコンディション（睡眠・参考）
+
+{sleep_context}
+
+> 練習評価に反映すること: 睡眠不良（深い睡眠の大幅不足やHRVのベースライン逸脱）の朝は、
+> 同じペースでもHR・主観強度が上振れしやすく、光学心拍も乱れやすい。その場合「不調」と
+> 断定せずコンディション要因として言及する。Garminスコア単体での減点解釈は禁止。
+
+---
+
+"""
     
     user_prompt = f"""## 日付・曜日対応表（最優先・厳守）
 
@@ -428,7 +468,7 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
 
 ---
 
-## シーズンコンテキスト
+{condition_section}## シーズンコンテキスト
 
 {season_context}
 
@@ -1055,6 +1095,11 @@ def main() -> int:
     history_context = fetch_recent_history(notion, target_date, days=7)
     print(f"\n📊 Recent History fetched ({len(history_context)} chars)")
     
+    # v13: 当日朝の睡眠サマリ（sleep_report.py が生成した sleep_state.json から）
+    sleep_context = load_sleep_context(target_date)
+    if sleep_context:
+        print(f"😴 Sleep context: {sleep_context}")
+    
     new_count = 0
     for act in activities:
         activity_id = act.get("activityId")
@@ -1074,7 +1119,7 @@ def main() -> int:
                         merged_summary[k] = v
             detail["summary"] = merged_summary
             
-            analysis = analyze_with_claude(detail, season_context, history_context, target_date)
+            analysis = analyze_with_claude(detail, season_context, history_context, target_date, sleep_context)
             create_notion_page(notion, schema, detail["summary"], analysis)
             
             analyzed_ids.add(activity_id)
