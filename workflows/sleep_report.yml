@@ -1,12 +1,6 @@
 name: Sleep Report
 
 on:
-  schedule:
-    # JST 7:15 / 8:15 / 9:15 / 10:15 / 11:15 に実行
-    # （起床後のウォッチ同期を待つため複数回。レポート済みなら即終了）
-    # 既存の Garmin Analysis（毎時00分）とコミットが衝突しないよう15分ずらす
-    - cron: '15 22,23 * * *'
-    - cron: '15 0,1,2 * * *'
   workflow_dispatch:
     inputs:
       target_date:
