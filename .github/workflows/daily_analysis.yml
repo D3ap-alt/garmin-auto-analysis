@@ -41,6 +41,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run sleep report
+        env:
+          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          GARMIN_TOKENS_BASE64: ${{ secrets.GARMIN_TOKENS_BASE64 }}
+        run: |
+          H=$(TZ=Asia/Tokyo date +%H)
+          if [ "$H" -ge 6 ]; then
+            python scripts/sleep_report.py
+          else
+            echo "JST ${H}時のため睡眠レポートはスキップ（就寝中の部分データ防止）"
+          fi
+
       - name: Run analysis
         env:
           GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
@@ -56,8 +72,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n $(git status --porcelain state.json) ]]; then
-            git add state.json
+          if [[ -n $(git status --porcelain state.json sleep_state.json) ]]; then
+            git pull --rebase
+            git add state.json sleep_state.json
             git commit -m "Update analyzed activity state [skip ci]"
             git push
           fi
