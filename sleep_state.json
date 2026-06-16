@@ -1,5 +1,5 @@
 {
-  "last_report_date": "2026-06-16",
+  "last_report_date": "2026-06-17",
   "history": [
     {
       "date": "2026-06-12",
@@ -120,6 +120,30 @@
       "hrv_status": "BALANCED",
       "hrv_baseline_low": 44,
       "hrv_baseline_high": 60
+    },
+    {
+      "date": "2026-06-17",
+      "total_min": 353,
+      "deep_min": 64,
+      "light_min": 266,
+      "rem_min": 23,
+      "awake_min": 77,
+      "sleep_start": "22:57",
+      "sleep_end": "06:07",
+      "awake_count": 5,
+      "resp_avg": 13.0,
+      "score": 47,
+      "score_quality": "POOR",
+      "deep_pct_quality": "EXCELLENT",
+      "rem_pct_quality": "POOR",
+      "rhr": 46,
+      "hrv_avg": 52,
+      "bb_change": 53,
+      "restless": 65,
+      "hrv_weekly_avg": 53,
+      "hrv_status": "BALANCED",
+      "hrv_baseline_low": 44,
+      "hrv_baseline_high": 59
     }
   ]
 }
