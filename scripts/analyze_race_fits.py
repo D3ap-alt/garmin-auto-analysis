@@ -124,7 +124,10 @@ def main() -> int:
         print(analysis)
         return 0
 
-    page_summary = (components.get("run") or components.get("bike"))["summary"]
+    # ページタイトルはレース名を優先（無指定時は元アクティビティ名のまま）
+    page_summary = dict((components.get("run") or components.get("bike"))["summary"])
+    if args.race:
+        page_summary["activityName"] = f"🏁 {args.race}"
     ra.create_notion_page(notion, schema, page_summary, analysis)
     print(f"\n✅ Notionにレース統合ページを作成しました（{target_date} {args.race}）", file=sys.stderr)
     return 0
