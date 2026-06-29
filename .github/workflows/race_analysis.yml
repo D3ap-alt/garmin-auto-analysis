@@ -1,0 +1,103 @@
+name: Race FIT Analysis (manual)
+
+# レース日の手元FITをGarminから取得し、統合分析してNotionに1ページ作成する(v15)。
+# FITはリポジトリにコミットせず、実行時にGarminから取得する（公開repoへの生データ流出を防ぐ）。
+on:
+  workflow_dispatch:
+    inputs:
+      multisport_id:
+        description: '965マルチスポーツの Garmin アクティビティID（必須）'
+        required: true
+        default: '23402561905'
+        type: string
+      edge_bike_id:
+        description: 'Edge840 バイクの Garmin アクティビティID（任意・空欄可）'
+        required: false
+        default: '23403125305'
+        type: string
+      date:
+        description: 'レース日 YYYY-MM-DD'
+        required: false
+        default: '2026-06-28'
+        type: string
+      race:
+        description: 'レース名'
+        required: false
+        default: '諏訪子'
+        type: string
+      dry_run:
+        description: 'true なら Notion に投稿せず分析文をログ出力のみ'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: race-analysis
+  cancel-in-progress: false
+
+jobs:
+  race-analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Download race FITs from Garmin
+        env:
+          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          GARMIN_TOKENS_BASE64: ${{ secrets.GARMIN_TOKENS_BASE64 }}
+          MULTISPORT_ID: ${{ inputs.multisport_id }}
+          EDGE_BIKE_ID: ${{ inputs.edge_bike_id }}
+        run: |
+          set -e
+          IDS="$MULTISPORT_ID"
+          if [ -n "$EDGE_BIKE_ID" ]; then IDS="$IDS $EDGE_BIKE_ID"; fi
+          echo "Downloading activity IDs: $IDS"
+          python scripts/fetch_garmin_fit.py race_fits $IDS
+          ls -la race_fits
+
+      - name: Run race analysis
+        env:
+          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          GARMIN_TOKENS_BASE64: ${{ secrets.GARMIN_TOKENS_BASE64 }}
+          MULTISPORT_ID: ${{ inputs.multisport_id }}
+          EDGE_BIKE_ID: ${{ inputs.edge_bike_id }}
+          RACE_DATE: ${{ inputs.date }}
+          RACE_NAME: ${{ inputs.race }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -e
+          EDGE=""
+          if [ -n "$EDGE_BIKE_ID" ]; then EDGE="--edge-bike race_fits/${EDGE_BIKE_ID}.fit"; fi
+          DRY=""
+          if [ "$DRY_RUN" = "true" ]; then DRY="--dry-run"; fi
+          python scripts/analyze_race_fits.py \
+            --multisport "race_fits/${MULTISPORT_ID}.fit" \
+            $EDGE \
+            --date "$RACE_DATE" \
+            --race "$RACE_NAME" \
+            $DRY
