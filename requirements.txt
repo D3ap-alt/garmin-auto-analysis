@@ -1,5 +1,6 @@
-garminconnect>=0.3.3
-curl-cffi
-ua-generator
 anthropic>=0.40.0
+curl-cffi
+fitparse
+garminconnect>=0.3.3
 notion-client>=2.2.0
+ua-generator

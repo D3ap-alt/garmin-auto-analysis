@@ -1,5 +1,24 @@
 """
-Garmin Connect → Claude → Notion 自動分析パイプライン (v13)
+Garmin Connect → Claude → Notion 自動分析パイプライン (v15)
+
+v15変更点 (レースマージ機能 / FIT手動投入):
+  - race_merge.py を新設。レース日（同日にS/B/R揃い・バイク二重記録・
+    マルチスポーツ記録のいずれか）を検出し、部位別に正データを採用して
+    1ページに統合分析する。
+    - スイム/ラン/トランジション/総合 → Forerunner 965 を正
+    - バイクのパワー/NP/IF/VI/ケイデンス/速度/標高 → Edge 840 を正。
+      デバイス確定判定（product ID: 965=4315 / Edge840=4062）を最優先、
+      パワー指標充実度はフォールバック。965側の重複バイクは破棄。
+      バイクのHRのみ965を維持（時系列連続性）。
+    - build_race_digest() で採用/破棄ルール・トランジション実測・Edge専用
+      指標（最大W/IF/TSS/獲得標高）を機械集計として最優先注入。
+  - fit_loader.py を新設。FIT(.fit)を Garmin API JSON 相当の dict に変換。
+    マルチスポーツFITを session 単位で S/T1/B/T2/R に分解。
+  - analyze_race_fits.py を新設。手元のレースFIT（965マルチ + Edge840バイク）
+    を渡すと統合分析→Notion投稿まで行う手動エントリポイント（--dry-run対応）。
+  - レース時の距離不一致（マルチFITのsummary距離がラップ合計より過大になる
+    ケース）は、ラップ合計を主・summaryを参考とし両値併記する方針をプロンプト注入。
+  - process_race_day() を main() に分岐追加。失敗時は従来の個別分析へフォールバック。
 
 v13変更点 (ラップ構造誤認バグの根本対策):
   - summarize_laps() を新設。ラップ配列を機械集計し、距離別の連続ブロック
@@ -39,6 +58,11 @@ from garminconnect import (
 )
 from anthropic import Anthropic
 from notion_client import Client as NotionClient
+
+# scripts/ を実行ディレクトリに依らず import 可能にする
+# （ワークフローは `python scripts/run_analysis.py` で起動するため sys.path[0] はリポジトリルートになる）
+sys.path.insert(0, str(Path(__file__).parent))
+import race_merge
 
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).parent.parent
@@ -404,7 +428,7 @@ def load_sleep_context(target_date: date_cls) -> str:
         return ""
 
 
-def analyze_with_claude(activity_data: dict, season_context: str, history_context: str, target_date: date_cls, sleep_context: str = "") -> str:
+def analyze_with_claude(activity_data: dict, season_context: str, history_context: str, target_date: date_cls, sleep_context: str = "", race_digest: str = "") -> str:
     skill_md, profile_md = load_prompts()
     model = select_model(activity_data.get("summary", {}))
     
@@ -438,12 +462,50 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
         "laps": activity_data.get("laps", {}),
     }
 
+    # v15: レース統合時は部位別の summary/laps をまとめて渡す
+    race_parts = activity_data.get("race_parts")
+    if race_parts:
+        payload["race_parts"] = {
+            k: {
+                "summary": _trim_summary(v.get("summary", {})),
+                "laps": v.get("laps", {}),
+            }
+            for k, v in race_parts.items()
+        }
+
     laps_digest = summarize_laps(
         activity_data.get("laps", {}),
         activity_data.get("summary", {}),
     )
 
+    # レース時は部位ごとのラップ機械集計も併記
+    if race_parts:
+        digests = []
+        label_map = {"swim": "スイム", "bike": "バイク(Edge)", "run": "ラン", "multi": "マルチ一括"}
+        for k, v in race_parts.items():
+            d = summarize_laps(v.get("laps", {}), v.get("summary", {}))
+            digests.append(f"### {label_map.get(k, k)} のラップ機械集計\n{d}")
+        laps_digest = "\n\n".join(digests)
+        laps_digest += (
+            "\n\n> 📏 **距離の取り扱い（レース統合時の方針）**: "
+            "マルチスポーツFITでは各レグの summary 距離が、ラップ化されていない移動や"
+            "トランジション境界を巻き込んで実走より大きく出ることがある。"
+            "**ラップ合計距離を主の基準**とし、summary 距離は参考値として扱うこと。"
+            "両者が食い違う場合（検算 ⚠️ 不一致）は、ラップ合計を採用してペース等を算出し、"
+            "本文では『ラップ合計◯km（GPS実測）／summary◯km』のように両値を併記して、"
+            "どちらか一方を断定的に唯一の距離としては書かないこと。"
+        )
+
     date_anchor = build_date_anchor(target_date)
+
+    # v15: レース日はレース構成サマリ（機械集計）を最優先で注入
+    race_section = ""
+    if race_digest:
+        race_section = f"""{race_digest}
+
+---
+
+"""
 
     # v13: 当日朝の睡眠サマリがあれば注入
     condition_section = ""
@@ -482,7 +544,7 @@ def analyze_with_claude(activity_data: dict, season_context: str, history_contex
 
 ## 本日の分析対象
 
-以下はアクティビティデータです。スキル定義の「出力形式」テンプレートに完全準拠して分析してください。
+{race_section}以下はアクティビティデータです。スキル定義の「出力形式」テンプレートに完全準拠して分析してください。
 **冒頭に「シーズン位置づけ」セクションを必ず追加し、「次の大会まで○日（{{大会名}}）、現在は{{フェーズ}}」を明記してください。**
 **「過去1週間との比較」セクションも追加し、相対評価を行ってください。**
 **最後の「次回トレーニング提案」では、次の大会までの残り日数に合わせた具体的なメニュー（曜日別）を提示してください。各メニューの曜日は上記「日付・曜日対応表」に厳密に従うこと。**
@@ -1066,6 +1128,69 @@ def save_state(state: dict) -> None:
 
 
 # ====================== main ======================
+def process_race_day(
+    client: Garmin,
+    activities: list[dict],
+    notion: NotionClient,
+    schema: dict,
+    season_context: str,
+    history_context: str,
+    target_date: date_cls,
+    sleep_context: str,
+) -> set[int]:
+    """レース日: 同日アクティビティを部位別に採用・統合し、1ページで分析する。
+
+    返り値: 分析済みとしてマークすべき activityId の集合（採用・破棄の両方を含む）。
+    破棄したバイク等も再分析されないよう ID をマークする。
+    """
+    components = race_merge.select_race_components(activities)
+    race_digest = race_merge.build_race_digest(components)
+    print(f"\n🏁 レース日として統合処理:\n{race_digest}")
+
+    # 各部位の詳細（summary + laps）を取得して1つのdetailに束ねる
+    parts: dict[str, dict] = {}
+    consumed_ids: set[int] = set()
+    for key in ("multi", "swim", "bike", "run"):
+        act = components.get(key)
+        if not act:
+            continue
+        aid = act.get("activityId")
+        detail = fetch_activity_detail(client, aid)
+        merged = dict(act)
+        if detail.get("summary"):
+            for k, v in detail["summary"].items():
+                if v is not None and v != "":
+                    merged[k] = v
+        parts[key] = {"summary": merged, "laps": detail.get("laps", {})}
+        consumed_ids.add(aid)
+        time.sleep(1)
+
+    # 破棄したバイク等も「分析済み」にして重複分析を防ぐ
+    for d in components.get("bike_dropped", []):
+        if d.get("activityId"):
+            consumed_ids.add(d["activityId"])
+
+    # 統合 detail: 部位ごとの summary/laps を race_parts として渡す。
+    # 代表 summary はランがあればラン（最終局面・総合評価の軸）、無ければ最初の部位。
+    rep_key = "run" if "run" in parts else next(iter(parts))
+    combined_detail = {
+        "summary": parts[rep_key]["summary"],
+        "laps": parts[rep_key].get("laps", {}),
+        "race_parts": {k: v for k, v in parts.items()},
+    }
+
+    analysis = analyze_with_claude(
+        combined_detail, season_context, history_context, target_date,
+        sleep_context, race_digest=race_digest,
+    )
+    # ページ作成用の代表 summary は「総合」を表現したいので、
+    # multi があればそれ、無ければランの summary を使う（種目=トライアスロン表記用）。
+    page_summary = parts.get("multi", {}).get("summary") or parts[rep_key]["summary"]
+    create_notion_page(notion, schema, page_summary, analysis)
+    print(f"✅ レース統合ページを作成（採用/破棄 {len(consumed_ids)}件をマーク）")
+    return consumed_ids
+
+
 def main() -> int:
     state = load_state()
     analyzed_ids: set[int] = set(state.get("analyzed_activity_ids", []))
@@ -1101,6 +1226,23 @@ def main() -> int:
         print(f"😴 Sleep context: {sleep_context}")
     
     new_count = 0
+
+    # v15: レース日判定。同日にS/B/R揃い or バイク二重記録 or マルチスポーツ記録があれば
+    # 部位別に正データを採用して1ページに統合分析する。
+    unanalyzed = [a for a in activities if a.get("activityId") not in analyzed_ids]
+    if unanalyzed and race_merge.detect_race_day(unanalyzed):
+        try:
+            consumed = process_race_day(
+                client, unanalyzed, notion, schema,
+                season_context, history_context, target_date, sleep_context,
+            )
+            analyzed_ids |= consumed
+            new_count += 1
+        except Exception as e:
+            print(f"❌ レース統合処理エラー: {e}", file=sys.stderr)
+            traceback.print_exc()
+            # 失敗時は従来の個別処理にフォールバックさせる（下のループへ）
+
     for act in activities:
         activity_id = act.get("activityId")
         if activity_id in analyzed_ids:
