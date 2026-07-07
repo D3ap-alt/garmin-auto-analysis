@@ -73,8 +73,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [[ -n $(git status --porcelain state.json sleep_state.json) ]]; then
+            git stash push -- state.json sleep_state.json
+            git pull --rebase
+            git stash pop || {
+              git checkout --theirs state.json sleep_state.json || true
+              git add state.json sleep_state.json
+            }
             git add state.json sleep_state.json
             git commit -m "Update analyzed activity state [skip ci]"
-            git pull --rebase
             git push
           fi
