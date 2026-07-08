@@ -38,6 +38,7 @@ v10変更点 (バグ修正・改善):
 from __future__ import annotations
 
 import base64
+import gzip
 import io
 import json
 import os
@@ -69,6 +70,7 @@ ROOT = Path(__file__).parent.parent
 STATE_PATH = ROOT / "state.json"
 PROMPTS_DIR = ROOT / "prompts"
 TOKEN_DIR = Path.home() / ".garminconnect"
+TOKEN_STORE = ROOT / "garmin_token.b64"  # 更新後トークンをリポジトリに永続化（429回避の要）
 
 GARMIN_EMAIL = os.environ["GARMIN_EMAIL"]
 GARMIN_PASSWORD = os.environ["GARMIN_PASSWORD"]
@@ -92,27 +94,110 @@ EXPECTED_SCHEMA = {
 
 
 # ====================== Garmin認証 ======================
+def _export_tokens_b64() -> str:
+    """TOKEN_DIR 内のトークンファイルを tar+gzip して base64 文字列にする。
+    mtime 等を 0 に固定し、トークン内容が同じなら毎回まったく同じ出力にする
+    （gzip のタイムスタンプ差分による毎時無駄コミットを防ぐ）。"""
+    raw = io.BytesIO()
+    with tarfile.open(fileobj=raw, mode="w") as tar:
+        for p in sorted(TOKEN_DIR.iterdir()):
+            if p.is_file():
+                data = p.read_bytes()
+                ti = tarfile.TarInfo(name=p.name)
+                ti.size = len(data)
+                ti.mtime = 0
+                ti.uid = ti.gid = 0
+                ti.uname = ti.gname = ""
+                tar.addfile(ti, io.BytesIO(data))
+    gz = io.BytesIO()
+    with gzip.GzipFile(fileobj=gz, mode="wb", mtime=0) as g:
+        g.write(raw.getvalue())
+    return base64.b64encode(gz.getvalue()).decode("ascii")
+
+
+def _persist_tokens(client: Garmin) -> None:
+    """ログイン/リフレッシュ後の最新トークンを TOKEN_DIR に dump し、リポジトリの
+    TOKEN_STORE(garmin_token.b64) に書き戻す。次回実行は新鮮なトークンで resume でき、
+    GitHub の IP から新規ログイン（429 でブロックされやすい）を踏まずに済む。"""
+    try:
+        try:
+            client.garth.dump(str(TOKEN_DIR))
+        except Exception:
+            pass
+        TOKEN_STORE.write_text(_export_tokens_b64(), encoding="ascii")
+        print("💾 Persisted refreshed Garmin tokens to repo store")
+    except Exception as e:
+        print(f"⚠️ Token persist failed (continuing): {e}")
+
+
+def _extract_tokens_to_dir() -> bool:
+    """resume 用トークンを TOKEN_DIR へ展開する。
+    優先順位: リポジトリの TOKEN_STORE（最新・毎回書き戻し）> Secret の GARMIN_TOKENS_BASE64。"""
+    src = ""
+    if TOKEN_STORE.exists():
+        try:
+            src = TOKEN_STORE.read_text(encoding="ascii").strip()
+            if src:
+                print("🗂️ Using committed token store (garmin_token.b64)")
+        except Exception as e:
+            print(f"⚠️ token store 読込失敗: {e}")
+            src = ""
+    if not src and GARMIN_TOKENS_BASE64:
+        src = GARMIN_TOKENS_BASE64
+        print("🗂️ Using GARMIN_TOKENS_BASE64 secret")
+    if not src:
+        return False
+    try:
+        tar_bytes = base64.b64decode(src)
+        with tarfile.open(fileobj=io.BytesIO(tar_bytes), mode="r:gz") as tar:
+            tar.extractall(TOKEN_DIR)
+        return True
+    except Exception as e:
+        print(f"⚠️ token 展開失敗: {e}")
+        return False
+
+
+def _is_rate_limit(e: Exception) -> bool:
+    return (
+        isinstance(e, GarminConnectTooManyRequestsError)
+        or "429" in str(e)
+        or "Too Many Requests" in str(e)
+    )
+
+
 def garmin_login() -> Garmin:
     TOKEN_DIR.mkdir(exist_ok=True)
-    
-    if GARMIN_TOKENS_BASE64:
+
+    # 1) 保存済みトークンで resume（TOKEN_STORE を最優先、無ければ Secret）
+    if _extract_tokens_to_dir():
         try:
-            tar_bytes = base64.b64decode(GARMIN_TOKENS_BASE64)
-            with tarfile.open(fileobj=io.BytesIO(tar_bytes), mode="r:gz") as tar:
-                tar.extractall(TOKEN_DIR)
-            
             client = Garmin()
             client.login(str(TOKEN_DIR))
             print("✅ Resumed session from saved tokens")
+            _persist_tokens(client)
             return client
         except Exception as e:
             print(f"⚠️ Token resume failed: {e}")
-    
+
+    # 2) 新規ログイン。GitHub の IP は 429 になりやすいので指数バックオフで数回リトライ
     print("🔐 Attempting fresh login...")
-    client = Garmin(email=GARMIN_EMAIL, password=GARMIN_PASSWORD)
-    client.login(str(TOKEN_DIR))
-    print("✅ Fresh login succeeded")
-    return client
+    last_err: Exception | None = None
+    for attempt in range(1, 4):
+        try:
+            client = Garmin(email=GARMIN_EMAIL, password=GARMIN_PASSWORD)
+            client.login(str(TOKEN_DIR))
+            print("✅ Fresh login succeeded")
+            _persist_tokens(client)
+            return client
+        except Exception as e:
+            last_err = e
+            if _is_rate_limit(e) and attempt < 3:
+                wait = 30 * attempt
+                print(f"⏳ Rate limited (429) on fresh login (attempt {attempt}/3). Waiting {wait}s...")
+                time.sleep(wait)
+                continue
+            raise
+    raise last_err if last_err else RuntimeError("Garmin login failed")
 
 
 # ====================== Garmin データ取得 ======================
