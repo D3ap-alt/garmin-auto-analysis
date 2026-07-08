@@ -38,6 +38,7 @@ v10変更点 (バグ修正・改善):
 from __future__ import annotations
 
 import base64
+import gzip
 import io
 import json
 import os
@@ -94,13 +95,24 @@ EXPECTED_SCHEMA = {
 
 # ====================== Garmin認証 ======================
 def _export_tokens_b64() -> str:
-    """TOKEN_DIR 内のトークンファイルを gzip+tar して base64 文字列にする。"""
-    buf = io.BytesIO()
-    with tarfile.open(fileobj=buf, mode="w:gz") as tar:
+    """TOKEN_DIR 内のトークンファイルを tar+gzip して base64 文字列にする。
+    mtime 等を 0 に固定し、トークン内容が同じなら毎回まったく同じ出力にする
+    （gzip のタイムスタンプ差分による毎時無駄コミットを防ぐ）。"""
+    raw = io.BytesIO()
+    with tarfile.open(fileobj=raw, mode="w") as tar:
         for p in sorted(TOKEN_DIR.iterdir()):
             if p.is_file():
-                tar.add(str(p), arcname=p.name)
-    return base64.b64encode(buf.getvalue()).decode("ascii")
+                data = p.read_bytes()
+                ti = tarfile.TarInfo(name=p.name)
+                ti.size = len(data)
+                ti.mtime = 0
+                ti.uid = ti.gid = 0
+                ti.uname = ti.gname = ""
+                tar.addfile(ti, io.BytesIO(data))
+    gz = io.BytesIO()
+    with gzip.GzipFile(fileobj=gz, mode="wb", mtime=0) as g:
+        g.write(raw.getvalue())
+    return base64.b64encode(gz.getvalue()).decode("ascii")
 
 
 def _persist_tokens(client: Garmin) -> None:
