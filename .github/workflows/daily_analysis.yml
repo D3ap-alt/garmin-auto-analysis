@@ -68,18 +68,19 @@ jobs:
           TARGET_DATE: ${{ inputs.target_date }}
         run: python scripts/run_analysis.py
 
-      - name: Commit state changes
+      - name: Commit state & refreshed tokens
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n $(git status --porcelain state.json sleep_state.json) ]]; then
-            git stash push -- state.json sleep_state.json
-            git pull --rebase
-            git stash pop || {
-              git checkout --theirs state.json sleep_state.json || true
-              git add state.json sleep_state.json
-            }
-            git add state.json sleep_state.json
-            git commit -m "Update analyzed activity state [skip ci]"
+          STAGED=0
+          for f in state.json sleep_state.json garmin_token.b64; do
+            if [ -f "$f" ]; then git add "$f" && STAGED=1; fi
+          done
+          if [ "$STAGED" = "1" ] && ! git diff --cached --quiet; then
+            git commit -m "Update state & refreshed Garmin tokens [skip ci]"
+            git pull --rebase --autostash
             git push
+          else
+            echo "No changes to commit"
           fi
