@@ -1,30 +1,6 @@
 {
-  "last_report_date": "2026-07-16",
+  "last_report_date": "2026-07-17",
   "history": [
-    {
-      "date": "2026-06-12",
-      "total_min": 348,
-      "deep_min": 31,
-      "light_min": 236,
-      "rem_min": 81,
-      "awake_min": 3,
-      "sleep_start": "00:00",
-      "sleep_end": "05:51",
-      "awake_count": 0,
-      "resp_avg": 13.0,
-      "score": 73,
-      "score_quality": "FAIR",
-      "deep_pct_quality": "FAIR",
-      "rem_pct_quality": "EXCELLENT",
-      "rhr": 44,
-      "hrv_avg": 52,
-      "bb_change": 54,
-      "restless": 51,
-      "hrv_weekly_avg": 48,
-      "hrv_status": "BALANCED",
-      "hrv_baseline_low": 44,
-      "hrv_baseline_high": 60
-    },
     {
       "date": "2026-06-13",
       "total_min": 439,
@@ -840,6 +816,30 @@
       "hrv_status": "UNBALANCED",
       "hrv_baseline_low": 46,
       "hrv_baseline_high": 62
+    },
+    {
+      "date": "2026-07-17",
+      "total_min": 403,
+      "deep_min": 117,
+      "light_min": 230,
+      "rem_min": 57,
+      "awake_min": 23,
+      "sleep_start": "23:53",
+      "sleep_end": "07:00",
+      "awake_count": 2,
+      "resp_avg": 15.0,
+      "score": 72,
+      "score_quality": "FAIR",
+      "deep_pct_quality": "EXCELLENT",
+      "rem_pct_quality": "FAIR",
+      "rhr": 46,
+      "hrv_avg": 37,
+      "bb_change": 55,
+      "restless": 77,
+      "hrv_weekly_avg": 44,
+      "hrv_status": "UNBALANCED",
+      "hrv_baseline_low": 45,
+      "hrv_baseline_high": 61
     }
   ]
 }
