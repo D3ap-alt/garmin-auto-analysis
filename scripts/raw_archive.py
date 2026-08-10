@@ -357,6 +357,75 @@ def archive_activity(
     }
 
 
+# ---------------------------------------------------------------- 索引
+
+INDEX_PATH = RAW_ROOT / "index.json"
+INDEX_URL = RAW_BASE_URL + "data/raw/index.json"
+
+
+def rebuild_index() -> Path | None:
+    """data/raw/json/*_meta.json を走査して data/raw/index.json を作り直す。
+
+    GitHub のディレクトリ一覧は API も HTML も外から読めない（403 / robots.txt）ため、
+    「何が保存されているか」を知る唯一の入口がこの索引になる。
+    後日セッションではこの1ファイルを取得すれば、日付・種目から目的のURLを引ける。
+
+    毎回まるごと作り直すので、どの経路（毎時分析／backfill）で足されたファイルも拾える。
+    """
+    if not JSON_DIR.exists():
+        return None
+
+    entries = []
+    for meta_path in sorted(JSON_DIR.glob("*_meta.json")):
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        stem = meta_path.name[: -len("_meta.json")]
+
+        files = {}
+        fit = FIT_DIR / f"{stem}.fit"
+        if fit.exists():
+            files["fit"] = RAW_BASE_URL + str(fit).replace("\\", "/")
+        for kind in ("meta", "laps", "lengths", "series_5s"):
+            p = JSON_DIR / f"{stem}_{kind}.json"
+            if p.exists():
+                files[kind] = RAW_BASE_URL + str(p).replace("\\", "/")
+
+        session = meta.get("session") or {}
+        entries.append({
+            "date": meta.get("date"),
+            "activity_id": meta.get("activity_id"),
+            "sport": meta.get("sport"),
+            "brick_key": meta.get("brick_key"),
+            "stem": stem,
+            "start_time": session.get("start_time"),
+            "distance_m": session.get("total_distance"),
+            "duration_s": session.get("total_timer_time"),
+            "avg_hr": session.get("avg_heart_rate"),
+            "lap_count": meta.get("lap_count"),
+            "length_count": meta.get("length_count"),
+            "record_count": meta.get("record_count"),
+            "urls": files,
+        })
+
+    entries.sort(key=lambda e: (e.get("date") or "", e.get("start_time") or ""))
+    index = {
+        "repo": f"{REPO_OWNER}/{REPO_NAME}",
+        "branch": REPO_BRANCH,
+        "base_url": RAW_BASE_URL,
+        "count": len(entries),
+        "dates": sorted({e["date"] for e in entries if e.get("date")}),
+        "activities": entries,
+    }
+    RAW_ROOT.mkdir(parents=True, exist_ok=True)
+    INDEX_PATH.write_text(
+        json.dumps(index, ensure_ascii=False, indent=1),
+        encoding="utf-8",
+    )
+    return INDEX_PATH
+
+
 # ---------------------------------------------------------------- ブリック
 
 def assign_brick_keys(activities: list[dict]) -> dict[str, str]:

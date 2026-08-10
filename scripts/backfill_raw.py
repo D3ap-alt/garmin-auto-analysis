@@ -35,7 +35,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 # run_analysis は import 時に GARMIN_* / ANTHROPIC_API_KEY / NOTION_* を要求するため、
 # ワークフロー側で同じ secrets を渡すこと（分析自体は実行しない）。
 import run_analysis as RA
-from raw_archive import FIT_DIR, archive_activity
+from raw_archive import FIT_DIR, archive_activity, rebuild_index
 
 SLEEP_SEC = float(os.environ.get("BACKFILL_SLEEP", "3"))
 LIMIT = int(os.environ.get("BACKFILL_LIMIT", "30"))
@@ -200,6 +200,14 @@ def main() -> int:
             print(f"  [{i}/{len(pending)}] ❌ id={aid} {type(e).__name__}: {e}")
             failed.append((aid, str(e)))
         time.sleep(SLEEP_SEC)
+
+    try:
+        p = rebuild_index()
+        if p:
+            idx = __import__("json").loads(p.read_text(encoding="utf-8"))
+            print(f"🗂️ raw index updated: {idx['count']}件 / {len(idx['dates'])}日分")
+    except Exception as e:
+        print(f"[raw] WARN index 更新失敗: {e}")
 
     print(f"\n✅ 完了: 成功 {ok}件 / 失敗 {len(failed)}件 / スキップ {skipped}件")
     if failed:

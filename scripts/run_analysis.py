@@ -64,7 +64,7 @@ from notion_client import Client as NotionClient
 # （ワークフローは `python scripts/run_analysis.py` で起動するため sys.path[0] はリポジトリルートになる）
 sys.path.insert(0, str(Path(__file__).parent))
 import race_merge
-from raw_archive import archive_activity, assign_brick_keys
+from raw_archive import archive_activity, assign_brick_keys, rebuild_index
 
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).parent.parent
@@ -1531,6 +1531,14 @@ def main() -> int:
     state["analyzed_activity_ids"] = sorted(analyzed_ids)[-500:]
     state["last_run"] = datetime.now(JST).isoformat()
     save_state(state)
+
+    # ローデータの索引を作り直す（後日セッションから唯一辿れる入口）。失敗しても止めない。
+    try:
+        p = rebuild_index()
+        if p:
+            print(f"🗂️ raw index updated: {p}")
+    except Exception as e:
+        print(f"[raw] WARN index 更新失敗: {e}")
     
     print(f"\n✅ Done. Analyzed {new_count} new activities.")
     return 0
