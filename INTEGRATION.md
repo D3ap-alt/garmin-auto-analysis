@@ -154,21 +154,26 @@ Notion の `raw_url` プロパティをコピーして貼るだけで、再取�
 
 ---
 
-## 6. 過去分の遡り取り込み
+## 6. 過去分の遡り取り込み / 単発テスト
 
-`state.json` に記録済みのIDに対して一度だけ実行する使い捨てスクリプト：
+`scripts/backfill_raw.py` を使う。分析・Notion書き込みは通らないので、
+**既に分析済みのアクティビティでもNotionページを重複させずに**ローデータだけ後から揃えられる。
 
-```python
-import json, time
-from raw_archive import archive_activity
+GitHub Actions の **Backfill Raw Data** ワークフロー（`workflow_dispatch`）から手動実行する。
 
-ids = json.load(open("state.json"))["analyzed"]   # 実際のキー名に合わせる
-for aid, meta in ids.items():
-    try:
-        archive_activity(client, aid, meta["date"])
-        time.sleep(2)          # Garmin のレート制限対策
-    except Exception as e:
-        print("skip", aid, e)
+| 入力 | 意味 |
+|---|---|
+| `start_date` / `end_date` | 期間指定。空欄なら今日 |
+| `activity_ids` | ID直指定（カンマ区切り）。指定すると日付は無視 |
+| `limit` | 1回の上限件数（既定30 / 0で無制限） |
+| `force` | 保存済みでも再取得 |
+
+ローカルからでも動く：
+
+```bash
+BACKFILL_START=2026-07-01 BACKFILL_END=2026-07-31 python scripts/backfill_raw.py
 ```
 
-Garmin は連続DLに厳しいので `sleep(2)` 以上を必ず入れる。数百件ある場合は日付で区切って数回に分ける。
+Garmin は連続DLに厳しいので1件ごとに既定3秒待つ（`BACKFILL_SLEEP` で変更可）。
+`data/raw/fit/` に既にあるIDは自動でスキップされるので、`limit` で打ち切られても
+同じ条件で再実行すれば続きから進む。数百件ある場合は月単位で区切るのが安全。
