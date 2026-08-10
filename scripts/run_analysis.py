@@ -64,6 +64,7 @@ from notion_client import Client as NotionClient
 # （ワークフローは `python scripts/run_analysis.py` で起動するため sys.path[0] はリポジトリルートになる）
 sys.path.insert(0, str(Path(__file__).parent))
 import race_merge
+from raw_archive import archive_activity, assign_brick_keys
 
 JST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).parent.parent
@@ -235,8 +236,62 @@ def fetch_activity_detail(client: Garmin, activity_id: int) -> dict[str, Any]:
         detail["laps"] = client.get_activity_splits(activity_id)
     except Exception as e:
         print(f"  ❌ laps取得失敗: {e}")
-    
+
     return detail
+
+
+# ====================== ローデータ保存（raw_archive ラッパ） ======================
+def _act_date(act: dict[str, Any]) -> str:
+    """アクティビティから 'YYYY-MM-DD' を取り出す（取れなければ空文字）。"""
+    s = act.get("startTimeLocal") or act.get("startTimeGMT") or ""
+    s = str(s)
+    return s.split("T")[0].split(" ")[0][:10] if s else ""
+
+
+def build_brick_keys(targets: list[dict[str, Any]]) -> dict[str, str]:
+    """同日・60分以内の連続セッションに brick キーを振る。
+    startTimeLocal が壊れているアクティビティは黙って除外する（分析は止めない）。"""
+    rows: list[dict[str, Any]] = []
+    for a in targets:
+        aid = a.get("activityId")
+        raw = a.get("startTimeLocal")
+        if aid is None or not raw:
+            continue
+        try:
+            st = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        rows.append({"activity_id": aid, "date": _act_date(a), "start_time": st})
+    if not rows:
+        return {}
+    try:
+        keys = assign_brick_keys(rows)
+        if keys:
+            print(f"🔗 ブリック検出: {keys}")
+        return keys
+    except Exception as e:
+        print(f"[raw] WARN brick key 付与失敗: {e}")
+        return {}
+
+
+def archive_raw(
+    client: Garmin,
+    activity_id: Any,
+    date_str: str,
+    brick_key: str | None = None,
+) -> dict | None:
+    """FIT原本＋抽出JSONを data/raw/ に保存する。
+    ここでの失敗は分析本体を絶対に止めない（必ず None を返して続行）。"""
+    if not activity_id or not date_str:
+        return None
+    try:
+        archive = archive_activity(client, activity_id, date_str, brick_key=brick_key)
+        print(f"[raw] saved {archive['stem']} sport={archive['sport']} "
+              f"laps={len(archive.get('files', {}))}files")
+        return archive
+    except Exception as e:
+        print(f"[raw] WARN {activity_id}: {e}")
+        return None
 
 
 # ====================== 日付・曜日ユーティリティ ======================
@@ -864,8 +919,18 @@ def _get_nested(d: dict, *keys) -> Any:
     return None
 
 
-def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
-    """Notionスキーマに基づいてプロパティ辞書を構築。キー名揺れに対応。"""
+def build_properties(
+    summary: dict,
+    schema: dict[str, str],
+    archive: dict | None = None,
+    activity_id: Any = None,
+) -> dict[str, Any]:
+    """Notionスキーマに基づいてプロパティ辞書を構築。キー名揺れに対応。
+
+    archive / activity_id を渡すと、ローデータ参照キー
+    （activity_id / raw_url / sport）も *スキーマに存在する場合のみ* 付与する。
+    Notion 側に該当プロパティが無い環境でもページ作成が落ちないよう、
+    既存の schema チェック機構を必ず通す。"""
     # デバッグ：summaryのキー一覧を表示
     print(f"  🔑 summary keys ({len(summary)}): {sorted(summary.keys())}")
     
@@ -923,7 +988,24 @@ def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
         "平均HR": ("number", round(avg_hr) if avg_hr else None),
         "TE": ("number", round(te, 1) if te else None),
     }
-    
+
+    # --- ローデータ参照キー（後日セッションで再取得なしに分析を再開するため） ---
+    # 曖昧一致（_find_property_name の部分一致フォールバック）で
+    # "url"/"id" 等の既存プロパティに誤爆しないよう、ここは完全一致のみ許可する。
+    def _exact_in_schema(name: str) -> bool:
+        return any(n == name for n in schema)
+
+    aid = activity_id if activity_id is not None else _get_nested(summary, "activityId")
+    if aid is not None and _exact_in_schema("activity_id"):
+        desired["activity_id"] = ("rich_text", str(aid))
+    if archive:
+        urls = archive.get("urls", {})
+        primary = urls.get("lengths") or urls.get("series_5s") or urls.get("laps")
+        if primary and _exact_in_schema("raw_url"):
+            desired["raw_url"] = ("url", primary)
+        if archive.get("sport") and _exact_in_schema("sport"):
+            desired["sport"] = ("select", archive["sport"])
+
     properties: dict[str, Any] = {}
     for logical_name, (expected_type, value) in desired.items():
         if value is None or value == "":
@@ -950,6 +1032,8 @@ def build_properties(summary: dict, schema: dict[str, str]) -> dict[str, Any]:
                 properties[actual_name] = {"number": value}
             elif expected_type == "rich_text":
                 properties[actual_name] = {"rich_text": [{"text": {"content": str(value)[:2000]}}]}
+            elif expected_type == "url":
+                properties[actual_name] = {"url": str(value)}
             print(f"     ✅ Will set {actual_name!r} = {value!r}")
         except Exception as e:
             print(f"     ❌ Failed to build {actual_name!r}: {e}")
@@ -1159,11 +1243,48 @@ def _build_table_block(table_lines: list[str]) -> dict | None:
 
 
 # ====================== Notion ページ作成 ======================
-def create_notion_page(notion: NotionClient, schema: dict[str, str], summary: dict, analysis_md: str) -> None:
-    properties = build_properties(summary, schema)
-    
+def _raw_data_toggle(archive: dict) -> dict | None:
+    """本文末尾に付ける「📦 ローデータ」トグル（全URLの一覧）。"""
+    urls = archive.get("urls") or {}
+    if not urls:
+        return None
+    return {
+        "object": "block", "type": "toggle",
+        "toggle": {
+            "rich_text": [{"type": "text", "text": {"content": "📦 ローデータ"}}],
+            "children": [
+                {"object": "block", "type": "bulleted_list_item",
+                 "bulleted_list_item": {"rich_text": [
+                     {"type": "text",
+                      "text": {"content": f"{k}: {u}"[:2000], "link": {"url": u}}}
+                 ]}}
+                for k, u in urls.items()
+            ],
+        },
+    }
+
+
+def create_notion_page(
+    notion: NotionClient,
+    schema: dict[str, str],
+    summary: dict,
+    analysis_md: str,
+    archive: dict | None = None,
+    activity_id: Any = None,
+) -> None:
+    properties = build_properties(summary, schema, archive=archive, activity_id=activity_id)
+
     children = md_to_notion_blocks(analysis_md)
-    
+
+    # ローデータのURL一覧を本文末尾に添付（失敗しても投稿は続行）
+    if archive:
+        try:
+            toggle = _raw_data_toggle(archive)
+            if toggle:
+                children.append(toggle)
+        except Exception as e:
+            print(f"  ⚠️ raw toggle 構築失敗（続行）: {e}")
+
     print(f"  📤 Creating page with {len(properties)} properties, {len(children)} blocks")
     
     first_batch = children[:100]
@@ -1222,6 +1343,7 @@ def process_race_day(
     history_context: str,
     target_date: date_cls,
     sleep_context: str,
+    brick_keys: dict[str, str] | None = None,
 ) -> set[int]:
     """レース日: 同日アクティビティを部位別に採用・統合し、1ページで分析する。
 
@@ -1233,8 +1355,10 @@ def process_race_day(
     print(f"\n🏁 レース日として統合処理:\n{race_digest}")
 
     # 各部位の詳細（summary + laps）を取得して1つのdetailに束ねる
+    brick_keys = brick_keys or {}
     parts: dict[str, dict] = {}
     consumed_ids: set[int] = set()
+    archives: dict[str, dict] = {}
     for key in ("multi", "swim", "bike", "run"):
         act = components.get(key)
         if not act:
@@ -1247,13 +1371,27 @@ def process_race_day(
                 if v is not None and v != "":
                     merged[k] = v
         parts[key] = {"summary": merged, "laps": detail.get("laps", {})}
+
+        # レース日こそ原本を残したい。失敗しても統合分析は止めない。
+        arc = archive_raw(
+            client, aid, _act_date(merged),
+            brick_key=brick_keys.get(str(aid)),
+        )
+        if arc:
+            archives[key] = arc
+
         consumed_ids.add(aid)
         time.sleep(1)
 
-    # 破棄したバイク等も「分析済み」にして重複分析を防ぐ
+    # 破棄したバイク等も「分析済み」にして重複分析を防ぐ。
+    # ただし破棄バイク（Edge/965の重複）は原本だけは保存しておく。
     for d in components.get("bike_dropped", []):
         if d.get("activityId"):
             consumed_ids.add(d["activityId"])
+            archive_raw(
+                client, d["activityId"], _act_date(d),
+                brick_key=brick_keys.get(str(d["activityId"])),
+            )
 
     # 統合 detail: 部位ごとの summary/laps を race_parts として渡す。
     # 代表 summary はランがあればラン（最終局面・総合評価の軸）、無ければ最初の部位。
@@ -1271,7 +1409,26 @@ def process_race_day(
     # ページ作成用の代表 summary は「総合」を表現したいので、
     # multi があればそれ、無ければランの summary を使う（種目=トライアスロン表記用）。
     page_summary = parts.get("multi", {}).get("summary") or parts[rep_key]["summary"]
-    create_notion_page(notion, schema, page_summary, analysis)
+
+    # ローデータは部位分をひとつにまとめて添付（urls キーに部位名を前置）
+    race_archive: dict | None = None
+    if archives:
+        merged_urls: dict[str, str] = {}
+        for part_key, arc in archives.items():
+            for k, u in (arc.get("urls") or {}).items():
+                merged_urls[f"{part_key}_{k}"] = u
+        primary_key = next(iter(archives))
+        race_archive = {
+            "urls": merged_urls,
+            "sport": "race",
+            "stem": archives[primary_key].get("stem"),
+        }
+
+    create_notion_page(
+        notion, schema, page_summary, analysis,
+        archive=race_archive,
+        activity_id=page_summary.get("activityId"),
+    )
     print(f"✅ レース統合ページを作成（採用/破棄 {len(consumed_ids)}件をマーク）")
     return consumed_ids
 
@@ -1315,11 +1472,16 @@ def main() -> int:
     # v15: レース日判定。同日にS/B/R揃い or バイク二重記録 or マルチスポーツ記録があれば
     # 部位別に正データを採用して1ページに統合分析する。
     unanalyzed = [a for a in activities if a.get("activityId") not in analyzed_ids]
+
+    # 同日ブリック（例: バイク→ラン）に共通キーを振り、ローデータのファイル名で紐付ける
+    brick_keys = build_brick_keys(unanalyzed)
+
     if unanalyzed and race_merge.detect_race_day(unanalyzed):
         try:
             consumed = process_race_day(
                 client, unanalyzed, notion, schema,
                 season_context, history_context, target_date, sleep_context,
+                brick_keys=brick_keys,
             )
             analyzed_ids |= consumed
             new_count += 1
@@ -1345,10 +1507,19 @@ def main() -> int:
                     if v is not None and v != "":
                         merged_summary[k] = v
             detail["summary"] = merged_summary
-            
+
+            # --- ローデータ保存（Claude に投げる前 / 失敗しても分析は止めない） ---
+            archive = archive_raw(
+                client, activity_id, _act_date(merged_summary),
+                brick_key=brick_keys.get(str(activity_id)),
+            )
+
             analysis = analyze_with_claude(detail, season_context, history_context, target_date, sleep_context)
-            create_notion_page(notion, schema, detail["summary"], analysis)
-            
+            create_notion_page(
+                notion, schema, detail["summary"], analysis,
+                archive=archive, activity_id=activity_id,
+            )
+
             analyzed_ids.add(activity_id)
             new_count += 1
             time.sleep(2)

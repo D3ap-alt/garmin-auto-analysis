@@ -1,5 +1,6 @@
 anthropic>=0.40.0
 curl-cffi
+fitdecode>=0.10.0
 fitparse
 garminconnect>=0.3.3
 notion-client>=2.2.0

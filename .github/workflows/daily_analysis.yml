@@ -68,7 +68,7 @@ jobs:
           TARGET_DATE: ${{ inputs.target_date }}
         run: python scripts/run_analysis.py
 
-      - name: Commit state & refreshed tokens
+      - name: Commit raw data, state & refreshed tokens
         if: always()
         run: |
           git config user.name "github-actions[bot]"
@@ -77,8 +77,11 @@ jobs:
           for f in state.json sleep_state.json garmin_token.b64; do
             if [ -f "$f" ]; then git add "$f" && STAGED=1; fi
           done
+          # ローデータ（FIT原本 + 抽出JSON）
+          if [ -d data/raw ]; then git add -A data/raw && STAGED=1; fi
           if [ "$STAGED" = "1" ] && ! git diff --cached --quiet; then
-            git commit -m "Update state & refreshed Garmin tokens [skip ci]"
+            git commit -m "raw+state: $(date -u +%Y-%m-%dT%H:%M) [skip ci]"
+            # 毎時cron + 他ワークフローとの並行実行によるpushリジェクト回避
             git pull --rebase --autostash
             git push
           else
