@@ -25,6 +25,7 @@ from __future__ import annotations
 import os
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 
 # scripts/ を import 可能にする（リポジトリルートから実行される前提）
@@ -46,6 +47,67 @@ def already_archived(activity_id) -> bool:
     return any(FIT_DIR.glob(f"*_{activity_id}.fit"))
 
 
+# 日付がぶら下がりうるネストキー。get_activities_by_date はトップレベルに持つが、
+# get_activity（詳細API）は summaryDTO の中に入れて返す。
+_DATE_NESTS = ("summaryDTO", "activitySummary", "summary", "metadataDTO", "activity")
+
+
+def extract_date(act: dict, _depth: int = 0) -> str:
+    """アクティビティ dict から 'YYYY-MM-DD' を掘り出す。ネストと epoch にも対応。"""
+    if not isinstance(act, dict):
+        return ""
+
+    d = RA._act_date(act)
+    if d:
+        return d
+
+    # startTimeGMT がミリ秒 epoch で来るケース
+    for key in ("beginTimestamp", "startTimeInMillis", "beginTimestampLocal"):
+        v = act.get(key)
+        if isinstance(v, (int, float)) and v > 0:
+            ts = v / 1000 if v > 1e11 else v
+            try:
+                return datetime.fromtimestamp(ts, RA.JST).date().isoformat()
+            except Exception:
+                pass
+
+    if _depth >= 2:
+        return ""
+    for key in _DATE_NESTS:
+        sub = act.get(key)
+        if isinstance(sub, dict):
+            d = extract_date(sub, _depth + 1)
+            if d:
+                return d
+    return ""
+
+
+def normalize(act: dict, fallback_id=None) -> dict:
+    """後段（build_brick_keys / archive）が読める形に整える。
+    startTimeLocal をトップレベルへ引き上げ、activityId を確定させる。"""
+    out = dict(act)
+    if fallback_id is not None:
+        out.setdefault("activityId", fallback_id)
+    if not out.get("activityId"):
+        for key in _DATE_NESTS:
+            sub = act.get(key)
+            if isinstance(sub, dict) and sub.get("activityId"):
+                out["activityId"] = sub["activityId"]
+                break
+
+    date_str = extract_date(act)
+    if date_str and not RA._act_date(out):
+        # build_brick_keys は startTimeLocal を datetime として読むので時刻も探して補う
+        t = ""
+        for src in (act, *(act.get(k) for k in _DATE_NESTS if isinstance(act.get(k), dict))):
+            if isinstance(src, dict):
+                t = src.get("startTimeLocal") or src.get("startTimeGMT") or ""
+                if t:
+                    break
+        out["startTimeLocal"] = str(t) if t else f"{date_str} 00:00:00"
+    return out
+
+
 def collect_targets(client) -> list[dict]:
     """処理対象のアクティビティ（activityId / startTimeLocal を含む dict）を集める。"""
     ids_raw = os.environ.get("BACKFILL_IDS", "").strip()
@@ -56,9 +118,11 @@ def collect_targets(client) -> list[dict]:
             if not aid:
                 continue
             try:
-                # 日付を知るために summary だけ引く
-                act = client.get_activity(aid)
-                act.setdefault("activityId", aid)
+                # 日付を知るために summary だけ引く（詳細APIは summaryDTO にネストして返す）
+                act = normalize(client.get_activity(aid), fallback_id=aid)
+                if not extract_date(act):
+                    print(f"⚠️ id={aid} 日付を特定できません。応答のキー: "
+                          f"{sorted(k for k in act)[:20]}")
                 targets.append(act)
             except Exception as e:
                 print(f"⚠️ id={aid} の summary 取得失敗、スキップ: {e}")
@@ -76,7 +140,7 @@ def collect_targets(client) -> list[dict]:
 
     activities = client.get_activities_by_date(start, end)
     print(f"📊 Garmin から {len(activities)}件")
-    return activities
+    return [normalize(a) for a in activities]
 
 
 def main() -> int:
@@ -119,7 +183,7 @@ def main() -> int:
     failed: list[tuple] = []
     for i, act in enumerate(pending, 1):
         aid = act["activityId"]
-        date_str = RA._act_date(act)
+        date_str = extract_date(act)
         if not date_str:
             print(f"  [{i}/{len(pending)}] id={aid} 日付不明のためスキップ")
             failed.append((aid, "日付不明"))
