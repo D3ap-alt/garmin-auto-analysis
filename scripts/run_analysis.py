@@ -316,12 +316,12 @@ def build_date_anchor(today: date_cls, days_ahead: int = 16) -> str:
 
 # ====================== シーズン分析機能 (v9) ======================
 RACE_SCHEDULE = [
+    # 2026-08-10: いわき(8/22) は不参加のため削除。復活させないこと。
     {"name": "渡良瀬", "date": "2026-05-24", "distance": "OD", "goal": "2:20", "tier": "B"},
     {"name": "海の森", "date": "2026-06-14", "distance": "OD", "goal": "2:18", "tier": "A"},
     {"name": "諏訪子", "date": "2026-06-28", "distance": "ミドル", "goal": "4:30", "tier": "B"},
     {"name": "潮来", "date": "2026-07-12", "distance": "OD", "goal": "2:17", "tier": "A"},
     {"name": "大井川", "date": "2026-07-19", "distance": "OD", "goal": "2:17", "tier": "A"},
-    {"name": "いわき", "date": "2026-08-22", "distance": "OD", "goal": "2:17", "tier": "A"},
     {"name": "富士", "date": "2026-09-06", "distance": "OD", "goal": "2:17", "tier": "A"},
     {"name": "村上", "date": "2026-09-27", "distance": "OD", "goal": "2:15", "tier": "A+"},
 ]
