@@ -1,0 +1,23 @@
+{
+ "activity_id": "23759697420",
+ "date": "2026-07-28",
+ "sport": "ows",
+ "brick_key": "brick01",
+ "session": {
+  "start_time": "2026-07-28T07:57:13+00:00",
+  "sport": "swimming",
+  "sub_sport": "open_water",
+  "total_elapsed_time": 1247.143,
+  "total_timer_time": 1093.197,
+  "total_distance": 1003.91,
+  "total_calories": 229,
+  "avg_heart_rate": 158,
+  "max_heart_rate": 175,
+  "avg_cadence": 25,
+  "avg_temperature": 30,
+  "max_temperature": 30
+ },
+ "lap_count": 3,
+ "length_count": 0,
+ "record_count": 1100
+}

@@ -1,0 +1,2529 @@
+[
+ {
+  "t": 0,
+  "timestamp": "2026-07-26T06:28:20+00:00",
+  "power": 38.6,
+  "heart_rate": 0.0,
+  "cadence": 18.0
+ },
+ {
+  "t": 5,
+  "timestamp": "2026-07-26T06:28:25+00:00",
+  "power": 192.8,
+  "heart_rate": 0.0,
+  "cadence": 78.6
+ },
+ {
+  "t": 10,
+  "timestamp": "2026-07-26T06:28:30+00:00",
+  "power": 254.4,
+  "heart_rate": 102.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 15,
+  "timestamp": "2026-07-26T06:28:35+00:00",
+  "power": 272.2,
+  "heart_rate": 103.4,
+  "cadence": 86.0
+ },
+ {
+  "t": 20,
+  "timestamp": "2026-07-26T06:28:40+00:00",
+  "power": 275.0,
+  "heart_rate": 103.2,
+  "cadence": 86.4
+ },
+ {
+  "t": 25,
+  "timestamp": "2026-07-26T06:28:45+00:00",
+  "power": 266.4,
+  "heart_rate": 105.2,
+  "cadence": 85.8
+ },
+ {
+  "t": 30,
+  "timestamp": "2026-07-26T06:28:50+00:00",
+  "power": 243.2,
+  "heart_rate": 108.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 35,
+  "timestamp": "2026-07-26T06:28:55+00:00",
+  "power": 240.6,
+  "heart_rate": 113.8,
+  "cadence": 84.2
+ },
+ {
+  "t": 40,
+  "timestamp": "2026-07-26T06:29:00+00:00",
+  "power": 267.4,
+  "heart_rate": 121.0,
+  "cadence": 84.6
+ },
+ {
+  "t": 45,
+  "timestamp": "2026-07-26T06:29:05+00:00",
+  "power": 276.6,
+  "heart_rate": 127.0,
+  "cadence": 84.0
+ },
+ {
+  "t": 50,
+  "timestamp": "2026-07-26T06:29:10+00:00",
+  "power": 273.2,
+  "heart_rate": 129.0,
+  "cadence": 85.8
+ },
+ {
+  "t": 55,
+  "timestamp": "2026-07-26T06:29:15+00:00",
+  "power": 283.2,
+  "heart_rate": 129.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 60,
+  "timestamp": "2026-07-26T06:29:20+00:00",
+  "power": 253.2,
+  "heart_rate": 131.8,
+  "cadence": 86.4
+ },
+ {
+  "t": 65,
+  "timestamp": "2026-07-26T06:29:25+00:00",
+  "power": 241.6,
+  "heart_rate": 133.6,
+  "cadence": 86.8
+ },
+ {
+  "t": 70,
+  "timestamp": "2026-07-26T06:29:30+00:00",
+  "power": 311.0,
+  "heart_rate": 136.4,
+  "cadence": 87.0
+ },
+ {
+  "t": 75,
+  "timestamp": "2026-07-26T06:29:35+00:00",
+  "power": 296.0,
+  "heart_rate": 138.8,
+  "cadence": 86.6
+ },
+ {
+  "t": 80,
+  "timestamp": "2026-07-26T06:29:40+00:00",
+  "power": 296.0,
+  "heart_rate": 140.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 85,
+  "timestamp": "2026-07-26T06:29:45+00:00",
+  "power": 295.6,
+  "heart_rate": 141.4,
+  "cadence": 87.0
+ },
+ {
+  "t": 90,
+  "timestamp": "2026-07-26T06:29:50+00:00",
+  "power": 292.4,
+  "heart_rate": 143.2,
+  "cadence": 87.4
+ },
+ {
+  "t": 95,
+  "timestamp": "2026-07-26T06:29:55+00:00",
+  "power": 287.2,
+  "heart_rate": 145.2,
+  "cadence": 87.2
+ },
+ {
+  "t": 100,
+  "timestamp": "2026-07-26T06:30:00+00:00",
+  "power": 289.0,
+  "heart_rate": 146.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 105,
+  "timestamp": "2026-07-26T06:30:05+00:00",
+  "power": 289.8,
+  "heart_rate": 147.2,
+  "cadence": 86.2
+ },
+ {
+  "t": 110,
+  "timestamp": "2026-07-26T06:30:10+00:00",
+  "power": 287.2,
+  "heart_rate": 148.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 115,
+  "timestamp": "2026-07-26T06:30:15+00:00",
+  "power": 289.0,
+  "heart_rate": 149.2,
+  "cadence": 85.4
+ },
+ {
+  "t": 120,
+  "timestamp": "2026-07-26T06:30:20+00:00",
+  "power": 284.2,
+  "heart_rate": 151.2,
+  "cadence": 85.4
+ },
+ {
+  "t": 125,
+  "timestamp": "2026-07-26T06:30:25+00:00",
+  "power": 284.2,
+  "heart_rate": 153.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 130,
+  "timestamp": "2026-07-26T06:30:30+00:00",
+  "power": 255.8,
+  "heart_rate": 154.6,
+  "cadence": 85.6
+ },
+ {
+  "t": 135,
+  "timestamp": "2026-07-26T06:30:35+00:00",
+  "power": 276.4,
+  "heart_rate": 155.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 140,
+  "timestamp": "2026-07-26T06:30:40+00:00",
+  "power": 295.0,
+  "heart_rate": 155.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 145,
+  "timestamp": "2026-07-26T06:30:45+00:00",
+  "power": 289.4,
+  "heart_rate": 154.4,
+  "cadence": 87.6
+ },
+ {
+  "t": 150,
+  "timestamp": "2026-07-26T06:30:50+00:00",
+  "power": 288.0,
+  "heart_rate": 154.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 155,
+  "timestamp": "2026-07-26T06:30:55+00:00",
+  "power": 297.0,
+  "heart_rate": 153.8,
+  "cadence": 87.6
+ },
+ {
+  "t": 160,
+  "timestamp": "2026-07-26T06:31:00+00:00",
+  "power": 295.6,
+  "heart_rate": 153.6,
+  "cadence": 87.8
+ },
+ {
+  "t": 165,
+  "timestamp": "2026-07-26T06:31:05+00:00",
+  "power": 304.6,
+  "heart_rate": 154.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 170,
+  "timestamp": "2026-07-26T06:31:10+00:00",
+  "power": 310.8,
+  "heart_rate": 154.2,
+  "cadence": 87.8
+ },
+ {
+  "t": 175,
+  "timestamp": "2026-07-26T06:31:15+00:00",
+  "power": 0.0,
+  "heart_rate": 153.6,
+  "cadence": 0.0
+ },
+ {
+  "t": 180,
+  "timestamp": "2026-07-26T06:31:20+00:00",
+  "power": 0.0,
+  "heart_rate": 151.4,
+  "cadence": 41.4
+ },
+ {
+  "t": 185,
+  "timestamp": "2026-07-26T06:31:25+00:00",
+  "power": 66.2,
+  "heart_rate": 150.0,
+  "cadence": 84.8
+ },
+ {
+  "t": 190,
+  "timestamp": "2026-07-26T06:31:30+00:00",
+  "power": 275.6,
+  "heart_rate": 148.6,
+  "cadence": 84.4
+ },
+ {
+  "t": 195,
+  "timestamp": "2026-07-26T06:31:35+00:00",
+  "power": 287.6,
+  "heart_rate": 148.0,
+  "cadence": 84.4
+ },
+ {
+  "t": 200,
+  "timestamp": "2026-07-26T06:31:40+00:00",
+  "power": 281.0,
+  "heart_rate": 148.4,
+  "cadence": 85.0
+ },
+ {
+  "t": 205,
+  "timestamp": "2026-07-26T06:31:45+00:00",
+  "power": 281.0,
+  "heart_rate": 148.6,
+  "cadence": 85.0
+ },
+ {
+  "t": 210,
+  "timestamp": "2026-07-26T06:31:50+00:00",
+  "power": 284.2,
+  "heart_rate": 149.2,
+  "cadence": 84.2
+ },
+ {
+  "t": 215,
+  "timestamp": "2026-07-26T06:31:55+00:00",
+  "power": 281.8,
+  "heart_rate": 150.2,
+  "cadence": 83.8
+ },
+ {
+  "t": 220,
+  "timestamp": "2026-07-26T06:32:00+00:00",
+  "power": 278.2,
+  "heart_rate": 150.4,
+  "cadence": 84.4
+ },
+ {
+  "t": 225,
+  "timestamp": "2026-07-26T06:32:05+00:00",
+  "power": 271.4,
+  "heart_rate": 150.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 230,
+  "timestamp": "2026-07-26T06:32:10+00:00",
+  "power": 243.8,
+  "heart_rate": 149.2,
+  "cadence": 85.0
+ },
+ {
+  "t": 235,
+  "timestamp": "2026-07-26T06:32:15+00:00",
+  "power": 240.0,
+  "heart_rate": 147.4,
+  "cadence": 85.0
+ },
+ {
+  "t": 240,
+  "timestamp": "2026-07-26T06:32:20+00:00",
+  "power": 247.4,
+  "heart_rate": 146.2,
+  "cadence": 84.0
+ },
+ {
+  "t": 245,
+  "timestamp": "2026-07-26T06:32:25+00:00",
+  "power": 259.0,
+  "heart_rate": 147.8,
+  "cadence": 84.0
+ },
+ {
+  "t": 250,
+  "timestamp": "2026-07-26T06:32:30+00:00",
+  "power": 259.2,
+  "heart_rate": 147.4,
+  "cadence": 84.0
+ },
+ {
+  "t": 255,
+  "timestamp": "2026-07-26T06:32:35+00:00",
+  "power": 254.4,
+  "heart_rate": 147.0,
+  "cadence": 84.2
+ },
+ {
+  "t": 260,
+  "timestamp": "2026-07-26T06:32:40+00:00",
+  "power": 258.6,
+  "heart_rate": 148.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 265,
+  "timestamp": "2026-07-26T06:32:45+00:00",
+  "power": 282.6,
+  "heart_rate": 149.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 270,
+  "timestamp": "2026-07-26T06:32:50+00:00",
+  "power": 282.4,
+  "heart_rate": 150.2,
+  "cadence": 86.4
+ },
+ {
+  "t": 275,
+  "timestamp": "2026-07-26T06:32:55+00:00",
+  "power": 285.0,
+  "heart_rate": 151.4,
+  "cadence": 87.0
+ },
+ {
+  "t": 280,
+  "timestamp": "2026-07-26T06:33:00+00:00",
+  "power": 287.0,
+  "heart_rate": 152.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 285,
+  "timestamp": "2026-07-26T06:33:05+00:00",
+  "power": 267.0,
+  "heart_rate": 152.0,
+  "cadence": 85.2
+ },
+ {
+  "t": 290,
+  "timestamp": "2026-07-26T06:33:10+00:00",
+  "power": 264.2,
+  "heart_rate": 152.0,
+  "cadence": 85.8
+ },
+ {
+  "t": 295,
+  "timestamp": "2026-07-26T06:33:15+00:00",
+  "power": 281.4,
+  "heart_rate": 152.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 300,
+  "timestamp": "2026-07-26T06:33:20+00:00",
+  "power": 273.8,
+  "heart_rate": 152.0,
+  "cadence": 86.2
+ },
+ {
+  "t": 305,
+  "timestamp": "2026-07-26T06:33:25+00:00",
+  "power": 287.6,
+  "heart_rate": 151.8,
+  "cadence": 87.0
+ },
+ {
+  "t": 310,
+  "timestamp": "2026-07-26T06:33:30+00:00",
+  "power": 293.0,
+  "heart_rate": 151.0,
+  "cadence": 86.2
+ },
+ {
+  "t": 315,
+  "timestamp": "2026-07-26T06:33:35+00:00",
+  "power": 289.0,
+  "heart_rate": 150.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 320,
+  "timestamp": "2026-07-26T06:33:40+00:00",
+  "power": 291.2,
+  "heart_rate": 150.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 325,
+  "timestamp": "2026-07-26T06:33:45+00:00",
+  "power": 307.6,
+  "heart_rate": 151.2,
+  "cadence": 86.0
+ },
+ {
+  "t": 330,
+  "timestamp": "2026-07-26T06:33:50+00:00",
+  "power": 291.8,
+  "heart_rate": 152.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 335,
+  "timestamp": "2026-07-26T06:33:55+00:00",
+  "power": 271.4,
+  "heart_rate": 153.8,
+  "cadence": 86.0
+ },
+ {
+  "t": 340,
+  "timestamp": "2026-07-26T06:34:00+00:00",
+  "power": 275.2,
+  "heart_rate": 154.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 345,
+  "timestamp": "2026-07-26T06:34:05+00:00",
+  "power": 262.4,
+  "heart_rate": 154.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 350,
+  "timestamp": "2026-07-26T06:34:10+00:00",
+  "power": 268.0,
+  "heart_rate": 154.2,
+  "cadence": 85.6
+ },
+ {
+  "t": 355,
+  "timestamp": "2026-07-26T06:34:15+00:00",
+  "power": 267.8,
+  "heart_rate": 155.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 360,
+  "timestamp": "2026-07-26T06:34:20+00:00",
+  "power": 286.0,
+  "heart_rate": 155.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 365,
+  "timestamp": "2026-07-26T06:34:25+00:00",
+  "power": 293.0,
+  "heart_rate": 155.6,
+  "cadence": 87.8
+ },
+ {
+  "t": 370,
+  "timestamp": "2026-07-26T06:34:30+00:00",
+  "power": 338.4,
+  "heart_rate": 157.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 375,
+  "timestamp": "2026-07-26T06:34:35+00:00",
+  "power": 302.6,
+  "heart_rate": 158.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 380,
+  "timestamp": "2026-07-26T06:34:40+00:00",
+  "power": 295.6,
+  "heart_rate": 159.2,
+  "cadence": 87.8
+ },
+ {
+  "t": 385,
+  "timestamp": "2026-07-26T06:34:45+00:00",
+  "power": 287.2,
+  "heart_rate": 160.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 390,
+  "timestamp": "2026-07-26T06:34:50+00:00",
+  "power": 289.0,
+  "heart_rate": 160.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 395,
+  "timestamp": "2026-07-26T06:34:55+00:00",
+  "power": 290.6,
+  "heart_rate": 161.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 400,
+  "timestamp": "2026-07-26T06:35:00+00:00",
+  "power": 288.4,
+  "heart_rate": 161.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 405,
+  "timestamp": "2026-07-26T06:35:05+00:00",
+  "power": 293.6,
+  "heart_rate": 160.4,
+  "cadence": 87.6
+ },
+ {
+  "t": 410,
+  "timestamp": "2026-07-26T06:35:10+00:00",
+  "power": 290.4,
+  "heart_rate": 160.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 415,
+  "timestamp": "2026-07-26T06:35:15+00:00",
+  "power": 283.2,
+  "heart_rate": 160.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 420,
+  "timestamp": "2026-07-26T06:35:20+00:00",
+  "power": 279.2,
+  "heart_rate": 161.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 425,
+  "timestamp": "2026-07-26T06:35:25+00:00",
+  "power": 271.8,
+  "heart_rate": 161.4,
+  "cadence": 86.8
+ },
+ {
+  "t": 430,
+  "timestamp": "2026-07-26T06:35:30+00:00",
+  "power": 279.2,
+  "heart_rate": 162.2,
+  "cadence": 86.2
+ },
+ {
+  "t": 435,
+  "timestamp": "2026-07-26T06:35:35+00:00",
+  "power": 286.4,
+  "heart_rate": 163.4,
+  "cadence": 87.6
+ },
+ {
+  "t": 440,
+  "timestamp": "2026-07-26T06:35:40+00:00",
+  "power": 287.0,
+  "heart_rate": 164.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 445,
+  "timestamp": "2026-07-26T06:35:45+00:00",
+  "power": 285.6,
+  "heart_rate": 165.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 450,
+  "timestamp": "2026-07-26T06:35:50+00:00",
+  "power": 291.6,
+  "heart_rate": 164.4,
+  "cadence": 86.8
+ },
+ {
+  "t": 455,
+  "timestamp": "2026-07-26T06:35:55+00:00",
+  "power": 291.8,
+  "heart_rate": 164.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 460,
+  "timestamp": "2026-07-26T06:36:00+00:00",
+  "power": 285.0,
+  "heart_rate": 164.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 465,
+  "timestamp": "2026-07-26T06:36:05+00:00",
+  "power": 287.8,
+  "heart_rate": 164.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 470,
+  "timestamp": "2026-07-26T06:36:10+00:00",
+  "power": 317.8,
+  "heart_rate": 165.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 475,
+  "timestamp": "2026-07-26T06:36:15+00:00",
+  "power": 306.4,
+  "heart_rate": 164.4,
+  "cadence": 87.0
+ },
+ {
+  "t": 480,
+  "timestamp": "2026-07-26T06:36:20+00:00",
+  "power": 300.4,
+  "heart_rate": 164.6,
+  "cadence": 86.4
+ },
+ {
+  "t": 485,
+  "timestamp": "2026-07-26T06:36:25+00:00",
+  "power": 293.2,
+  "heart_rate": 165.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 490,
+  "timestamp": "2026-07-26T06:36:30+00:00",
+  "power": 285.0,
+  "heart_rate": 165.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 495,
+  "timestamp": "2026-07-26T06:36:35+00:00",
+  "power": 288.8,
+  "heart_rate": 165.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 500,
+  "timestamp": "2026-07-26T06:36:40+00:00",
+  "power": 287.2,
+  "heart_rate": 165.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 505,
+  "timestamp": "2026-07-26T06:36:45+00:00",
+  "power": 286.8,
+  "heart_rate": 165.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 510,
+  "timestamp": "2026-07-26T06:36:50+00:00",
+  "power": 286.8,
+  "heart_rate": 165.0,
+  "cadence": 87.2
+ },
+ {
+  "t": 515,
+  "timestamp": "2026-07-26T06:36:55+00:00",
+  "power": 289.0,
+  "heart_rate": 165.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 520,
+  "timestamp": "2026-07-26T06:37:00+00:00",
+  "power": 285.2,
+  "heart_rate": 165.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 525,
+  "timestamp": "2026-07-26T06:37:05+00:00",
+  "power": 282.2,
+  "heart_rate": 165.0,
+  "cadence": 87.6
+ },
+ {
+  "t": 530,
+  "timestamp": "2026-07-26T06:37:10+00:00",
+  "power": 288.6,
+  "heart_rate": 165.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 535,
+  "timestamp": "2026-07-26T06:37:15+00:00",
+  "power": 291.2,
+  "heart_rate": 165.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 540,
+  "timestamp": "2026-07-26T06:37:20+00:00",
+  "power": 289.4,
+  "heart_rate": 165.6,
+  "cadence": 86.6
+ },
+ {
+  "t": 545,
+  "timestamp": "2026-07-26T06:37:25+00:00",
+  "power": 289.0,
+  "heart_rate": 165.2,
+  "cadence": 87.2
+ },
+ {
+  "t": 550,
+  "timestamp": "2026-07-26T06:37:30+00:00",
+  "power": 286.6,
+  "heart_rate": 165.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 555,
+  "timestamp": "2026-07-26T06:37:35+00:00",
+  "power": 288.8,
+  "heart_rate": 166.0,
+  "cadence": 87.6
+ },
+ {
+  "t": 560,
+  "timestamp": "2026-07-26T06:37:40+00:00",
+  "power": 293.2,
+  "heart_rate": 166.0,
+  "cadence": 87.8
+ },
+ {
+  "t": 565,
+  "timestamp": "2026-07-26T06:37:45+00:00",
+  "power": 288.2,
+  "heart_rate": 166.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 570,
+  "timestamp": "2026-07-26T06:37:50+00:00",
+  "power": 290.0,
+  "heart_rate": 166.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 575,
+  "timestamp": "2026-07-26T06:37:55+00:00",
+  "power": 287.8,
+  "heart_rate": 166.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 580,
+  "timestamp": "2026-07-26T06:38:00+00:00",
+  "power": 294.0,
+  "heart_rate": 166.6,
+  "cadence": 87.6
+ },
+ {
+  "t": 585,
+  "timestamp": "2026-07-26T06:38:05+00:00",
+  "power": 292.8,
+  "heart_rate": 167.0,
+  "cadence": 86.4
+ },
+ {
+  "t": 590,
+  "timestamp": "2026-07-26T06:38:10+00:00",
+  "power": 291.2,
+  "heart_rate": 167.0,
+  "cadence": 86.2
+ },
+ {
+  "t": 595,
+  "timestamp": "2026-07-26T06:38:15+00:00",
+  "power": 294.6,
+  "heart_rate": 166.2,
+  "cadence": 86.0
+ },
+ {
+  "t": 600,
+  "timestamp": "2026-07-26T06:38:20+00:00",
+  "power": 272.6,
+  "heart_rate": 166.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 605,
+  "timestamp": "2026-07-26T06:38:25+00:00",
+  "power": 286.6,
+  "heart_rate": 166.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 610,
+  "timestamp": "2026-07-26T06:38:30+00:00",
+  "power": 284.2,
+  "heart_rate": 166.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 615,
+  "timestamp": "2026-07-26T06:38:35+00:00",
+  "power": 285.4,
+  "heart_rate": 166.0,
+  "cadence": 87.6
+ },
+ {
+  "t": 620,
+  "timestamp": "2026-07-26T06:38:40+00:00",
+  "power": 268.8,
+  "heart_rate": 166.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 625,
+  "timestamp": "2026-07-26T06:38:45+00:00",
+  "power": 293.2,
+  "heart_rate": 166.6,
+  "cadence": 87.0
+ },
+ {
+  "t": 630,
+  "timestamp": "2026-07-26T06:38:50+00:00",
+  "power": 291.4,
+  "heart_rate": 167.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 635,
+  "timestamp": "2026-07-26T06:38:55+00:00",
+  "power": 286.2,
+  "heart_rate": 167.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 640,
+  "timestamp": "2026-07-26T06:39:00+00:00",
+  "power": 283.4,
+  "heart_rate": 167.0,
+  "cadence": 87.2
+ },
+ {
+  "t": 645,
+  "timestamp": "2026-07-26T06:39:05+00:00",
+  "power": 286.2,
+  "heart_rate": 167.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 650,
+  "timestamp": "2026-07-26T06:39:10+00:00",
+  "power": 284.4,
+  "heart_rate": 167.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 655,
+  "timestamp": "2026-07-26T06:39:15+00:00",
+  "power": 261.0,
+  "heart_rate": 167.8,
+  "cadence": 87.0
+ },
+ {
+  "t": 660,
+  "timestamp": "2026-07-26T06:39:20+00:00",
+  "power": 296.0,
+  "heart_rate": 167.0,
+  "cadence": 87.6
+ },
+ {
+  "t": 665,
+  "timestamp": "2026-07-26T06:39:25+00:00",
+  "power": 287.6,
+  "heart_rate": 167.2,
+  "cadence": 87.4
+ },
+ {
+  "t": 670,
+  "timestamp": "2026-07-26T06:39:30+00:00",
+  "power": 289.6,
+  "heart_rate": 167.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 675,
+  "timestamp": "2026-07-26T06:39:35+00:00",
+  "power": 289.6,
+  "heart_rate": 167.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 680,
+  "timestamp": "2026-07-26T06:39:40+00:00",
+  "power": 285.8,
+  "heart_rate": 167.6,
+  "cadence": 86.8
+ },
+ {
+  "t": 685,
+  "timestamp": "2026-07-26T06:39:45+00:00",
+  "power": 276.2,
+  "heart_rate": 168.4,
+  "cadence": 87.4
+ },
+ {
+  "t": 690,
+  "timestamp": "2026-07-26T06:39:50+00:00",
+  "power": 285.8,
+  "heart_rate": 169.8,
+  "cadence": 87.8
+ },
+ {
+  "t": 695,
+  "timestamp": "2026-07-26T06:39:55+00:00",
+  "power": 287.0,
+  "heart_rate": 171.4,
+  "cadence": 87.8
+ },
+ {
+  "t": 700,
+  "timestamp": "2026-07-26T06:40:00+00:00",
+  "power": 276.4,
+  "heart_rate": 172.6,
+  "cadence": 87.2
+ },
+ {
+  "t": 705,
+  "timestamp": "2026-07-26T06:40:05+00:00",
+  "power": 287.4,
+  "heart_rate": 173.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 710,
+  "timestamp": "2026-07-26T06:40:10+00:00",
+  "power": 281.0,
+  "heart_rate": 172.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 715,
+  "timestamp": "2026-07-26T06:40:15+00:00",
+  "power": 269.4,
+  "heart_rate": 172.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 720,
+  "timestamp": "2026-07-26T06:40:20+00:00",
+  "power": 309.6,
+  "heart_rate": 171.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 725,
+  "timestamp": "2026-07-26T06:40:25+00:00",
+  "power": 335.2,
+  "heart_rate": 171.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 730,
+  "timestamp": "2026-07-26T06:40:30+00:00",
+  "power": 294.8,
+  "heart_rate": 170.4,
+  "cadence": 87.0
+ },
+ {
+  "t": 735,
+  "timestamp": "2026-07-26T06:40:35+00:00",
+  "power": 289.4,
+  "heart_rate": 170.0,
+  "cadence": 87.6
+ },
+ {
+  "t": 740,
+  "timestamp": "2026-07-26T06:40:40+00:00",
+  "power": 299.0,
+  "heart_rate": 169.8,
+  "cadence": 87.6
+ },
+ {
+  "t": 745,
+  "timestamp": "2026-07-26T06:40:45+00:00",
+  "power": 292.2,
+  "heart_rate": 168.2,
+  "cadence": 86.6
+ },
+ {
+  "t": 750,
+  "timestamp": "2026-07-26T06:40:50+00:00",
+  "power": 292.0,
+  "heart_rate": 167.8,
+  "cadence": 86.0
+ },
+ {
+  "t": 755,
+  "timestamp": "2026-07-26T06:40:55+00:00",
+  "power": 290.4,
+  "heart_rate": 167.6,
+  "cadence": 87.0
+ },
+ {
+  "t": 760,
+  "timestamp": "2026-07-26T06:41:00+00:00",
+  "power": 286.6,
+  "heart_rate": 167.8,
+  "cadence": 87.0
+ },
+ {
+  "t": 765,
+  "timestamp": "2026-07-26T06:41:05+00:00",
+  "power": 279.8,
+  "heart_rate": 169.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 770,
+  "timestamp": "2026-07-26T06:41:10+00:00",
+  "power": 276.0,
+  "heart_rate": 170.0,
+  "cadence": 87.8
+ },
+ {
+  "t": 775,
+  "timestamp": "2026-07-26T06:41:15+00:00",
+  "power": 277.2,
+  "heart_rate": 170.0,
+  "cadence": 87.2
+ },
+ {
+  "t": 780,
+  "timestamp": "2026-07-26T06:41:20+00:00",
+  "power": 278.8,
+  "heart_rate": 170.2,
+  "cadence": 87.4
+ },
+ {
+  "t": 785,
+  "timestamp": "2026-07-26T06:41:25+00:00",
+  "power": 280.2,
+  "heart_rate": 170.0,
+  "cadence": 87.2
+ },
+ {
+  "t": 790,
+  "timestamp": "2026-07-26T06:41:30+00:00",
+  "power": 273.4,
+  "heart_rate": 171.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 795,
+  "timestamp": "2026-07-26T06:41:35+00:00",
+  "power": 284.2,
+  "heart_rate": 172.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 800,
+  "timestamp": "2026-07-26T06:41:40+00:00",
+  "power": 274.6,
+  "heart_rate": 172.0,
+  "cadence": 88.8
+ },
+ {
+  "t": 805,
+  "timestamp": "2026-07-26T06:41:45+00:00",
+  "power": 284.8,
+  "heart_rate": 172.6,
+  "cadence": 88.6
+ },
+ {
+  "t": 810,
+  "timestamp": "2026-07-26T06:41:50+00:00",
+  "power": 290.0,
+  "heart_rate": 172.8,
+  "cadence": 88.2
+ },
+ {
+  "t": 815,
+  "timestamp": "2026-07-26T06:41:55+00:00",
+  "power": 289.0,
+  "heart_rate": 172.4,
+  "cadence": 87.8
+ },
+ {
+  "t": 820,
+  "timestamp": "2026-07-26T06:42:00+00:00",
+  "power": 302.4,
+  "heart_rate": 173.0,
+  "cadence": 88.4
+ },
+ {
+  "t": 825,
+  "timestamp": "2026-07-26T06:42:05+00:00",
+  "power": 297.4,
+  "heart_rate": 172.2,
+  "cadence": 88.8
+ },
+ {
+  "t": 830,
+  "timestamp": "2026-07-26T06:42:10+00:00",
+  "power": 297.4,
+  "heart_rate": 172.0,
+  "cadence": 87.8
+ },
+ {
+  "t": 835,
+  "timestamp": "2026-07-26T06:42:15+00:00",
+  "power": 295.6,
+  "heart_rate": 172.0,
+  "cadence": 87.2
+ },
+ {
+  "t": 840,
+  "timestamp": "2026-07-26T06:42:20+00:00",
+  "power": 283.8,
+  "heart_rate": 171.8,
+  "cadence": 87.0
+ },
+ {
+  "t": 845,
+  "timestamp": "2026-07-26T06:42:25+00:00",
+  "power": 286.0,
+  "heart_rate": 172.0,
+  "cadence": 87.8
+ },
+ {
+  "t": 850,
+  "timestamp": "2026-07-26T06:42:30+00:00",
+  "power": 288.0,
+  "heart_rate": 172.4,
+  "cadence": 87.6
+ },
+ {
+  "t": 855,
+  "timestamp": "2026-07-26T06:42:35+00:00",
+  "power": 282.6,
+  "heart_rate": 171.4,
+  "cadence": 87.8
+ },
+ {
+  "t": 860,
+  "timestamp": "2026-07-26T06:42:40+00:00",
+  "power": 293.0,
+  "heart_rate": 171.2,
+  "cadence": 87.6
+ },
+ {
+  "t": 865,
+  "timestamp": "2026-07-26T06:42:45+00:00",
+  "power": 290.2,
+  "heart_rate": 171.2,
+  "cadence": 87.6
+ },
+ {
+  "t": 870,
+  "timestamp": "2026-07-26T06:42:50+00:00",
+  "power": 289.4,
+  "heart_rate": 171.4,
+  "cadence": 88.0
+ },
+ {
+  "t": 875,
+  "timestamp": "2026-07-26T06:42:55+00:00",
+  "power": 288.4,
+  "heart_rate": 173.0,
+  "cadence": 88.6
+ },
+ {
+  "t": 880,
+  "timestamp": "2026-07-26T06:43:00+00:00",
+  "power": 287.4,
+  "heart_rate": 172.6,
+  "cadence": 88.6
+ },
+ {
+  "t": 885,
+  "timestamp": "2026-07-26T06:43:05+00:00",
+  "power": 278.6,
+  "heart_rate": 172.6,
+  "cadence": 88.6
+ },
+ {
+  "t": 890,
+  "timestamp": "2026-07-26T06:43:10+00:00",
+  "power": 281.6,
+  "heart_rate": 173.0,
+  "cadence": 87.6
+ },
+ {
+  "t": 895,
+  "timestamp": "2026-07-26T06:43:15+00:00",
+  "power": 283.8,
+  "heart_rate": 172.4,
+  "cadence": 87.6
+ },
+ {
+  "t": 900,
+  "timestamp": "2026-07-26T06:43:20+00:00",
+  "power": 289.8,
+  "heart_rate": 171.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 905,
+  "timestamp": "2026-07-26T06:43:25+00:00",
+  "power": 299.0,
+  "heart_rate": 171.2,
+  "cadence": 85.8
+ },
+ {
+  "t": 910,
+  "timestamp": "2026-07-26T06:43:30+00:00",
+  "power": 285.6,
+  "heart_rate": 171.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 915,
+  "timestamp": "2026-07-26T06:43:35+00:00",
+  "power": 291.2,
+  "heart_rate": 171.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 920,
+  "timestamp": "2026-07-26T06:43:40+00:00",
+  "power": 373.4,
+  "heart_rate": 171.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 925,
+  "timestamp": "2026-07-26T06:43:45+00:00",
+  "power": 422.0,
+  "heart_rate": 171.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 930,
+  "timestamp": "2026-07-26T06:43:50+00:00",
+  "power": 457.6,
+  "heart_rate": 171.2,
+  "cadence": 85.0
+ },
+ {
+  "t": 935,
+  "timestamp": "2026-07-26T06:43:55+00:00",
+  "power": 414.4,
+  "heart_rate": 171.4,
+  "cadence": 86.4
+ },
+ {
+  "t": 940,
+  "timestamp": "2026-07-26T06:44:00+00:00",
+  "power": 409.4,
+  "heart_rate": 172.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 945,
+  "timestamp": "2026-07-26T06:44:05+00:00",
+  "power": 412.8,
+  "heart_rate": 173.0,
+  "cadence": 86.2
+ },
+ {
+  "t": 950,
+  "timestamp": "2026-07-26T06:44:10+00:00",
+  "power": 426.4,
+  "heart_rate": 173.4,
+  "cadence": 86.2
+ },
+ {
+  "t": 955,
+  "timestamp": "2026-07-26T06:44:15+00:00",
+  "power": 329.2,
+  "heart_rate": 173.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 960,
+  "timestamp": "2026-07-26T06:44:20+00:00",
+  "power": 299.2,
+  "heart_rate": 171.8,
+  "cadence": 87.2
+ },
+ {
+  "t": 965,
+  "timestamp": "2026-07-26T06:44:25+00:00",
+  "power": 294.6,
+  "heart_rate": 171.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 970,
+  "timestamp": "2026-07-26T06:44:30+00:00",
+  "power": 239.4,
+  "heart_rate": 171.0,
+  "cadence": 86.6
+ },
+ {
+  "t": 975,
+  "timestamp": "2026-07-26T06:44:35+00:00",
+  "power": 262.0,
+  "heart_rate": 171.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 980,
+  "timestamp": "2026-07-26T06:44:40+00:00",
+  "power": 258.0,
+  "heart_rate": 170.6,
+  "cadence": 87.2
+ },
+ {
+  "t": 985,
+  "timestamp": "2026-07-26T06:44:45+00:00",
+  "power": 267.0,
+  "heart_rate": 170.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 990,
+  "timestamp": "2026-07-26T06:44:50+00:00",
+  "power": 288.4,
+  "heart_rate": 169.6,
+  "cadence": 86.8
+ },
+ {
+  "t": 995,
+  "timestamp": "2026-07-26T06:44:55+00:00",
+  "power": 296.2,
+  "heart_rate": 168.6,
+  "cadence": 86.2
+ },
+ {
+  "t": 1000,
+  "timestamp": "2026-07-26T06:45:00+00:00",
+  "power": 246.8,
+  "heart_rate": 168.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 1005,
+  "timestamp": "2026-07-26T06:45:05+00:00",
+  "power": 249.2,
+  "heart_rate": 167.6,
+  "cadence": 85.0
+ },
+ {
+  "t": 1010,
+  "timestamp": "2026-07-26T06:45:10+00:00",
+  "power": 270.4,
+  "heart_rate": 166.4,
+  "cadence": 86.0
+ },
+ {
+  "t": 1015,
+  "timestamp": "2026-07-26T06:45:15+00:00",
+  "power": 258.6,
+  "heart_rate": 166.4,
+  "cadence": 84.2
+ },
+ {
+  "t": 1020,
+  "timestamp": "2026-07-26T06:45:20+00:00",
+  "power": 265.0,
+  "heart_rate": 167.0,
+  "cadence": 82.4
+ },
+ {
+  "t": 1025,
+  "timestamp": "2026-07-26T06:45:25+00:00",
+  "power": 278.4,
+  "heart_rate": 166.8,
+  "cadence": 85.0
+ },
+ {
+  "t": 1030,
+  "timestamp": "2026-07-26T06:45:30+00:00",
+  "power": 273.8,
+  "heart_rate": 165.8,
+  "cadence": 85.0
+ },
+ {
+  "t": 1035,
+  "timestamp": "2026-07-26T06:45:35+00:00",
+  "power": 274.8,
+  "heart_rate": 165.0,
+  "cadence": 85.8
+ },
+ {
+  "t": 1040,
+  "timestamp": "2026-07-26T06:45:40+00:00",
+  "power": 270.0,
+  "heart_rate": 164.4,
+  "cadence": 86.0
+ },
+ {
+  "t": 1045,
+  "timestamp": "2026-07-26T06:45:45+00:00",
+  "power": 257.0,
+  "heart_rate": 164.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1050,
+  "timestamp": "2026-07-26T06:45:50+00:00",
+  "power": 263.8,
+  "heart_rate": 164.2,
+  "cadence": 85.0
+ },
+ {
+  "t": 1055,
+  "timestamp": "2026-07-26T06:45:55+00:00",
+  "power": 256.6,
+  "heart_rate": 164.6,
+  "cadence": 85.0
+ },
+ {
+  "t": 1060,
+  "timestamp": "2026-07-26T06:46:00+00:00",
+  "power": 251.4,
+  "heart_rate": 162.6,
+  "cadence": 83.4
+ },
+ {
+  "t": 1065,
+  "timestamp": "2026-07-26T06:46:05+00:00",
+  "power": 249.0,
+  "heart_rate": 161.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 1070,
+  "timestamp": "2026-07-26T06:46:10+00:00",
+  "power": 236.6,
+  "heart_rate": 161.0,
+  "cadence": 85.6
+ },
+ {
+  "t": 1075,
+  "timestamp": "2026-07-26T06:46:15+00:00",
+  "power": 206.4,
+  "heart_rate": 161.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1080,
+  "timestamp": "2026-07-26T06:46:20+00:00",
+  "power": 255.8,
+  "heart_rate": 162.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1085,
+  "timestamp": "2026-07-26T06:46:25+00:00",
+  "power": 270.0,
+  "heart_rate": 162.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 1090,
+  "timestamp": "2026-07-26T06:46:30+00:00",
+  "power": 261.0,
+  "heart_rate": 163.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 1095,
+  "timestamp": "2026-07-26T06:46:35+00:00",
+  "power": 274.8,
+  "heart_rate": 163.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 1100,
+  "timestamp": "2026-07-26T06:46:40+00:00",
+  "power": 269.4,
+  "heart_rate": 162.2,
+  "cadence": 85.4
+ },
+ {
+  "t": 1105,
+  "timestamp": "2026-07-26T06:46:45+00:00",
+  "power": 249.0,
+  "heart_rate": 161.2,
+  "cadence": 85.6
+ },
+ {
+  "t": 1110,
+  "timestamp": "2026-07-26T06:46:50+00:00",
+  "power": 275.4,
+  "heart_rate": 161.0,
+  "cadence": 84.6
+ },
+ {
+  "t": 1115,
+  "timestamp": "2026-07-26T06:46:55+00:00",
+  "power": 247.2,
+  "heart_rate": 161.0,
+  "cadence": 85.6
+ },
+ {
+  "t": 1120,
+  "timestamp": "2026-07-26T06:47:00+00:00",
+  "power": 249.2,
+  "heart_rate": 161.4,
+  "cadence": 84.0
+ },
+ {
+  "t": 1125,
+  "timestamp": "2026-07-26T06:47:05+00:00",
+  "power": 247.0,
+  "heart_rate": 161.6,
+  "cadence": 85.8
+ },
+ {
+  "t": 1130,
+  "timestamp": "2026-07-26T06:47:10+00:00",
+  "power": 252.6,
+  "heart_rate": 161.4,
+  "cadence": 85.8
+ },
+ {
+  "t": 1135,
+  "timestamp": "2026-07-26T06:47:15+00:00",
+  "power": 254.4,
+  "heart_rate": 162.2,
+  "cadence": 85.0
+ },
+ {
+  "t": 1140,
+  "timestamp": "2026-07-26T06:47:20+00:00",
+  "power": 252.8,
+  "heart_rate": 163.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 1145,
+  "timestamp": "2026-07-26T06:47:25+00:00",
+  "power": 253.4,
+  "heart_rate": 163.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 1150,
+  "timestamp": "2026-07-26T06:47:30+00:00",
+  "power": 279.4,
+  "heart_rate": 163.0,
+  "cadence": 85.4
+ },
+ {
+  "t": 1155,
+  "timestamp": "2026-07-26T06:47:35+00:00",
+  "power": 257.8,
+  "heart_rate": 162.8,
+  "cadence": 85.0
+ },
+ {
+  "t": 1160,
+  "timestamp": "2026-07-26T06:47:40+00:00",
+  "power": 271.0,
+  "heart_rate": 161.8,
+  "cadence": 85.6
+ },
+ {
+  "t": 1165,
+  "timestamp": "2026-07-26T06:47:45+00:00",
+  "power": 274.4,
+  "heart_rate": 161.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 1170,
+  "timestamp": "2026-07-26T06:47:50+00:00",
+  "power": 272.4,
+  "heart_rate": 161.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 1175,
+  "timestamp": "2026-07-26T06:47:55+00:00",
+  "power": 280.0,
+  "heart_rate": 161.0,
+  "cadence": 85.0
+ },
+ {
+  "t": 1180,
+  "timestamp": "2026-07-26T06:48:00+00:00",
+  "power": 272.6,
+  "heart_rate": 161.0,
+  "cadence": 85.2
+ },
+ {
+  "t": 1185,
+  "timestamp": "2026-07-26T06:48:05+00:00",
+  "power": 274.8,
+  "heart_rate": 162.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 1190,
+  "timestamp": "2026-07-26T06:48:10+00:00",
+  "power": 283.4,
+  "heart_rate": 164.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 1195,
+  "timestamp": "2026-07-26T06:48:15+00:00",
+  "power": 259.2,
+  "heart_rate": 166.4,
+  "cadence": 86.0
+ },
+ {
+  "t": 1200,
+  "timestamp": "2026-07-26T06:48:20+00:00",
+  "power": 254.0,
+  "heart_rate": 167.4,
+  "cadence": 86.0
+ },
+ {
+  "t": 1205,
+  "timestamp": "2026-07-26T06:48:25+00:00",
+  "power": 266.0,
+  "heart_rate": 168.0,
+  "cadence": 85.6
+ },
+ {
+  "t": 1210,
+  "timestamp": "2026-07-26T06:48:30+00:00",
+  "power": 273.0,
+  "heart_rate": 169.0,
+  "cadence": 86.2
+ },
+ {
+  "t": 1215,
+  "timestamp": "2026-07-26T06:48:35+00:00",
+  "power": 288.8,
+  "heart_rate": 170.0,
+  "cadence": 86.2
+ },
+ {
+  "t": 1220,
+  "timestamp": "2026-07-26T06:48:40+00:00",
+  "power": 285.4,
+  "heart_rate": 171.8,
+  "cadence": 86.4
+ },
+ {
+  "t": 1225,
+  "timestamp": "2026-07-26T06:48:45+00:00",
+  "power": 274.2,
+  "heart_rate": 174.8,
+  "cadence": 85.2
+ },
+ {
+  "t": 1230,
+  "timestamp": "2026-07-26T06:48:50+00:00",
+  "power": 276.6,
+  "heart_rate": 174.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1235,
+  "timestamp": "2026-07-26T06:48:55+00:00",
+  "power": 288.6,
+  "heart_rate": 174.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1240,
+  "timestamp": "2026-07-26T06:49:00+00:00",
+  "power": 270.0,
+  "heart_rate": 174.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1245,
+  "timestamp": "2026-07-26T06:49:05+00:00",
+  "power": 280.4,
+  "heart_rate": 175.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1250,
+  "timestamp": "2026-07-26T06:49:10+00:00",
+  "power": 257.2,
+  "heart_rate": 176.8,
+  "cadence": 86.0
+ },
+ {
+  "t": 1255,
+  "timestamp": "2026-07-26T06:49:15+00:00",
+  "power": 283.4,
+  "heart_rate": 176.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1260,
+  "timestamp": "2026-07-26T06:49:20+00:00",
+  "power": 288.0,
+  "heart_rate": 176.0,
+  "cadence": 86.0
+ },
+ {
+  "t": 1265,
+  "timestamp": "2026-07-26T06:49:25+00:00",
+  "power": 280.0,
+  "heart_rate": 177.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 1270,
+  "timestamp": "2026-07-26T06:49:30+00:00",
+  "power": 281.4,
+  "heart_rate": 178.0,
+  "cadence": 85.6
+ },
+ {
+  "t": 1275,
+  "timestamp": "2026-07-26T06:49:35+00:00",
+  "power": 273.0,
+  "heart_rate": 178.2,
+  "cadence": 86.0
+ },
+ {
+  "t": 1280,
+  "timestamp": "2026-07-26T06:49:40+00:00",
+  "power": 291.6,
+  "heart_rate": 178.4,
+  "cadence": 86.0
+ },
+ {
+  "t": 1285,
+  "timestamp": "2026-07-26T06:49:45+00:00",
+  "power": 286.8,
+  "heart_rate": 178.6,
+  "cadence": 86.0
+ },
+ {
+  "t": 1290,
+  "timestamp": "2026-07-26T06:49:50+00:00",
+  "power": 284.4,
+  "heart_rate": 178.4,
+  "cadence": 86.2
+ },
+ {
+  "t": 1295,
+  "timestamp": "2026-07-26T06:49:55+00:00",
+  "power": 281.0,
+  "heart_rate": 178.8,
+  "cadence": 86.0
+ },
+ {
+  "t": 1300,
+  "timestamp": "2026-07-26T06:50:00+00:00",
+  "power": 279.0,
+  "heart_rate": 179.0,
+  "cadence": 86.4
+ },
+ {
+  "t": 1305,
+  "timestamp": "2026-07-26T06:50:05+00:00",
+  "power": 289.0,
+  "heart_rate": 179.0,
+  "cadence": 86.4
+ },
+ {
+  "t": 1310,
+  "timestamp": "2026-07-26T06:50:10+00:00",
+  "power": 286.6,
+  "heart_rate": 179.8,
+  "cadence": 86.6
+ },
+ {
+  "t": 1315,
+  "timestamp": "2026-07-26T06:50:15+00:00",
+  "power": 242.6,
+  "heart_rate": 179.6,
+  "cadence": 87.0
+ },
+ {
+  "t": 1320,
+  "timestamp": "2026-07-26T06:50:20+00:00",
+  "power": 289.4,
+  "heart_rate": 179.0,
+  "cadence": 86.2
+ },
+ {
+  "t": 1325,
+  "timestamp": "2026-07-26T06:50:25+00:00",
+  "power": 280.6,
+  "heart_rate": 178.2,
+  "cadence": 86.0
+ },
+ {
+  "t": 1330,
+  "timestamp": "2026-07-26T06:50:30+00:00",
+  "power": 268.0,
+  "heart_rate": 178.8,
+  "cadence": 86.2
+ },
+ {
+  "t": 1335,
+  "timestamp": "2026-07-26T06:50:35+00:00",
+  "power": 280.8,
+  "heart_rate": 178.2,
+  "cadence": 87.0
+ },
+ {
+  "t": 1340,
+  "timestamp": "2026-07-26T06:50:40+00:00",
+  "power": 289.6,
+  "heart_rate": 177.2,
+  "cadence": 86.4
+ },
+ {
+  "t": 1345,
+  "timestamp": "2026-07-26T06:50:45+00:00",
+  "power": 285.6,
+  "heart_rate": 178.4,
+  "cadence": 87.0
+ },
+ {
+  "t": 1350,
+  "timestamp": "2026-07-26T06:50:50+00:00",
+  "power": 287.4,
+  "heart_rate": 179.0,
+  "cadence": 86.8
+ },
+ {
+  "t": 1355,
+  "timestamp": "2026-07-26T06:50:55+00:00",
+  "power": 287.0,
+  "heart_rate": 179.0,
+  "cadence": 87.8
+ },
+ {
+  "t": 1360,
+  "timestamp": "2026-07-26T06:51:00+00:00",
+  "power": 295.2,
+  "heart_rate": 178.4,
+  "cadence": 88.2
+ },
+ {
+  "t": 1365,
+  "timestamp": "2026-07-26T06:51:05+00:00",
+  "power": 356.4,
+  "heart_rate": 177.0,
+  "cadence": 88.6
+ },
+ {
+  "t": 1370,
+  "timestamp": "2026-07-26T06:51:10+00:00",
+  "power": 308.0,
+  "heart_rate": 177.0,
+  "cadence": 88.0
+ },
+ {
+  "t": 1375,
+  "timestamp": "2026-07-26T06:51:15+00:00",
+  "power": 305.4,
+  "heart_rate": 177.4,
+  "cadence": 87.8
+ },
+ {
+  "t": 1380,
+  "timestamp": "2026-07-26T06:51:20+00:00",
+  "power": 298.8,
+  "heart_rate": 177.4,
+  "cadence": 88.2
+ },
+ {
+  "t": 1385,
+  "timestamp": "2026-07-26T06:51:25+00:00",
+  "power": 292.0,
+  "heart_rate": 178.0,
+  "cadence": 89.0
+ },
+ {
+  "t": 1390,
+  "timestamp": "2026-07-26T06:51:30+00:00",
+  "power": 297.6,
+  "heart_rate": 178.8,
+  "cadence": 87.6
+ },
+ {
+  "t": 1395,
+  "timestamp": "2026-07-26T06:51:35+00:00",
+  "power": 294.2,
+  "heart_rate": 179.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 1400,
+  "timestamp": "2026-07-26T06:51:40+00:00",
+  "power": 233.4,
+  "heart_rate": 179.2,
+  "cadence": 87.4
+ },
+ {
+  "t": 1405,
+  "timestamp": "2026-07-26T06:51:45+00:00",
+  "power": 91.8,
+  "heart_rate": 181.0,
+  "cadence": 87.0
+ },
+ {
+  "t": 1410,
+  "timestamp": "2026-07-26T06:51:50+00:00",
+  "power": 353.0,
+  "heart_rate": 181.0,
+  "cadence": 87.2
+ },
+ {
+  "t": 1415,
+  "timestamp": "2026-07-26T06:51:55+00:00",
+  "power": 294.8,
+  "heart_rate": 181.6,
+  "cadence": 87.4
+ },
+ {
+  "t": 1420,
+  "timestamp": "2026-07-26T06:52:00+00:00",
+  "power": 305.4,
+  "heart_rate": 182.0,
+  "cadence": 88.4
+ },
+ {
+  "t": 1425,
+  "timestamp": "2026-07-26T06:52:05+00:00",
+  "power": 295.6,
+  "heart_rate": 182.0,
+  "cadence": 88.4
+ },
+ {
+  "t": 1430,
+  "timestamp": "2026-07-26T06:52:10+00:00",
+  "power": 296.6,
+  "heart_rate": 182.0,
+  "cadence": 87.8
+ },
+ {
+  "t": 1435,
+  "timestamp": "2026-07-26T06:52:15+00:00",
+  "power": 293.4,
+  "heart_rate": 182.0,
+  "cadence": 87.4
+ },
+ {
+  "t": 1440,
+  "timestamp": "2026-07-26T06:52:20+00:00",
+  "power": 299.4,
+  "heart_rate": 182.0,
+  "cadence": 87.8
+ },
+ {
+  "t": 1445,
+  "timestamp": "2026-07-26T06:52:25+00:00",
+  "power": 304.6,
+  "heart_rate": 182.4,
+  "cadence": 87.0
+ },
+ {
+  "t": 1450,
+  "timestamp": "2026-07-26T06:52:30+00:00",
+  "power": 289.8,
+  "heart_rate": 183.2,
+  "cadence": 87.8
+ },
+ {
+  "t": 1455,
+  "timestamp": "2026-07-26T06:52:35+00:00",
+  "power": 298.4,
+  "heart_rate": 183.6,
+  "cadence": 87.8
+ },
+ {
+  "t": 1460,
+  "timestamp": "2026-07-26T06:52:40+00:00",
+  "power": 277.6,
+  "heart_rate": 183.6,
+  "cadence": 87.6
+ },
+ {
+  "t": 1465,
+  "timestamp": "2026-07-26T06:52:45+00:00",
+  "power": 298.0,
+  "heart_rate": 183.2,
+  "cadence": 87.4
+ },
+ {
+  "t": 1470,
+  "timestamp": "2026-07-26T06:52:50+00:00",
+  "power": 292.8,
+  "heart_rate": 183.0,
+  "cadence": 87.6
+ },
+ {
+  "t": 1475,
+  "timestamp": "2026-07-26T06:52:55+00:00",
+  "power": 291.8,
+  "heart_rate": 183.2,
+  "cadence": 88.4
+ },
+ {
+  "t": 1480,
+  "timestamp": "2026-07-26T06:53:00+00:00",
+  "power": 303.2,
+  "heart_rate": 183.8,
+  "cadence": 88.4
+ },
+ {
+  "t": 1485,
+  "timestamp": "2026-07-26T06:53:05+00:00",
+  "power": 304.4,
+  "heart_rate": 183.2,
+  "cadence": 88.8
+ },
+ {
+  "t": 1490,
+  "timestamp": "2026-07-26T06:53:10+00:00",
+  "power": 296.6,
+  "heart_rate": 184.0,
+  "cadence": 88.6
+ },
+ {
+  "t": 1495,
+  "timestamp": "2026-07-26T06:53:15+00:00",
+  "power": 307.2,
+  "heart_rate": 184.0,
+  "cadence": 88.8
+ },
+ {
+  "t": 1500,
+  "timestamp": "2026-07-26T06:53:20+00:00",
+  "power": 307.8,
+  "heart_rate": 184.2,
+  "cadence": 89.0
+ },
+ {
+  "t": 1505,
+  "timestamp": "2026-07-26T06:53:25+00:00",
+  "power": 410.4,
+  "heart_rate": 184.2,
+  "cadence": 88.2
+ },
+ {
+  "t": 1510,
+  "timestamp": "2026-07-26T06:53:30+00:00",
+  "power": 412.8,
+  "heart_rate": 185.0,
+  "cadence": 88.4
+ },
+ {
+  "t": 1515,
+  "timestamp": "2026-07-26T06:53:35+00:00",
+  "power": 337.6,
+  "heart_rate": 184.4,
+  "cadence": 89.2
+ },
+ {
+  "t": 1520,
+  "timestamp": "2026-07-26T06:53:40+00:00",
+  "power": 332.8,
+  "heart_rate": 185.0,
+  "cadence": 88.6
+ },
+ {
+  "t": 1525,
+  "timestamp": "2026-07-26T06:53:45+00:00",
+  "power": 314.6,
+  "heart_rate": 184.4,
+  "cadence": 89.0
+ },
+ {
+  "t": 1530,
+  "timestamp": "2026-07-26T06:53:50+00:00",
+  "power": 311.4,
+  "heart_rate": 185.0,
+  "cadence": 89.0
+ },
+ {
+  "t": 1535,
+  "timestamp": "2026-07-26T06:53:55+00:00",
+  "power": 311.6,
+  "heart_rate": 185.0,
+  "cadence": 88.4
+ },
+ {
+  "t": 1540,
+  "timestamp": "2026-07-26T06:54:00+00:00",
+  "power": 350.0,
+  "heart_rate": 185.0,
+  "cadence": 88.6
+ },
+ {
+  "t": 1545,
+  "timestamp": "2026-07-26T06:54:05+00:00",
+  "power": 340.8,
+  "heart_rate": 185.8,
+  "cadence": 88.8
+ },
+ {
+  "t": 1550,
+  "timestamp": "2026-07-26T06:54:10+00:00",
+  "power": 326.6,
+  "heart_rate": 187.0,
+  "cadence": 89.0
+ },
+ {
+  "t": 1555,
+  "timestamp": "2026-07-26T06:54:15+00:00",
+  "power": 310.8,
+  "heart_rate": 187.0,
+  "cadence": 88.4
+ },
+ {
+  "t": 1560,
+  "timestamp": "2026-07-26T06:54:20+00:00",
+  "power": 296.8,
+  "heart_rate": 187.0,
+  "cadence": 88.6
+ },
+ {
+  "t": 1565,
+  "timestamp": "2026-07-26T06:54:25+00:00",
+  "power": 295.2,
+  "heart_rate": 187.6,
+  "cadence": 88.4
+ },
+ {
+  "t": 1570,
+  "timestamp": "2026-07-26T06:54:30+00:00",
+  "power": 298.8,
+  "heart_rate": 188.0,
+  "cadence": 88.8
+ },
+ {
+  "t": 1575,
+  "timestamp": "2026-07-26T06:54:35+00:00",
+  "power": 320.8,
+  "heart_rate": 187.6,
+  "cadence": 88.0
+ },
+ {
+  "t": 1580,
+  "timestamp": "2026-07-26T06:54:40+00:00",
+  "power": 309.4,
+  "heart_rate": 187.2,
+  "cadence": 88.6
+ },
+ {
+  "t": 1585,
+  "timestamp": "2026-07-26T06:54:45+00:00",
+  "power": 308.2,
+  "heart_rate": 187.0,
+  "cadence": 89.0
+ },
+ {
+  "t": 1590,
+  "timestamp": "2026-07-26T06:54:50+00:00",
+  "power": 308.4,
+  "heart_rate": 187.0,
+  "cadence": 88.2
+ },
+ {
+  "t": 1595,
+  "timestamp": "2026-07-26T06:54:55+00:00",
+  "power": 323.2,
+  "heart_rate": 187.0,
+  "cadence": 88.2
+ },
+ {
+  "t": 1600,
+  "timestamp": "2026-07-26T06:55:00+00:00",
+  "power": 305.2,
+  "heart_rate": 187.0,
+  "cadence": 86.4
+ },
+ {
+  "t": 1605,
+  "timestamp": "2026-07-26T06:55:05+00:00",
+  "power": 225.8,
+  "heart_rate": 186.8,
+  "cadence": 85.6
+ },
+ {
+  "t": 1610,
+  "timestamp": "2026-07-26T06:55:10+00:00",
+  "power": 240.6,
+  "heart_rate": 185.4,
+  "cadence": 85.0
+ },
+ {
+  "t": 1615,
+  "timestamp": "2026-07-26T06:55:15+00:00",
+  "power": 232.6,
+  "heart_rate": 184.0,
+  "cadence": 83.4
+ },
+ {
+  "t": 1620,
+  "timestamp": "2026-07-26T06:55:20+00:00",
+  "power": 216.0,
+  "heart_rate": 183.0,
+  "cadence": 83.0
+ },
+ {
+  "t": 1625,
+  "timestamp": "2026-07-26T06:55:25+00:00",
+  "power": 224.6,
+  "heart_rate": 182.4,
+  "cadence": 82.2
+ },
+ {
+  "t": 1630,
+  "timestamp": "2026-07-26T06:55:30+00:00",
+  "power": 219.0,
+  "heart_rate": 182.0,
+  "cadence": 83.2
+ },
+ {
+  "t": 1635,
+  "timestamp": "2026-07-26T06:55:35+00:00",
+  "power": 222.2,
+  "heart_rate": 180.2,
+  "cadence": 83.8
+ },
+ {
+  "t": 1640,
+  "timestamp": "2026-07-26T06:55:40+00:00",
+  "power": 225.2,
+  "heart_rate": 178.2,
+  "cadence": 83.0
+ },
+ {
+  "t": 1645,
+  "timestamp": "2026-07-26T06:55:45+00:00",
+  "power": 221.6,
+  "heart_rate": 175.6,
+  "cadence": 82.6
+ },
+ {
+  "t": 1650,
+  "timestamp": "2026-07-26T06:55:50+00:00",
+  "power": 228.6,
+  "heart_rate": 174.2,
+  "cadence": 82.4
+ },
+ {
+  "t": 1655,
+  "timestamp": "2026-07-26T06:55:55+00:00",
+  "power": 228.2,
+  "heart_rate": 173.8,
+  "cadence": 84.0
+ },
+ {
+  "t": 1660,
+  "timestamp": "2026-07-26T06:56:00+00:00",
+  "power": 226.6,
+  "heart_rate": 172.2,
+  "cadence": 83.6
+ },
+ {
+  "t": 1665,
+  "timestamp": "2026-07-26T06:56:05+00:00",
+  "power": 224.8,
+  "heart_rate": 170.8,
+  "cadence": 83.4
+ },
+ {
+  "t": 1670,
+  "timestamp": "2026-07-26T06:56:10+00:00",
+  "power": 224.0,
+  "heart_rate": 168.4,
+  "cadence": 84.6
+ },
+ {
+  "t": 1675,
+  "timestamp": "2026-07-26T06:56:15+00:00",
+  "power": 221.4,
+  "heart_rate": 165.4,
+  "cadence": 85.8
+ },
+ {
+  "t": 1680,
+  "timestamp": "2026-07-26T06:56:20+00:00",
+  "power": 230.4,
+  "heart_rate": 164.0,
+  "cadence": 84.4
+ },
+ {
+  "t": 1685,
+  "timestamp": "2026-07-26T06:56:25+00:00",
+  "power": 228.0,
+  "heart_rate": 164.0,
+  "cadence": 82.6
+ },
+ {
+  "t": 1690,
+  "timestamp": "2026-07-26T06:56:30+00:00",
+  "power": 225.8,
+  "heart_rate": 163.0,
+  "cadence": 82.0
+ },
+ {
+  "t": 1695,
+  "timestamp": "2026-07-26T06:56:35+00:00",
+  "power": 224.8,
+  "heart_rate": 161.0,
+  "cadence": 81.6
+ },
+ {
+  "t": 1700,
+  "timestamp": "2026-07-26T06:56:40+00:00",
+  "power": 222.8,
+  "heart_rate": 160.4,
+  "cadence": 83.2
+ },
+ {
+  "t": 1705,
+  "timestamp": "2026-07-26T06:56:45+00:00",
+  "power": 218.2,
+  "heart_rate": 158.4,
+  "cadence": 84.4
+ },
+ {
+  "t": 1710,
+  "timestamp": "2026-07-26T06:56:50+00:00",
+  "power": 224.2,
+  "heart_rate": 159.0,
+  "cadence": 82.8
+ },
+ {
+  "t": 1715,
+  "timestamp": "2026-07-26T06:56:55+00:00",
+  "power": 222.0,
+  "heart_rate": 159.0,
+  "cadence": 82.0
+ },
+ {
+  "t": 1720,
+  "timestamp": "2026-07-26T06:57:00+00:00",
+  "power": 158.4,
+  "heart_rate": 159.8,
+  "cadence": 57.8
+ },
+ {
+  "t": 1725,
+  "timestamp": "2026-07-26T06:57:05+00:00",
+  "power": 108.2,
+  "heart_rate": 158.4,
+  "cadence": 41.0
+ },
+ {
+  "t": 1730,
+  "timestamp": "2026-07-26T06:57:10+00:00",
+  "power": 114.8,
+  "heart_rate": 157.6,
+  "cadence": 55.4
+ },
+ {
+  "t": 1735,
+  "timestamp": "2026-07-26T06:57:15+00:00",
+  "power": 114.6,
+  "heart_rate": 156.4,
+  "cadence": 60.0
+ },
+ {
+  "t": 1740,
+  "timestamp": "2026-07-26T06:57:20+00:00",
+  "power": 115.2,
+  "heart_rate": 155.2,
+  "cadence": 60.6
+ },
+ {
+  "t": 1745,
+  "timestamp": "2026-07-26T06:57:25+00:00",
+  "power": 123.4,
+  "heart_rate": 154.0,
+  "cadence": 61.4
+ },
+ {
+  "t": 1750,
+  "timestamp": "2026-07-26T06:57:30+00:00",
+  "power": 153.2,
+  "heart_rate": 152.6,
+  "cadence": 86.8
+ },
+ {
+  "t": 1755,
+  "timestamp": "2026-07-26T06:57:35+00:00",
+  "power": 136.0,
+  "heart_rate": 147.0,
+  "cadence": 54.0
+ },
+ {
+  "t": 1760,
+  "timestamp": "2026-07-26T06:57:40+00:00",
+  "power": 118.0,
+  "heart_rate": 144.6,
+  "cadence": 54.0
+ },
+ {
+  "t": 1765,
+  "timestamp": "2026-07-26T06:57:45+00:00",
+  "power": 112.0,
+  "heart_rate": 142.4,
+  "cadence": 57.0
+ },
+ {
+  "t": 1770,
+  "timestamp": "2026-07-26T06:57:50+00:00",
+  "power": 111.0,
+  "heart_rate": 141.0,
+  "cadence": 58.0
+ },
+ {
+  "t": 1775,
+  "timestamp": "2026-07-26T06:57:55+00:00",
+  "power": 108.0,
+  "heart_rate": 141.4,
+  "cadence": 58.0
+ },
+ {
+  "t": 1780,
+  "timestamp": "2026-07-26T06:58:00+00:00",
+  "power": 108.2,
+  "heart_rate": 141.0,
+  "cadence": 58.4
+ },
+ {
+  "t": 1785,
+  "timestamp": "2026-07-26T06:58:05+00:00",
+  "power": 100.0,
+  "heart_rate": 140.0,
+  "cadence": 56.0
+ },
+ {
+  "t": 1790,
+  "timestamp": "2026-07-26T06:58:10+00:00",
+  "power": 54.8,
+  "heart_rate": 140.8,
+  "cadence": 34.8
+ },
+ {
+  "t": 1795,
+  "timestamp": "2026-07-26T06:58:15+00:00",
+  "power": 0.0,
+  "heart_rate": 141.8,
+  "cadence": 21.0
+ },
+ {
+  "t": 1800,
+  "timestamp": "2026-07-26T06:58:20+00:00",
+  "power": 0.0,
+  "heart_rate": 141.0,
+  "cadence": 0.0
+ }
+]

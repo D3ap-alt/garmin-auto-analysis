@@ -1,0 +1,31 @@
+{
+ "activity_id": "23471371819",
+ "date": "2026-07-04",
+ "sport": "bike",
+ "brick_key": null,
+ "session": {
+  "start_time": "2026-07-04T02:34:29+00:00",
+  "sport": "cycling",
+  "sub_sport": "road",
+  "total_elapsed_time": 4847.237,
+  "total_timer_time": 4041.238,
+  "total_distance": 30499.77,
+  "total_calories": 555,
+  "avg_heart_rate": 152,
+  "max_heart_rate": 188,
+  "avg_power": 116,
+  "max_power": 659,
+  "normalized_power": 176,
+  "training_stress_score": 73.3,
+  "intensity_factor": 0.813,
+  "threshold_power": 216,
+  "avg_cadence": 78,
+  "total_ascent": 541,
+  "total_descent": 384,
+  "avg_temperature": 30,
+  "max_temperature": 34
+ },
+ "lap_count": 7,
+ "length_count": 0,
+ "record_count": 4044
+}

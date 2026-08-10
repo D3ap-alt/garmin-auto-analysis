@@ -1,0 +1,26 @@
+{
+ "activity_id": "23735520896",
+ "date": "2026-07-26",
+ "sport": "run",
+ "brick_key": null,
+ "session": {
+  "start_time": "2026-07-26T06:28:20+00:00",
+  "sport": "running",
+  "sub_sport": "treadmill",
+  "total_elapsed_time": 1800.558,
+  "total_timer_time": 1800.558,
+  "total_distance": 5380.0,
+  "total_calories": 382,
+  "avg_heart_rate": 164,
+  "max_heart_rate": 188,
+  "avg_power": 272,
+  "max_power": 476,
+  "normalized_power": 283,
+  "avg_cadence": 84,
+  "avg_stance_time": 254.1,
+  "avg_vertical_ratio": 8.31
+ },
+ "lap_count": 6,
+ "length_count": 0,
+ "record_count": 1801
+}
