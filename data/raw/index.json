@@ -2,7 +2,7 @@
  "repo": "D3ap-alt/garmin-auto-analysis",
  "branch": "main",
  "base_url": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/",
- "count": 27,
+ "count": 29,
  "dates": [
   "2026-07-01",
   "2026-07-03",
@@ -22,7 +22,8 @@
   "2026-07-28",
   "2026-07-29",
   "2026-07-30",
-  "2026-08-10"
+  "2026-08-10",
+  "2026-08-15"
  ],
  "activities": [
   {
@@ -560,6 +561,46 @@
     "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-10_23923679015_meta.json",
     "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-10_23923679015_laps.json",
     "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-10_23923679015_series_5s.json"
+   }
+  },
+  {
+   "date": "2026-08-15",
+   "activity_id": "23980282389",
+   "sport": "run",
+   "brick_key": "brick01",
+   "stem": "2026-08-15_brick01_23980282389",
+   "start_time": "2026-08-14T23:27:01+00:00",
+   "distance_m": 5361.61,
+   "duration_s": 1490.884,
+   "avg_hr": 177,
+   "lap_count": 6,
+   "length_count": 0,
+   "record_count": 1491,
+   "urls": {
+    "fit": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/fit/2026-08-15_brick01_23980282389.fit",
+    "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-15_brick01_23980282389_meta.json",
+    "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-15_brick01_23980282389_laps.json",
+    "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-15_brick01_23980282389_series_5s.json"
+   }
+  },
+  {
+   "date": "2026-08-15",
+   "activity_id": "23980282899",
+   "sport": "run",
+   "brick_key": "brick01",
+   "stem": "2026-08-15_brick01_23980282899",
+   "start_time": "2026-08-15T00:05:21+00:00",
+   "distance_m": 5355.47,
+   "duration_s": 1523.629,
+   "avg_hr": 186,
+   "lap_count": 6,
+   "length_count": 0,
+   "record_count": 1525,
+   "urls": {
+    "fit": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/fit/2026-08-15_brick01_23980282899.fit",
+    "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-15_brick01_23980282899_meta.json",
+    "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-15_brick01_23980282899_laps.json",
+    "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-15_brick01_23980282899_series_5s.json"
    }
   }
  ]
