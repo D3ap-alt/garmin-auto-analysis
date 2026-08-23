@@ -1,0 +1,2729 @@
+[
+ {
+  "t": 0,
+  "timestamp": "2026-08-23T07:53:47+00:00",
+  "power": 116.6,
+  "heart_rate": 98.6,
+  "cadence": 62.4,
+  "speed": 2.09,
+  "altitude": 12.8
+ },
+ {
+  "t": 5,
+  "timestamp": "2026-08-23T07:53:52+00:00",
+  "power": 121.4,
+  "heart_rate": 102.4,
+  "cadence": 69.6,
+  "speed": 4.17,
+  "altitude": 12.8
+ },
+ {
+  "t": 10,
+  "timestamp": "2026-08-23T07:53:57+00:00",
+  "power": 54.8,
+  "heart_rate": 104.8,
+  "cadence": 30.8,
+  "speed": 4.97,
+  "altitude": 12.88
+ },
+ {
+  "t": 15,
+  "timestamp": "2026-08-23T07:54:02+00:00",
+  "power": 124.4,
+  "heart_rate": 105.6,
+  "cadence": 71.0,
+  "speed": 4.37,
+  "altitude": 13.0
+ },
+ {
+  "t": 20,
+  "timestamp": "2026-08-23T07:54:07+00:00",
+  "power": 58.4,
+  "heart_rate": 108.8,
+  "cadence": 26.8,
+  "speed": 4.23,
+  "altitude": 13.0
+ },
+ {
+  "t": 25,
+  "timestamp": "2026-08-23T07:54:12+00:00",
+  "power": 129.4,
+  "heart_rate": 111.0,
+  "cadence": 79.6,
+  "speed": 4.67,
+  "altitude": 13.0
+ },
+ {
+  "t": 30,
+  "timestamp": "2026-08-23T07:54:17+00:00",
+  "power": 72.8,
+  "heart_rate": 115.4,
+  "cadence": 68.4,
+  "speed": 5.79,
+  "altitude": 13.0
+ },
+ {
+  "t": 35,
+  "timestamp": "2026-08-23T07:54:22+00:00",
+  "power": 106.8,
+  "heart_rate": 117.8,
+  "cadence": 62.0,
+  "speed": 6.1,
+  "altitude": 13.0
+ },
+ {
+  "t": 40,
+  "timestamp": "2026-08-23T07:54:27+00:00",
+  "power": 102.2,
+  "heart_rate": 117.2,
+  "cadence": 84.0,
+  "speed": 6.56,
+  "altitude": 13.0
+ },
+ {
+  "t": 45,
+  "timestamp": "2026-08-23T07:54:32+00:00",
+  "power": 111.8,
+  "heart_rate": 119.0,
+  "cadence": 84.6,
+  "speed": 6.93,
+  "altitude": 13.0
+ },
+ {
+  "t": 50,
+  "timestamp": "2026-08-23T07:54:37+00:00",
+  "power": 128.2,
+  "heart_rate": 122.2,
+  "cadence": 83.2,
+  "speed": 7.32,
+  "altitude": 13.0
+ },
+ {
+  "t": 55,
+  "timestamp": "2026-08-23T07:54:42+00:00",
+  "power": 127.6,
+  "heart_rate": 122.6,
+  "cadence": 94.4,
+  "speed": 7.67,
+  "altitude": 13.0
+ },
+ {
+  "t": 60,
+  "timestamp": "2026-08-23T07:54:47+00:00",
+  "power": 112.4,
+  "heart_rate": 122.4,
+  "cadence": 92.4,
+  "speed": 7.83,
+  "altitude": 13.0
+ },
+ {
+  "t": 65,
+  "timestamp": "2026-08-23T07:54:52+00:00",
+  "power": 136.8,
+  "heart_rate": 124.8,
+  "cadence": 90.0,
+  "speed": 8.14,
+  "altitude": 13.04
+ },
+ {
+  "t": 70,
+  "timestamp": "2026-08-23T07:54:57+00:00",
+  "power": 144.6,
+  "heart_rate": 124.0,
+  "cadence": 89.2,
+  "speed": 8.23,
+  "altitude": 13.2
+ },
+ {
+  "t": 75,
+  "timestamp": "2026-08-23T07:55:02+00:00",
+  "power": 131.8,
+  "heart_rate": 125.4,
+  "cadence": 89.6,
+  "speed": 8.13,
+  "altitude": 13.44
+ },
+ {
+  "t": 80,
+  "timestamp": "2026-08-23T07:55:07+00:00",
+  "power": 156.6,
+  "heart_rate": 126.0,
+  "cadence": 94.4,
+  "speed": 7.96,
+  "altitude": 13.84
+ },
+ {
+  "t": 85,
+  "timestamp": "2026-08-23T07:55:12+00:00",
+  "power": 118.2,
+  "heart_rate": 127.0,
+  "cadence": 100.4,
+  "speed": 7.75,
+  "altitude": 14.44
+ },
+ {
+  "t": 90,
+  "timestamp": "2026-08-23T07:55:17+00:00",
+  "power": 132.4,
+  "heart_rate": 128.8,
+  "cadence": 98.4,
+  "speed": 7.48,
+  "altitude": 15.04
+ },
+ {
+  "t": 95,
+  "timestamp": "2026-08-23T07:55:22+00:00",
+  "power": 128.6,
+  "heart_rate": 130.8,
+  "cadence": 96.8,
+  "speed": 7.21,
+  "altitude": 15.64
+ },
+ {
+  "t": 100,
+  "timestamp": "2026-08-23T07:55:27+00:00",
+  "power": 138.6,
+  "heart_rate": 131.0,
+  "cadence": 94.6,
+  "speed": 7.27,
+  "altitude": 16.12
+ },
+ {
+  "t": 105,
+  "timestamp": "2026-08-23T07:55:32+00:00",
+  "power": 140.2,
+  "heart_rate": 132.0,
+  "cadence": 93.2,
+  "speed": 7.66,
+  "altitude": 16.2
+ },
+ {
+  "t": 110,
+  "timestamp": "2026-08-23T07:55:37+00:00",
+  "power": 142.0,
+  "heart_rate": 133.0,
+  "cadence": 92.0,
+  "speed": 8.1,
+  "altitude": 16.2
+ },
+ {
+  "t": 115,
+  "timestamp": "2026-08-23T07:55:42+00:00",
+  "power": 138.0,
+  "heart_rate": 133.4,
+  "cadence": 91.8,
+  "speed": 8.49,
+  "altitude": 16.0
+ },
+ {
+  "t": 120,
+  "timestamp": "2026-08-23T07:55:47+00:00",
+  "power": 139.0,
+  "heart_rate": 134.4,
+  "cadence": 90.0,
+  "speed": 8.9,
+  "altitude": 15.68
+ },
+ {
+  "t": 125,
+  "timestamp": "2026-08-23T07:55:52+00:00",
+  "power": 139.4,
+  "heart_rate": 135.0,
+  "cadence": 90.4,
+  "speed": 9.25,
+  "altitude": 15.32
+ },
+ {
+  "t": 130,
+  "timestamp": "2026-08-23T07:55:57+00:00",
+  "power": 143.0,
+  "heart_rate": 135.2,
+  "cadence": 90.6,
+  "speed": 9.34,
+  "altitude": 15.2
+ },
+ {
+  "t": 135,
+  "timestamp": "2026-08-23T07:56:02+00:00",
+  "power": 140.2,
+  "heart_rate": 134.6,
+  "cadence": 90.6,
+  "speed": 8.99,
+  "altitude": 15.52
+ },
+ {
+  "t": 140,
+  "timestamp": "2026-08-23T07:56:07+00:00",
+  "power": 149.2,
+  "heart_rate": 131.2,
+  "cadence": 90.6,
+  "speed": 8.79,
+  "altitude": 15.76
+ },
+ {
+  "t": 145,
+  "timestamp": "2026-08-23T07:56:12+00:00",
+  "power": 153.8,
+  "heart_rate": 130.2,
+  "cadence": 89.8,
+  "speed": 8.66,
+  "altitude": 15.96
+ },
+ {
+  "t": 150,
+  "timestamp": "2026-08-23T07:56:17+00:00",
+  "power": 132.4,
+  "heart_rate": 133.2,
+  "cadence": 91.8,
+  "speed": 8.61,
+  "altitude": 16.08
+ },
+ {
+  "t": 155,
+  "timestamp": "2026-08-23T07:56:22+00:00",
+  "power": 154.8,
+  "heart_rate": 135.2,
+  "cadence": 89.0,
+  "speed": 8.87,
+  "altitude": 16.0
+ },
+ {
+  "t": 160,
+  "timestamp": "2026-08-23T07:56:27+00:00",
+  "power": 141.4,
+  "heart_rate": 136.0,
+  "cadence": 90.8,
+  "speed": 9.43,
+  "altitude": 15.56
+ },
+ {
+  "t": 165,
+  "timestamp": "2026-08-23T07:56:32+00:00",
+  "power": 151.0,
+  "heart_rate": 135.8,
+  "cadence": 90.8,
+  "speed": 9.23,
+  "altitude": 15.68
+ },
+ {
+  "t": 170,
+  "timestamp": "2026-08-23T07:56:37+00:00",
+  "power": 148.4,
+  "heart_rate": 135.0,
+  "cadence": 92.6,
+  "speed": 9.34,
+  "altitude": 15.68
+ },
+ {
+  "t": 175,
+  "timestamp": "2026-08-23T07:56:42+00:00",
+  "power": 146.4,
+  "heart_rate": 135.0,
+  "cadence": 91.8,
+  "speed": 9.64,
+  "altitude": 15.32
+ },
+ {
+  "t": 180,
+  "timestamp": "2026-08-23T07:56:47+00:00",
+  "power": 169.6,
+  "heart_rate": 135.0,
+  "cadence": 93.4,
+  "speed": 9.95,
+  "altitude": 14.92
+ },
+ {
+  "t": 185,
+  "timestamp": "2026-08-23T07:56:52+00:00",
+  "power": 166.2,
+  "heart_rate": 135.4,
+  "cadence": 97.2,
+  "speed": 10.41,
+  "altitude": 14.44
+ },
+ {
+  "t": 190,
+  "timestamp": "2026-08-23T07:56:57+00:00",
+  "power": 182.8,
+  "heart_rate": 136.4,
+  "cadence": 95.2,
+  "speed": 10.51,
+  "altitude": 14.16
+ },
+ {
+  "t": 195,
+  "timestamp": "2026-08-23T07:57:02+00:00",
+  "power": 178.4,
+  "heart_rate": 138.6,
+  "cadence": 95.4,
+  "speed": 10.43,
+  "altitude": 14.0
+ },
+ {
+  "t": 200,
+  "timestamp": "2026-08-23T07:57:07+00:00",
+  "power": 200.2,
+  "heart_rate": 141.0,
+  "cadence": 93.0,
+  "speed": 10.66,
+  "altitude": 14.0
+ },
+ {
+  "t": 205,
+  "timestamp": "2026-08-23T07:57:12+00:00",
+  "power": 189.4,
+  "heart_rate": 141.2,
+  "cadence": 96.6,
+  "speed": 10.88,
+  "altitude": 14.0
+ },
+ {
+  "t": 210,
+  "timestamp": "2026-08-23T07:57:17+00:00",
+  "power": 202.4,
+  "heart_rate": 141.0,
+  "cadence": 96.0,
+  "speed": 10.81,
+  "altitude": 14.0
+ },
+ {
+  "t": 215,
+  "timestamp": "2026-08-23T07:57:22+00:00",
+  "power": 189.8,
+  "heart_rate": 142.2,
+  "cadence": 95.4,
+  "speed": 10.52,
+  "altitude": 13.96
+ },
+ {
+  "t": 220,
+  "timestamp": "2026-08-23T07:57:27+00:00",
+  "power": 186.4,
+  "heart_rate": 145.0,
+  "cadence": 96.0,
+  "speed": 10.66,
+  "altitude": 13.56
+ },
+ {
+  "t": 225,
+  "timestamp": "2026-08-23T07:57:32+00:00",
+  "power": 150.6,
+  "heart_rate": 146.2,
+  "cadence": 91.2,
+  "speed": 10.46,
+  "altitude": 13.2
+ },
+ {
+  "t": 230,
+  "timestamp": "2026-08-23T07:57:37+00:00",
+  "power": 161.0,
+  "heart_rate": 145.2,
+  "cadence": 87.4,
+  "speed": 10.06,
+  "altitude": 13.2
+ },
+ {
+  "t": 235,
+  "timestamp": "2026-08-23T07:57:42+00:00",
+  "power": 152.0,
+  "heart_rate": 144.2,
+  "cadence": 87.8,
+  "speed": 9.79,
+  "altitude": 13.2
+ },
+ {
+  "t": 240,
+  "timestamp": "2026-08-23T07:57:47+00:00",
+  "power": 179.2,
+  "heart_rate": 144.0,
+  "cadence": 92.0,
+  "speed": 9.88,
+  "altitude": 13.2
+ },
+ {
+  "t": 245,
+  "timestamp": "2026-08-23T07:57:52+00:00",
+  "power": 179.4,
+  "heart_rate": 144.6,
+  "cadence": 96.8,
+  "speed": 10.13,
+  "altitude": 13.2
+ },
+ {
+  "t": 250,
+  "timestamp": "2026-08-23T07:57:57+00:00",
+  "power": 190.8,
+  "heart_rate": 145.6,
+  "cadence": 95.4,
+  "speed": 10.23,
+  "altitude": 13.2
+ },
+ {
+  "t": 255,
+  "timestamp": "2026-08-23T07:58:02+00:00",
+  "power": 194.0,
+  "heart_rate": 146.4,
+  "cadence": 94.4,
+  "speed": 10.09,
+  "altitude": 13.2
+ },
+ {
+  "t": 260,
+  "timestamp": "2026-08-23T07:58:07+00:00",
+  "power": 195.2,
+  "heart_rate": 147.8,
+  "cadence": 94.0,
+  "speed": 9.83,
+  "altitude": 13.36
+ },
+ {
+  "t": 265,
+  "timestamp": "2026-08-23T07:58:12+00:00",
+  "power": 223.8,
+  "heart_rate": 148.0,
+  "cadence": 94.2,
+  "speed": 9.76,
+  "altitude": 13.48
+ },
+ {
+  "t": 270,
+  "timestamp": "2026-08-23T07:58:17+00:00",
+  "power": 214.8,
+  "heart_rate": 149.0,
+  "cadence": 94.8,
+  "speed": 9.68,
+  "altitude": 13.72
+ },
+ {
+  "t": 275,
+  "timestamp": "2026-08-23T07:58:22+00:00",
+  "power": 209.2,
+  "heart_rate": 149.2,
+  "cadence": 94.4,
+  "speed": 9.7,
+  "altitude": 13.96
+ },
+ {
+  "t": 280,
+  "timestamp": "2026-08-23T07:58:27+00:00",
+  "power": 169.2,
+  "heart_rate": 150.2,
+  "cadence": 89.4,
+  "speed": 9.64,
+  "altitude": 14.2
+ },
+ {
+  "t": 285,
+  "timestamp": "2026-08-23T07:58:32+00:00",
+  "power": 23.4,
+  "heart_rate": 151.0,
+  "cadence": 16.6,
+  "speed": 8.89,
+  "altitude": 14.36
+ },
+ {
+  "t": 290,
+  "timestamp": "2026-08-23T07:58:37+00:00",
+  "power": 44.8,
+  "heart_rate": 148.6,
+  "cadence": 10.8,
+  "speed": 7.79,
+  "altitude": 14.64
+ },
+ {
+  "t": 295,
+  "timestamp": "2026-08-23T07:58:42+00:00",
+  "power": 149.2,
+  "heart_rate": 143.2,
+  "cadence": 91.0,
+  "speed": 7.86,
+  "altitude": 14.8
+ },
+ {
+  "t": 300,
+  "timestamp": "2026-08-23T07:58:47+00:00",
+  "power": 145.4,
+  "heart_rate": 141.8,
+  "cadence": 96.4,
+  "speed": 8.47,
+  "altitude": 14.64
+ },
+ {
+  "t": 305,
+  "timestamp": "2026-08-23T07:58:52+00:00",
+  "power": 176.8,
+  "heart_rate": 144.4,
+  "cadence": 97.2,
+  "speed": 9.17,
+  "altitude": 14.24
+ },
+ {
+  "t": 310,
+  "timestamp": "2026-08-23T07:58:57+00:00",
+  "power": 183.4,
+  "heart_rate": 146.2,
+  "cadence": 94.4,
+  "speed": 9.68,
+  "altitude": 13.96
+ },
+ {
+  "t": 315,
+  "timestamp": "2026-08-23T07:59:02+00:00",
+  "power": 187.2,
+  "heart_rate": 147.4,
+  "cadence": 93.8,
+  "speed": 10.2,
+  "altitude": 13.8
+ },
+ {
+  "t": 320,
+  "timestamp": "2026-08-23T07:59:07+00:00",
+  "power": 207.6,
+  "heart_rate": 147.8,
+  "cadence": 94.2,
+  "speed": 10.45,
+  "altitude": 13.72
+ },
+ {
+  "t": 325,
+  "timestamp": "2026-08-23T07:59:12+00:00",
+  "power": 219.6,
+  "heart_rate": 148.2,
+  "cadence": 96.2,
+  "speed": 10.86,
+  "altitude": 13.36
+ },
+ {
+  "t": 330,
+  "timestamp": "2026-08-23T07:59:17+00:00",
+  "power": 213.4,
+  "heart_rate": 149.0,
+  "cadence": 96.6,
+  "speed": 11.2,
+  "altitude": 13.12
+ },
+ {
+  "t": 335,
+  "timestamp": "2026-08-23T07:59:22+00:00",
+  "power": 216.6,
+  "heart_rate": 150.8,
+  "cadence": 95.6,
+  "speed": 11.25,
+  "altitude": 13.2
+ },
+ {
+  "t": 340,
+  "timestamp": "2026-08-23T07:59:27+00:00",
+  "power": 200.2,
+  "heart_rate": 152.6,
+  "cadence": 93.4,
+  "speed": 11.34,
+  "altitude": 13.2
+ },
+ {
+  "t": 345,
+  "timestamp": "2026-08-23T07:59:32+00:00",
+  "power": 172.6,
+  "heart_rate": 153.0,
+  "cadence": 88.8,
+  "speed": 11.15,
+  "altitude": 13.2
+ },
+ {
+  "t": 350,
+  "timestamp": "2026-08-23T07:59:37+00:00",
+  "power": 167.2,
+  "heart_rate": 153.2,
+  "cadence": 88.4,
+  "speed": 10.58,
+  "altitude": 13.2
+ },
+ {
+  "t": 355,
+  "timestamp": "2026-08-23T07:59:42+00:00",
+  "power": 170.4,
+  "heart_rate": 152.0,
+  "cadence": 87.2,
+  "speed": 10.36,
+  "altitude": 13.2
+ },
+ {
+  "t": 360,
+  "timestamp": "2026-08-23T07:59:47+00:00",
+  "power": 158.4,
+  "heart_rate": 152.4,
+  "cadence": 84.0,
+  "speed": 10.33,
+  "altitude": 13.2
+ },
+ {
+  "t": 365,
+  "timestamp": "2026-08-23T07:59:52+00:00",
+  "power": 125.6,
+  "heart_rate": 151.8,
+  "cadence": 79.8,
+  "speed": 10.1,
+  "altitude": 13.2
+ },
+ {
+  "t": 370,
+  "timestamp": "2026-08-23T07:59:57+00:00",
+  "power": 121.2,
+  "heart_rate": 151.6,
+  "cadence": 79.0,
+  "speed": 9.9,
+  "altitude": 13.2
+ },
+ {
+  "t": 375,
+  "timestamp": "2026-08-23T08:00:02+00:00",
+  "power": 112.4,
+  "heart_rate": 152.0,
+  "cadence": 79.6,
+  "speed": 9.64,
+  "altitude": 13.2
+ },
+ {
+  "t": 380,
+  "timestamp": "2026-08-23T08:00:07+00:00",
+  "power": 122.6,
+  "heart_rate": 152.0,
+  "cadence": 80.0,
+  "speed": 9.65,
+  "altitude": 13.2
+ },
+ {
+  "t": 385,
+  "timestamp": "2026-08-23T08:00:12+00:00",
+  "power": 120.0,
+  "heart_rate": 151.8,
+  "cadence": 79.0,
+  "speed": 9.7,
+  "altitude": 13.2
+ },
+ {
+  "t": 390,
+  "timestamp": "2026-08-23T08:00:17+00:00",
+  "power": 119.6,
+  "heart_rate": 150.4,
+  "cadence": 78.4,
+  "speed": 9.51,
+  "altitude": 13.2
+ },
+ {
+  "t": 395,
+  "timestamp": "2026-08-23T08:00:22+00:00",
+  "power": 120.6,
+  "heart_rate": 149.6,
+  "cadence": 78.8,
+  "speed": 9.69,
+  "altitude": 13.2
+ },
+ {
+  "t": 400,
+  "timestamp": "2026-08-23T08:00:27+00:00",
+  "power": 115.0,
+  "heart_rate": 147.6,
+  "cadence": 78.2,
+  "speed": 9.74,
+  "altitude": 13.2
+ },
+ {
+  "t": 405,
+  "timestamp": "2026-08-23T08:00:32+00:00",
+  "power": 121.6,
+  "heart_rate": 144.2,
+  "cadence": 80.4,
+  "speed": 9.5,
+  "altitude": 13.2
+ },
+ {
+  "t": 410,
+  "timestamp": "2026-08-23T08:00:37+00:00",
+  "power": 113.4,
+  "heart_rate": 142.2,
+  "cadence": 81.8,
+  "speed": 9.1,
+  "altitude": 13.2
+ },
+ {
+  "t": 415,
+  "timestamp": "2026-08-23T08:00:42+00:00",
+  "power": 122.0,
+  "heart_rate": 141.0,
+  "cadence": 80.4,
+  "speed": 8.84,
+  "altitude": 13.2
+ },
+ {
+  "t": 420,
+  "timestamp": "2026-08-23T08:00:47+00:00",
+  "power": 153.4,
+  "heart_rate": 139.8,
+  "cadence": 82.8,
+  "speed": 8.72,
+  "altitude": 13.2
+ },
+ {
+  "t": 425,
+  "timestamp": "2026-08-23T08:00:52+00:00",
+  "power": 166.0,
+  "heart_rate": 138.6,
+  "cadence": 93.0,
+  "speed": 8.94,
+  "altitude": 13.2
+ },
+ {
+  "t": 430,
+  "timestamp": "2026-08-23T08:00:57+00:00",
+  "power": 181.0,
+  "heart_rate": 140.4,
+  "cadence": 91.2,
+  "speed": 9.06,
+  "altitude": 13.2
+ },
+ {
+  "t": 435,
+  "timestamp": "2026-08-23T08:01:02+00:00",
+  "power": 174.4,
+  "heart_rate": 143.0,
+  "cadence": 91.0,
+  "speed": 9.21,
+  "altitude": 13.2
+ },
+ {
+  "t": 440,
+  "timestamp": "2026-08-23T08:01:07+00:00",
+  "power": 185.4,
+  "heart_rate": 144.8,
+  "cadence": 92.8,
+  "speed": 9.32,
+  "altitude": 13.2
+ },
+ {
+  "t": 445,
+  "timestamp": "2026-08-23T08:01:12+00:00",
+  "power": 195.2,
+  "heart_rate": 146.2,
+  "cadence": 93.0,
+  "speed": 9.47,
+  "altitude": 13.2
+ },
+ {
+  "t": 450,
+  "timestamp": "2026-08-23T08:01:17+00:00",
+  "power": 194.6,
+  "heart_rate": 147.6,
+  "cadence": 93.6,
+  "speed": 9.59,
+  "altitude": 13.2
+ },
+ {
+  "t": 455,
+  "timestamp": "2026-08-23T08:01:22+00:00",
+  "power": 198.4,
+  "heart_rate": 148.0,
+  "cadence": 94.0,
+  "speed": 9.8,
+  "altitude": 13.2
+ },
+ {
+  "t": 460,
+  "timestamp": "2026-08-23T08:01:27+00:00",
+  "power": 173.0,
+  "heart_rate": 148.6,
+  "cadence": 93.8,
+  "speed": 10.28,
+  "altitude": 13.2
+ },
+ {
+  "t": 465,
+  "timestamp": "2026-08-23T08:01:32+00:00",
+  "power": 135.6,
+  "heart_rate": 150.4,
+  "cadence": 86.8,
+  "speed": 9.93,
+  "altitude": 13.08
+ },
+ {
+  "t": 470,
+  "timestamp": "2026-08-23T08:01:37+00:00",
+  "power": 158.0,
+  "heart_rate": 150.4,
+  "cadence": 84.6,
+  "speed": 9.64,
+  "altitude": 13.0
+ },
+ {
+  "t": 475,
+  "timestamp": "2026-08-23T08:01:42+00:00",
+  "power": 154.0,
+  "heart_rate": 149.0,
+  "cadence": 85.2,
+  "speed": 9.53,
+  "altitude": 13.0
+ },
+ {
+  "t": 480,
+  "timestamp": "2026-08-23T08:01:47+00:00",
+  "power": 166.0,
+  "heart_rate": 149.4,
+  "cadence": 88.0,
+  "speed": 9.41,
+  "altitude": 13.0
+ },
+ {
+  "t": 485,
+  "timestamp": "2026-08-23T08:01:52+00:00",
+  "power": 171.2,
+  "heart_rate": 151.8,
+  "cadence": 96.4,
+  "speed": 9.47,
+  "altitude": 13.0
+ },
+ {
+  "t": 490,
+  "timestamp": "2026-08-23T08:01:57+00:00",
+  "power": 192.0,
+  "heart_rate": 153.8,
+  "cadence": 95.8,
+  "speed": 9.62,
+  "altitude": 13.0
+ },
+ {
+  "t": 495,
+  "timestamp": "2026-08-23T08:02:02+00:00",
+  "power": 178.6,
+  "heart_rate": 154.8,
+  "cadence": 94.0,
+  "speed": 9.76,
+  "altitude": 13.0
+ },
+ {
+  "t": 500,
+  "timestamp": "2026-08-23T08:02:07+00:00",
+  "power": 210.4,
+  "heart_rate": 154.6,
+  "cadence": 93.4,
+  "speed": 9.97,
+  "altitude": 13.0
+ },
+ {
+  "t": 505,
+  "timestamp": "2026-08-23T08:02:12+00:00",
+  "power": 200.4,
+  "heart_rate": 154.0,
+  "cadence": 97.0,
+  "speed": 10.53,
+  "altitude": 13.0
+ },
+ {
+  "t": 510,
+  "timestamp": "2026-08-23T08:02:17+00:00",
+  "power": 214.0,
+  "heart_rate": 154.6,
+  "cadence": 96.8,
+  "speed": 10.77,
+  "altitude": 13.08
+ },
+ {
+  "t": 515,
+  "timestamp": "2026-08-23T08:02:22+00:00",
+  "power": 222.6,
+  "heart_rate": 155.0,
+  "cadence": 95.8,
+  "speed": 10.77,
+  "altitude": 13.2
+ },
+ {
+  "t": 520,
+  "timestamp": "2026-08-23T08:02:27+00:00",
+  "power": 156.2,
+  "heart_rate": 154.6,
+  "cadence": 91.8,
+  "speed": 10.75,
+  "altitude": 13.2
+ },
+ {
+  "t": 525,
+  "timestamp": "2026-08-23T08:02:32+00:00",
+  "power": 163.8,
+  "heart_rate": 154.0,
+  "cadence": 81.4,
+  "speed": 10.24,
+  "altitude": 13.2
+ },
+ {
+  "t": 530,
+  "timestamp": "2026-08-23T08:02:37+00:00",
+  "power": 174.8,
+  "heart_rate": 154.0,
+  "cadence": 81.6,
+  "speed": 9.97,
+  "altitude": 13.2
+ },
+ {
+  "t": 535,
+  "timestamp": "2026-08-23T08:02:42+00:00",
+  "power": 158.4,
+  "heart_rate": 154.0,
+  "cadence": 83.4,
+  "speed": 9.75,
+  "altitude": 13.2
+ },
+ {
+  "t": 540,
+  "timestamp": "2026-08-23T08:02:47+00:00",
+  "power": 191.6,
+  "heart_rate": 154.8,
+  "cadence": 89.8,
+  "speed": 9.71,
+  "altitude": 13.2
+ },
+ {
+  "t": 545,
+  "timestamp": "2026-08-23T08:02:52+00:00",
+  "power": 180.4,
+  "heart_rate": 155.0,
+  "cadence": 95.0,
+  "speed": 9.86,
+  "altitude": 13.2
+ },
+ {
+  "t": 550,
+  "timestamp": "2026-08-23T08:02:57+00:00",
+  "power": 204.8,
+  "heart_rate": 155.8,
+  "cadence": 91.8,
+  "speed": 10.21,
+  "altitude": 13.2
+ },
+ {
+  "t": 555,
+  "timestamp": "2026-08-23T08:03:02+00:00",
+  "power": 181.2,
+  "heart_rate": 156.0,
+  "cadence": 93.0,
+  "speed": 10.33,
+  "altitude": 13.2
+ },
+ {
+  "t": 560,
+  "timestamp": "2026-08-23T08:03:07+00:00",
+  "power": 205.6,
+  "heart_rate": 156.8,
+  "cadence": 93.2,
+  "speed": 10.17,
+  "altitude": 13.36
+ },
+ {
+  "t": 565,
+  "timestamp": "2026-08-23T08:03:12+00:00",
+  "power": 209.4,
+  "heart_rate": 156.0,
+  "cadence": 94.8,
+  "speed": 10.26,
+  "altitude": 13.6
+ },
+ {
+  "t": 570,
+  "timestamp": "2026-08-23T08:03:17+00:00",
+  "power": 219.8,
+  "heart_rate": 156.0,
+  "cadence": 94.4,
+  "speed": 10.24,
+  "altitude": 14.08
+ },
+ {
+  "t": 575,
+  "timestamp": "2026-08-23T08:03:22+00:00",
+  "power": 221.2,
+  "heart_rate": 155.6,
+  "cadence": 92.0,
+  "speed": 9.73,
+  "altitude": 14.72
+ },
+ {
+  "t": 580,
+  "timestamp": "2026-08-23T08:03:27+00:00",
+  "power": 179.6,
+  "heart_rate": 156.0,
+  "cadence": 91.0,
+  "speed": 9.25,
+  "altitude": 15.48
+ },
+ {
+  "t": 585,
+  "timestamp": "2026-08-23T08:03:32+00:00",
+  "power": 170.4,
+  "heart_rate": 156.6,
+  "cadence": 84.4,
+  "speed": 8.62,
+  "altitude": 16.24
+ },
+ {
+  "t": 590,
+  "timestamp": "2026-08-23T08:03:37+00:00",
+  "power": 181.2,
+  "heart_rate": 157.0,
+  "cadence": 83.4,
+  "speed": 8.31,
+  "altitude": 16.96
+ },
+ {
+  "t": 595,
+  "timestamp": "2026-08-23T08:03:42+00:00",
+  "power": 176.4,
+  "heart_rate": 157.2,
+  "cadence": 82.6,
+  "speed": 8.56,
+  "altitude": 17.36
+ },
+ {
+  "t": 600,
+  "timestamp": "2026-08-23T08:03:47+00:00",
+  "power": 149.6,
+  "heart_rate": 158.0,
+  "cadence": 81.6,
+  "speed": 8.82,
+  "altitude": 17.56
+ },
+ {
+  "t": 605,
+  "timestamp": "2026-08-23T08:03:52+00:00",
+  "power": 113.6,
+  "heart_rate": 157.2,
+  "cadence": 78.6,
+  "speed": 9.19,
+  "altitude": 17.16
+ },
+ {
+  "t": 610,
+  "timestamp": "2026-08-23T08:03:57+00:00",
+  "power": 124.6,
+  "heart_rate": 157.4,
+  "cadence": 77.2,
+  "speed": 9.77,
+  "altitude": 16.52
+ },
+ {
+  "t": 615,
+  "timestamp": "2026-08-23T08:04:02+00:00",
+  "power": 125.6,
+  "heart_rate": 157.2,
+  "cadence": 76.6,
+  "speed": 10.25,
+  "altitude": 15.76
+ },
+ {
+  "t": 620,
+  "timestamp": "2026-08-23T08:04:07+00:00",
+  "power": 120.8,
+  "heart_rate": 156.6,
+  "cadence": 76.8,
+  "speed": 10.57,
+  "altitude": 14.96
+ },
+ {
+  "t": 625,
+  "timestamp": "2026-08-23T08:04:12+00:00",
+  "power": 123.4,
+  "heart_rate": 154.4,
+  "cadence": 75.0,
+  "speed": 10.75,
+  "altitude": 14.16
+ },
+ {
+  "t": 630,
+  "timestamp": "2026-08-23T08:04:17+00:00",
+  "power": 118.4,
+  "heart_rate": 153.0,
+  "cadence": 75.6,
+  "speed": 11.01,
+  "altitude": 13.4
+ },
+ {
+  "t": 635,
+  "timestamp": "2026-08-23T08:04:22+00:00",
+  "power": 124.8,
+  "heart_rate": 151.2,
+  "cadence": 76.4,
+  "speed": 10.75,
+  "altitude": 13.24
+ },
+ {
+  "t": 640,
+  "timestamp": "2026-08-23T08:04:27+00:00",
+  "power": 120.6,
+  "heart_rate": 149.4,
+  "cadence": 76.2,
+  "speed": 9.85,
+  "altitude": 13.48
+ },
+ {
+  "t": 645,
+  "timestamp": "2026-08-23T08:04:32+00:00",
+  "power": 121.0,
+  "heart_rate": 149.0,
+  "cadence": 76.8,
+  "speed": 9.2,
+  "altitude": 13.72
+ },
+ {
+  "t": 650,
+  "timestamp": "2026-08-23T08:04:37+00:00",
+  "power": 121.6,
+  "heart_rate": 150.2,
+  "cadence": 78.8,
+  "speed": 8.82,
+  "altitude": 13.96
+ },
+ {
+  "t": 655,
+  "timestamp": "2026-08-23T08:04:42+00:00",
+  "power": 114.2,
+  "heart_rate": 151.0,
+  "cadence": 81.0,
+  "speed": 8.84,
+  "altitude": 14.08
+ },
+ {
+  "t": 660,
+  "timestamp": "2026-08-23T08:04:47+00:00",
+  "power": 174.0,
+  "heart_rate": 150.2,
+  "cadence": 82.2,
+  "speed": 9.34,
+  "altitude": 13.84
+ },
+ {
+  "t": 665,
+  "timestamp": "2026-08-23T08:04:52+00:00",
+  "power": 172.2,
+  "heart_rate": 147.6,
+  "cadence": 91.8,
+  "speed": 9.56,
+  "altitude": 13.72
+ },
+ {
+  "t": 670,
+  "timestamp": "2026-08-23T08:04:57+00:00",
+  "power": 177.6,
+  "heart_rate": 146.4,
+  "cadence": 93.0,
+  "speed": 9.44,
+  "altitude": 13.8
+ },
+ {
+  "t": 675,
+  "timestamp": "2026-08-23T08:05:02+00:00",
+  "power": 171.6,
+  "heart_rate": 145.4,
+  "cadence": 93.0,
+  "speed": 9.53,
+  "altitude": 13.8
+ },
+ {
+  "t": 680,
+  "timestamp": "2026-08-23T08:05:07+00:00",
+  "power": 196.6,
+  "heart_rate": 145.0,
+  "cadence": 91.4,
+  "speed": 9.7,
+  "altitude": 13.76
+ },
+ {
+  "t": 685,
+  "timestamp": "2026-08-23T08:05:12+00:00",
+  "power": 191.6,
+  "heart_rate": 145.8,
+  "cadence": 90.8,
+  "speed": 9.7,
+  "altitude": 13.6
+ },
+ {
+  "t": 690,
+  "timestamp": "2026-08-23T08:05:17+00:00",
+  "power": 209.8,
+  "heart_rate": 146.4,
+  "cadence": 91.0,
+  "speed": 9.76,
+  "altitude": 13.6
+ },
+ {
+  "t": 695,
+  "timestamp": "2026-08-23T08:05:22+00:00",
+  "power": 204.0,
+  "heart_rate": 148.4,
+  "cadence": 89.6,
+  "speed": 9.86,
+  "altitude": 13.6
+ },
+ {
+  "t": 700,
+  "timestamp": "2026-08-23T08:05:27+00:00",
+  "power": 179.0,
+  "heart_rate": 150.0,
+  "cadence": 90.2,
+  "speed": 10.06,
+  "altitude": 13.44
+ },
+ {
+  "t": 705,
+  "timestamp": "2026-08-23T08:05:32+00:00",
+  "power": 146.4,
+  "heart_rate": 150.6,
+  "cadence": 86.0,
+  "speed": 10.03,
+  "altitude": 13.2
+ },
+ {
+  "t": 710,
+  "timestamp": "2026-08-23T08:05:37+00:00",
+  "power": 159.0,
+  "heart_rate": 150.2,
+  "cadence": 82.8,
+  "speed": 10.09,
+  "altitude": 13.12
+ },
+ {
+  "t": 715,
+  "timestamp": "2026-08-23T08:05:42+00:00",
+  "power": 153.6,
+  "heart_rate": 151.0,
+  "cadence": 83.2,
+  "speed": 9.82,
+  "altitude": 13.0
+ },
+ {
+  "t": 720,
+  "timestamp": "2026-08-23T08:05:47+00:00",
+  "power": 169.8,
+  "heart_rate": 151.0,
+  "cadence": 86.2,
+  "speed": 9.81,
+  "altitude": 13.2
+ },
+ {
+  "t": 725,
+  "timestamp": "2026-08-23T08:05:52+00:00",
+  "power": 175.6,
+  "heart_rate": 151.6,
+  "cadence": 90.2,
+  "speed": 9.99,
+  "altitude": 13.2
+ },
+ {
+  "t": 730,
+  "timestamp": "2026-08-23T08:05:57+00:00",
+  "power": 196.4,
+  "heart_rate": 152.0,
+  "cadence": 88.2,
+  "speed": 10.12,
+  "altitude": 13.2
+ },
+ {
+  "t": 735,
+  "timestamp": "2026-08-23T08:06:02+00:00",
+  "power": 191.0,
+  "heart_rate": 152.8,
+  "cadence": 91.6,
+  "speed": 10.21,
+  "altitude": 13.2
+ },
+ {
+  "t": 740,
+  "timestamp": "2026-08-23T08:06:07+00:00",
+  "power": 199.6,
+  "heart_rate": 154.0,
+  "cadence": 93.0,
+  "speed": 10.11,
+  "altitude": 13.2
+ },
+ {
+  "t": 745,
+  "timestamp": "2026-08-23T08:06:12+00:00",
+  "power": 200.2,
+  "heart_rate": 154.0,
+  "cadence": 94.0,
+  "speed": 10.07,
+  "altitude": 13.2
+ },
+ {
+  "t": 750,
+  "timestamp": "2026-08-23T08:06:17+00:00",
+  "power": 213.4,
+  "heart_rate": 154.0,
+  "cadence": 92.8,
+  "speed": 10.08,
+  "altitude": 13.2
+ },
+ {
+  "t": 755,
+  "timestamp": "2026-08-23T08:06:22+00:00",
+  "power": 217.2,
+  "heart_rate": 155.0,
+  "cadence": 92.8,
+  "speed": 10.23,
+  "altitude": 13.2
+ },
+ {
+  "t": 760,
+  "timestamp": "2026-08-23T08:06:27+00:00",
+  "power": 158.2,
+  "heart_rate": 156.2,
+  "cadence": 91.2,
+  "speed": 10.54,
+  "altitude": 13.2
+ },
+ {
+  "t": 765,
+  "timestamp": "2026-08-23T08:06:32+00:00",
+  "power": 171.8,
+  "heart_rate": 156.4,
+  "cadence": 80.4,
+  "speed": 10.37,
+  "altitude": 13.04
+ },
+ {
+  "t": 770,
+  "timestamp": "2026-08-23T08:06:37+00:00",
+  "power": 170.2,
+  "heart_rate": 156.4,
+  "cadence": 75.8,
+  "speed": 10.25,
+  "altitude": 13.16
+ },
+ {
+  "t": 775,
+  "timestamp": "2026-08-23T08:06:42+00:00",
+  "power": 159.6,
+  "heart_rate": 156.4,
+  "cadence": 76.6,
+  "speed": 10.28,
+  "altitude": 13.28
+ },
+ {
+  "t": 780,
+  "timestamp": "2026-08-23T08:06:47+00:00",
+  "power": 194.6,
+  "heart_rate": 156.0,
+  "cadence": 81.4,
+  "speed": 9.95,
+  "altitude": 13.4
+ },
+ {
+  "t": 785,
+  "timestamp": "2026-08-23T08:06:52+00:00",
+  "power": 187.6,
+  "heart_rate": 155.4,
+  "cadence": 88.0,
+  "speed": 9.87,
+  "altitude": 13.52
+ },
+ {
+  "t": 790,
+  "timestamp": "2026-08-23T08:06:57+00:00",
+  "power": 190.6,
+  "heart_rate": 155.6,
+  "cadence": 87.6,
+  "speed": 9.96,
+  "altitude": 13.36
+ },
+ {
+  "t": 795,
+  "timestamp": "2026-08-23T08:07:02+00:00",
+  "power": 187.6,
+  "heart_rate": 157.4,
+  "cadence": 86.8,
+  "speed": 10.03,
+  "altitude": 13.2
+ },
+ {
+  "t": 800,
+  "timestamp": "2026-08-23T08:07:07+00:00",
+  "power": 223.2,
+  "heart_rate": 158.0,
+  "cadence": 85.0,
+  "speed": 10.06,
+  "altitude": 13.2
+ },
+ {
+  "t": 805,
+  "timestamp": "2026-08-23T08:07:12+00:00",
+  "power": 230.2,
+  "heart_rate": 159.0,
+  "cadence": 88.0,
+  "speed": 10.15,
+  "altitude": 13.2
+ },
+ {
+  "t": 810,
+  "timestamp": "2026-08-23T08:07:17+00:00",
+  "power": 206.6,
+  "heart_rate": 158.2,
+  "cadence": 90.0,
+  "speed": 10.24,
+  "altitude": 13.2
+ },
+ {
+  "t": 815,
+  "timestamp": "2026-08-23T08:07:22+00:00",
+  "power": 231.8,
+  "heart_rate": 158.0,
+  "cadence": 87.2,
+  "speed": 10.29,
+  "altitude": 13.2
+ },
+ {
+  "t": 820,
+  "timestamp": "2026-08-23T08:07:27+00:00",
+  "power": 202.6,
+  "heart_rate": 158.2,
+  "cadence": 86.0,
+  "speed": 10.28,
+  "altitude": 13.2
+ },
+ {
+  "t": 825,
+  "timestamp": "2026-08-23T08:07:32+00:00",
+  "power": 178.8,
+  "heart_rate": 159.0,
+  "cadence": 77.6,
+  "speed": 10.17,
+  "altitude": 13.2
+ },
+ {
+  "t": 830,
+  "timestamp": "2026-08-23T08:07:37+00:00",
+  "power": 172.4,
+  "heart_rate": 159.6,
+  "cadence": 79.2,
+  "speed": 10.23,
+  "altitude": 13.2
+ },
+ {
+  "t": 835,
+  "timestamp": "2026-08-23T08:07:42+00:00",
+  "power": 169.4,
+  "heart_rate": 161.4,
+  "cadence": 78.6,
+  "speed": 9.98,
+  "altitude": 13.2
+ },
+ {
+  "t": 840,
+  "timestamp": "2026-08-23T08:07:47+00:00",
+  "power": 156.4,
+  "heart_rate": 161.6,
+  "cadence": 76.8,
+  "speed": 9.86,
+  "altitude": 13.2
+ },
+ {
+  "t": 845,
+  "timestamp": "2026-08-23T08:07:52+00:00",
+  "power": 116.6,
+  "heart_rate": 161.0,
+  "cadence": 78.6,
+  "speed": 9.84,
+  "altitude": 13.2
+ },
+ {
+  "t": 850,
+  "timestamp": "2026-08-23T08:07:57+00:00",
+  "power": 121.2,
+  "heart_rate": 159.6,
+  "cadence": 76.6,
+  "speed": 9.72,
+  "altitude": 13.2
+ },
+ {
+  "t": 855,
+  "timestamp": "2026-08-23T08:08:02+00:00",
+  "power": 120.2,
+  "heart_rate": 157.6,
+  "cadence": 77.0,
+  "speed": 9.47,
+  "altitude": 13.2
+ },
+ {
+  "t": 860,
+  "timestamp": "2026-08-23T08:08:07+00:00",
+  "power": 118.6,
+  "heart_rate": 155.8,
+  "cadence": 76.2,
+  "speed": 9.15,
+  "altitude": 13.2
+ },
+ {
+  "t": 865,
+  "timestamp": "2026-08-23T08:08:12+00:00",
+  "power": 130.0,
+  "heart_rate": 154.2,
+  "cadence": 76.6,
+  "speed": 8.93,
+  "altitude": 13.2
+ },
+ {
+  "t": 870,
+  "timestamp": "2026-08-23T08:08:17+00:00",
+  "power": 119.0,
+  "heart_rate": 152.4,
+  "cadence": 77.0,
+  "speed": 8.75,
+  "altitude": 13.2
+ },
+ {
+  "t": 875,
+  "timestamp": "2026-08-23T08:08:22+00:00",
+  "power": 117.0,
+  "heart_rate": 151.0,
+  "cadence": 76.4,
+  "speed": 8.58,
+  "altitude": 13.2
+ },
+ {
+  "t": 880,
+  "timestamp": "2026-08-23T08:08:27+00:00",
+  "power": 118.8,
+  "heart_rate": 149.8,
+  "cadence": 76.2,
+  "speed": 8.49,
+  "altitude": 13.2
+ },
+ {
+  "t": 885,
+  "timestamp": "2026-08-23T08:08:32+00:00",
+  "power": 119.2,
+  "heart_rate": 148.2,
+  "cadence": 75.0,
+  "speed": 8.36,
+  "altitude": 13.2
+ },
+ {
+  "t": 890,
+  "timestamp": "2026-08-23T08:08:37+00:00",
+  "power": 122.4,
+  "heart_rate": 146.6,
+  "cadence": 74.6,
+  "speed": 8.3,
+  "altitude": 13.2
+ },
+ {
+  "t": 895,
+  "timestamp": "2026-08-23T08:08:42+00:00",
+  "power": 117.2,
+  "heart_rate": 144.0,
+  "cadence": 74.8,
+  "speed": 8.28,
+  "altitude": 13.2
+ },
+ {
+  "t": 900,
+  "timestamp": "2026-08-23T08:08:47+00:00",
+  "power": 159.8,
+  "heart_rate": 141.8,
+  "cadence": 80.4,
+  "speed": 8.55,
+  "altitude": 13.2
+ },
+ {
+  "t": 905,
+  "timestamp": "2026-08-23T08:08:52+00:00",
+  "power": 163.8,
+  "heart_rate": 142.2,
+  "cadence": 91.6,
+  "speed": 9.13,
+  "altitude": 13.2
+ },
+ {
+  "t": 910,
+  "timestamp": "2026-08-23T08:08:57+00:00",
+  "power": 171.6,
+  "heart_rate": 145.0,
+  "cadence": 88.6,
+  "speed": 9.51,
+  "altitude": 13.2
+ },
+ {
+  "t": 915,
+  "timestamp": "2026-08-23T08:09:02+00:00",
+  "power": 182.4,
+  "heart_rate": 146.8,
+  "cadence": 85.8,
+  "speed": 9.77,
+  "altitude": 13.2
+ },
+ {
+  "t": 920,
+  "timestamp": "2026-08-23T08:09:07+00:00",
+  "power": 187.0,
+  "heart_rate": 148.0,
+  "cadence": 85.8,
+  "speed": 9.78,
+  "altitude": 13.2
+ },
+ {
+  "t": 925,
+  "timestamp": "2026-08-23T08:09:12+00:00",
+  "power": 200.6,
+  "heart_rate": 148.0,
+  "cadence": 89.8,
+  "speed": 9.8,
+  "altitude": 13.2
+ },
+ {
+  "t": 930,
+  "timestamp": "2026-08-23T08:09:17+00:00",
+  "power": 197.0,
+  "heart_rate": 147.4,
+  "cadence": 91.2,
+  "speed": 9.78,
+  "altitude": 13.2
+ },
+ {
+  "t": 935,
+  "timestamp": "2026-08-23T08:09:22+00:00",
+  "power": 199.2,
+  "heart_rate": 148.0,
+  "cadence": 91.8,
+  "speed": 9.75,
+  "altitude": 13.24
+ },
+ {
+  "t": 940,
+  "timestamp": "2026-08-23T08:09:27+00:00",
+  "power": 192.2,
+  "heart_rate": 150.2,
+  "cadence": 92.6,
+  "speed": 9.53,
+  "altitude": 13.64
+ },
+ {
+  "t": 945,
+  "timestamp": "2026-08-23T08:09:32+00:00",
+  "power": 127.4,
+  "heart_rate": 152.2,
+  "cadence": 89.2,
+  "speed": 9.48,
+  "altitude": 13.64
+ },
+ {
+  "t": 950,
+  "timestamp": "2026-08-23T08:09:37+00:00",
+  "power": 156.2,
+  "heart_rate": 153.4,
+  "cadence": 85.6,
+  "speed": 9.68,
+  "altitude": 13.24
+ },
+ {
+  "t": 955,
+  "timestamp": "2026-08-23T08:09:42+00:00",
+  "power": 147.4,
+  "heart_rate": 151.6,
+  "cadence": 86.6,
+  "speed": 9.35,
+  "altitude": 13.4
+ },
+ {
+  "t": 960,
+  "timestamp": "2026-08-23T08:09:47+00:00",
+  "power": 171.2,
+  "heart_rate": 150.2,
+  "cadence": 88.4,
+  "speed": 8.74,
+  "altitude": 13.92
+ },
+ {
+  "t": 965,
+  "timestamp": "2026-08-23T08:09:52+00:00",
+  "power": 179.2,
+  "heart_rate": 150.0,
+  "cadence": 91.6,
+  "speed": 8.38,
+  "altitude": 14.56
+ },
+ {
+  "t": 970,
+  "timestamp": "2026-08-23T08:09:57+00:00",
+  "power": 187.0,
+  "heart_rate": 149.0,
+  "cadence": 88.2,
+  "speed": 8.28,
+  "altitude": 15.04
+ },
+ {
+  "t": 975,
+  "timestamp": "2026-08-23T08:10:02+00:00",
+  "power": 198.8,
+  "heart_rate": 149.8,
+  "cadence": 87.8,
+  "speed": 8.53,
+  "altitude": 15.2
+ },
+ {
+  "t": 980,
+  "timestamp": "2026-08-23T08:10:07+00:00",
+  "power": 189.8,
+  "heart_rate": 152.6,
+  "cadence": 88.0,
+  "speed": 9.02,
+  "altitude": 15.12
+ },
+ {
+  "t": 985,
+  "timestamp": "2026-08-23T08:10:12+00:00",
+  "power": 207.0,
+  "heart_rate": 154.0,
+  "cadence": 87.8,
+  "speed": 9.58,
+  "altitude": 14.88
+ },
+ {
+  "t": 990,
+  "timestamp": "2026-08-23T08:10:17+00:00",
+  "power": 210.2,
+  "heart_rate": 154.2,
+  "cadence": 87.2,
+  "speed": 10.02,
+  "altitude": 14.52
+ },
+ {
+  "t": 995,
+  "timestamp": "2026-08-23T08:10:22+00:00",
+  "power": 217.0,
+  "heart_rate": 155.0,
+  "cadence": 87.4,
+  "speed": 10.31,
+  "altitude": 14.2
+ },
+ {
+  "t": 1000,
+  "timestamp": "2026-08-23T08:10:27+00:00",
+  "power": 168.4,
+  "heart_rate": 155.4,
+  "cadence": 87.0,
+  "speed": 10.47,
+  "altitude": 13.88
+ },
+ {
+  "t": 1005,
+  "timestamp": "2026-08-23T08:10:32+00:00",
+  "power": 167.8,
+  "heart_rate": 156.8,
+  "cadence": 78.6,
+  "speed": 10.25,
+  "altitude": 13.52
+ },
+ {
+  "t": 1010,
+  "timestamp": "2026-08-23T08:10:37+00:00",
+  "power": 163.8,
+  "heart_rate": 157.4,
+  "cadence": 78.8,
+  "speed": 10.02,
+  "altitude": 13.48
+ },
+ {
+  "t": 1015,
+  "timestamp": "2026-08-23T08:10:42+00:00",
+  "power": 159.6,
+  "heart_rate": 157.0,
+  "cadence": 78.0,
+  "speed": 9.46,
+  "altitude": 13.84
+ },
+ {
+  "t": 1020,
+  "timestamp": "2026-08-23T08:10:47+00:00",
+  "power": 184.8,
+  "heart_rate": 157.0,
+  "cadence": 82.6,
+  "speed": 9.25,
+  "altitude": 14.04
+ },
+ {
+  "t": 1025,
+  "timestamp": "2026-08-23T08:10:52+00:00",
+  "power": 180.6,
+  "heart_rate": 158.0,
+  "cadence": 89.0,
+  "speed": 9.71,
+  "altitude": 13.6
+ },
+ {
+  "t": 1030,
+  "timestamp": "2026-08-23T08:10:57+00:00",
+  "power": 190.0,
+  "heart_rate": 157.0,
+  "cadence": 86.0,
+  "speed": 10.24,
+  "altitude": 13.0
+ },
+ {
+  "t": 1035,
+  "timestamp": "2026-08-23T08:11:02+00:00",
+  "power": 199.0,
+  "heart_rate": 156.8,
+  "cadence": 86.4,
+  "speed": 10.31,
+  "altitude": 12.8
+ },
+ {
+  "t": 1040,
+  "timestamp": "2026-08-23T08:11:07+00:00",
+  "power": 214.8,
+  "heart_rate": 156.0,
+  "cadence": 85.8,
+  "speed": 10.26,
+  "altitude": 12.64
+ },
+ {
+  "t": 1045,
+  "timestamp": "2026-08-23T08:11:12+00:00",
+  "power": 221.4,
+  "heart_rate": 156.6,
+  "cadence": 88.2,
+  "speed": 10.25,
+  "altitude": 12.76
+ },
+ {
+  "t": 1050,
+  "timestamp": "2026-08-23T08:11:17+00:00",
+  "power": 232.4,
+  "heart_rate": 158.0,
+  "cadence": 91.2,
+  "speed": 10.31,
+  "altitude": 12.64
+ },
+ {
+  "t": 1055,
+  "timestamp": "2026-08-23T08:11:22+00:00",
+  "power": 211.8,
+  "heart_rate": 159.6,
+  "cadence": 94.2,
+  "speed": 10.61,
+  "altitude": 12.76
+ },
+ {
+  "t": 1060,
+  "timestamp": "2026-08-23T08:11:27+00:00",
+  "power": 179.4,
+  "heart_rate": 160.0,
+  "cadence": 89.4,
+  "speed": 10.85,
+  "altitude": 12.64
+ },
+ {
+  "t": 1065,
+  "timestamp": "2026-08-23T08:11:32+00:00",
+  "power": 188.4,
+  "heart_rate": 161.0,
+  "cadence": 85.4,
+  "speed": 10.64,
+  "altitude": 12.92
+ },
+ {
+  "t": 1070,
+  "timestamp": "2026-08-23T08:11:37+00:00",
+  "power": 163.0,
+  "heart_rate": 161.8,
+  "cadence": 88.2,
+  "speed": 10.16,
+  "altitude": 13.2
+ },
+ {
+  "t": 1075,
+  "timestamp": "2026-08-23T08:11:42+00:00",
+  "power": 188.0,
+  "heart_rate": 162.0,
+  "cadence": 84.0,
+  "speed": 9.91,
+  "altitude": 13.2
+ },
+ {
+  "t": 1080,
+  "timestamp": "2026-08-23T08:11:47+00:00",
+  "power": 136.4,
+  "heart_rate": 162.0,
+  "cadence": 84.8,
+  "speed": 9.76,
+  "altitude": 13.2
+ },
+ {
+  "t": 1085,
+  "timestamp": "2026-08-23T08:11:52+00:00",
+  "power": 124.2,
+  "heart_rate": 161.8,
+  "cadence": 83.8,
+  "speed": 9.39,
+  "altitude": 13.2
+ },
+ {
+  "t": 1090,
+  "timestamp": "2026-08-23T08:11:57+00:00",
+  "power": 111.8,
+  "heart_rate": 161.0,
+  "cadence": 88.8,
+  "speed": 9.05,
+  "altitude": 13.2
+ },
+ {
+  "t": 1095,
+  "timestamp": "2026-08-23T08:12:02+00:00",
+  "power": 116.4,
+  "heart_rate": 161.4,
+  "cadence": 86.2,
+  "speed": 8.76,
+  "altitude": 13.16
+ },
+ {
+  "t": 1100,
+  "timestamp": "2026-08-23T08:12:07+00:00",
+  "power": 118.6,
+  "heart_rate": 160.4,
+  "cadence": 84.8,
+  "speed": 8.77,
+  "altitude": 12.92
+ },
+ {
+  "t": 1105,
+  "timestamp": "2026-08-23T08:12:12+00:00",
+  "power": 122.8,
+  "heart_rate": 157.8,
+  "cadence": 82.6,
+  "speed": 8.85,
+  "altitude": 12.72
+ },
+ {
+  "t": 1110,
+  "timestamp": "2026-08-23T08:12:17+00:00",
+  "power": 108.8,
+  "heart_rate": 155.8,
+  "cadence": 81.8,
+  "speed": 8.65,
+  "altitude": 12.72
+ },
+ {
+  "t": 1115,
+  "timestamp": "2026-08-23T08:12:22+00:00",
+  "power": 135.4,
+  "heart_rate": 155.0,
+  "cadence": 81.8,
+  "speed": 8.68,
+  "altitude": 12.8
+ },
+ {
+  "t": 1120,
+  "timestamp": "2026-08-23T08:12:27+00:00",
+  "power": 113.2,
+  "heart_rate": 152.8,
+  "cadence": 85.2,
+  "speed": 8.6,
+  "altitude": 12.88
+ },
+ {
+  "t": 1125,
+  "timestamp": "2026-08-23T08:12:32+00:00",
+  "power": 123.6,
+  "heart_rate": 151.6,
+  "cadence": 84.2,
+  "speed": 8.42,
+  "altitude": 13.36
+ },
+ {
+  "t": 1130,
+  "timestamp": "2026-08-23T08:12:37+00:00",
+  "power": 117.4,
+  "heart_rate": 149.8,
+  "cadence": 85.6,
+  "speed": 8.09,
+  "altitude": 13.92
+ },
+ {
+  "t": 1135,
+  "timestamp": "2026-08-23T08:12:42+00:00",
+  "power": 125.0,
+  "heart_rate": 147.6,
+  "cadence": 85.6,
+  "speed": 8.17,
+  "altitude": 14.04
+ },
+ {
+  "t": 1140,
+  "timestamp": "2026-08-23T08:12:47+00:00",
+  "power": 146.6,
+  "heart_rate": 146.2,
+  "cadence": 86.6,
+  "speed": 8.67,
+  "altitude": 13.8
+ },
+ {
+  "t": 1145,
+  "timestamp": "2026-08-23T08:12:52+00:00",
+  "power": 187.6,
+  "heart_rate": 145.4,
+  "cadence": 86.6,
+  "speed": 9.28,
+  "altitude": 13.48
+ },
+ {
+  "t": 1150,
+  "timestamp": "2026-08-23T08:12:57+00:00",
+  "power": 172.4,
+  "heart_rate": 145.0,
+  "cadence": 87.4,
+  "speed": 9.43,
+  "altitude": 13.52
+ },
+ {
+  "t": 1155,
+  "timestamp": "2026-08-23T08:13:02+00:00",
+  "power": 183.8,
+  "heart_rate": 145.8,
+  "cadence": 87.0,
+  "speed": 9.35,
+  "altitude": 13.76
+ },
+ {
+  "t": 1160,
+  "timestamp": "2026-08-23T08:13:07+00:00",
+  "power": 192.2,
+  "heart_rate": 147.0,
+  "cadence": 86.4,
+  "speed": 9.29,
+  "altitude": 14.08
+ },
+ {
+  "t": 1165,
+  "timestamp": "2026-08-23T08:13:12+00:00",
+  "power": 191.4,
+  "heart_rate": 147.8,
+  "cadence": 88.8,
+  "speed": 9.42,
+  "altitude": 14.36
+ },
+ {
+  "t": 1170,
+  "timestamp": "2026-08-23T08:13:17+00:00",
+  "power": 206.2,
+  "heart_rate": 148.6,
+  "cadence": 87.8,
+  "speed": 9.65,
+  "altitude": 14.68
+ },
+ {
+  "t": 1175,
+  "timestamp": "2026-08-23T08:13:22+00:00",
+  "power": 200.6,
+  "heart_rate": 150.2,
+  "cadence": 88.2,
+  "speed": 9.89,
+  "altitude": 15.0
+ },
+ {
+  "t": 1180,
+  "timestamp": "2026-08-23T08:13:27+00:00",
+  "power": 184.2,
+  "heart_rate": 151.6,
+  "cadence": 85.4,
+  "speed": 9.7,
+  "altitude": 15.2
+ },
+ {
+  "t": 1185,
+  "timestamp": "2026-08-23T08:13:32+00:00",
+  "power": 142.2,
+  "heart_rate": 152.8,
+  "cadence": 87.0,
+  "speed": 9.81,
+  "altitude": 15.04
+ },
+ {
+  "t": 1190,
+  "timestamp": "2026-08-23T08:13:37+00:00",
+  "power": 147.0,
+  "heart_rate": 154.0,
+  "cadence": 86.0,
+  "speed": 10.07,
+  "altitude": 14.4
+ },
+ {
+  "t": 1195,
+  "timestamp": "2026-08-23T08:13:42+00:00",
+  "power": 152.2,
+  "heart_rate": 152.2,
+  "cadence": 85.6,
+  "speed": 10.34,
+  "altitude": 13.68
+ },
+ {
+  "t": 1200,
+  "timestamp": "2026-08-23T08:13:47+00:00",
+  "power": 185.8,
+  "heart_rate": 150.4,
+  "cadence": 85.2,
+  "speed": 10.35,
+  "altitude": 13.24
+ },
+ {
+  "t": 1205,
+  "timestamp": "2026-08-23T08:13:52+00:00",
+  "power": 193.8,
+  "heart_rate": 150.0,
+  "cadence": 90.2,
+  "speed": 10.02,
+  "altitude": 13.4
+ },
+ {
+  "t": 1210,
+  "timestamp": "2026-08-23T08:13:57+00:00",
+  "power": 182.8,
+  "heart_rate": 150.6,
+  "cadence": 91.6,
+  "speed": 9.81,
+  "altitude": 13.72
+ },
+ {
+  "t": 1215,
+  "timestamp": "2026-08-23T08:14:02+00:00",
+  "power": 193.8,
+  "heart_rate": 152.2,
+  "cadence": 92.8,
+  "speed": 10.43,
+  "altitude": 13.36
+ },
+ {
+  "t": 1220,
+  "timestamp": "2026-08-23T08:14:07+00:00",
+  "power": 191.6,
+  "heart_rate": 153.8,
+  "cadence": 92.8,
+  "speed": 10.57,
+  "altitude": 13.2
+ },
+ {
+  "t": 1225,
+  "timestamp": "2026-08-23T08:14:12+00:00",
+  "power": 204.8,
+  "heart_rate": 155.0,
+  "cadence": 91.6,
+  "speed": 10.41,
+  "altitude": 13.2
+ },
+ {
+  "t": 1230,
+  "timestamp": "2026-08-23T08:14:17+00:00",
+  "power": 207.4,
+  "heart_rate": 155.0,
+  "cadence": 89.4,
+  "speed": 10.3,
+  "altitude": 13.2
+ },
+ {
+  "t": 1235,
+  "timestamp": "2026-08-23T08:14:22+00:00",
+  "power": 215.6,
+  "heart_rate": 156.4,
+  "cadence": 89.0,
+  "speed": 10.29,
+  "altitude": 13.2
+ },
+ {
+  "t": 1240,
+  "timestamp": "2026-08-23T08:14:27+00:00",
+  "power": 180.6,
+  "heart_rate": 158.8,
+  "cadence": 86.4,
+  "speed": 10.21,
+  "altitude": 13.2
+ },
+ {
+  "t": 1245,
+  "timestamp": "2026-08-23T08:14:32+00:00",
+  "power": 163.8,
+  "heart_rate": 160.8,
+  "cadence": 86.2,
+  "speed": 9.9,
+  "altitude": 13.2
+ },
+ {
+  "t": 1250,
+  "timestamp": "2026-08-23T08:14:37+00:00",
+  "power": 150.2,
+  "heart_rate": 161.8,
+  "cadence": 83.2,
+  "speed": 9.66,
+  "altitude": 13.2
+ },
+ {
+  "t": 1255,
+  "timestamp": "2026-08-23T08:14:42+00:00",
+  "power": 162.2,
+  "heart_rate": 162.0,
+  "cadence": 81.0,
+  "speed": 9.49,
+  "altitude": 13.2
+ },
+ {
+  "t": 1260,
+  "timestamp": "2026-08-23T08:14:47+00:00",
+  "power": 169.0,
+  "heart_rate": 162.0,
+  "cadence": 80.4,
+  "speed": 9.4,
+  "altitude": 13.2
+ },
+ {
+  "t": 1265,
+  "timestamp": "2026-08-23T08:14:52+00:00",
+  "power": 201.0,
+  "heart_rate": 161.4,
+  "cadence": 86.2,
+  "speed": 9.61,
+  "altitude": 13.2
+ },
+ {
+  "t": 1270,
+  "timestamp": "2026-08-23T08:14:57+00:00",
+  "power": 189.0,
+  "heart_rate": 160.6,
+  "cadence": 87.8,
+  "speed": 9.66,
+  "altitude": 13.2
+ },
+ {
+  "t": 1275,
+  "timestamp": "2026-08-23T08:15:02+00:00",
+  "power": 200.0,
+  "heart_rate": 160.0,
+  "cadence": 88.2,
+  "speed": 9.74,
+  "altitude": 13.2
+ },
+ {
+  "t": 1280,
+  "timestamp": "2026-08-23T08:15:07+00:00",
+  "power": 203.8,
+  "heart_rate": 160.4,
+  "cadence": 90.2,
+  "speed": 10.1,
+  "altitude": 13.2
+ },
+ {
+  "t": 1285,
+  "timestamp": "2026-08-23T08:15:12+00:00",
+  "power": 216.0,
+  "heart_rate": 160.6,
+  "cadence": 92.4,
+  "speed": 10.59,
+  "altitude": 13.2
+ },
+ {
+  "t": 1290,
+  "timestamp": "2026-08-23T08:15:17+00:00",
+  "power": 235.4,
+  "heart_rate": 160.2,
+  "cadence": 89.8,
+  "speed": 10.8,
+  "altitude": 13.2
+ },
+ {
+  "t": 1295,
+  "timestamp": "2026-08-23T08:15:22+00:00",
+  "power": 211.8,
+  "heart_rate": 161.0,
+  "cadence": 92.6,
+  "speed": 10.76,
+  "altitude": 13.2
+ },
+ {
+  "t": 1300,
+  "timestamp": "2026-08-23T08:15:27+00:00",
+  "power": 191.0,
+  "heart_rate": 161.0,
+  "cadence": 90.2,
+  "speed": 10.6,
+  "altitude": 13.2
+ },
+ {
+  "t": 1305,
+  "timestamp": "2026-08-23T08:15:32+00:00",
+  "power": 174.0,
+  "heart_rate": 161.0,
+  "cadence": 78.4,
+  "speed": 10.31,
+  "altitude": 13.2
+ },
+ {
+  "t": 1310,
+  "timestamp": "2026-08-23T08:15:37+00:00",
+  "power": 175.6,
+  "heart_rate": 162.6,
+  "cadence": 78.4,
+  "speed": 10.07,
+  "altitude": 13.2
+ },
+ {
+  "t": 1315,
+  "timestamp": "2026-08-23T08:15:42+00:00",
+  "power": 167.0,
+  "heart_rate": 163.0,
+  "cadence": 75.2,
+  "speed": 10.01,
+  "altitude": 13.2
+ },
+ {
+  "t": 1320,
+  "timestamp": "2026-08-23T08:15:47+00:00",
+  "power": 173.0,
+  "heart_rate": 163.8,
+  "cadence": 73.6,
+  "speed": 9.9,
+  "altitude": 13.2
+ },
+ {
+  "t": 1325,
+  "timestamp": "2026-08-23T08:15:52+00:00",
+  "power": 159.4,
+  "heart_rate": 164.0,
+  "cadence": 83.8,
+  "speed": 9.74,
+  "altitude": 13.2
+ },
+ {
+  "t": 1330,
+  "timestamp": "2026-08-23T08:15:57+00:00",
+  "power": 130.0,
+  "heart_rate": 163.8,
+  "cadence": 89.4,
+  "speed": 9.42,
+  "altitude": 13.2
+ },
+ {
+  "t": 1335,
+  "timestamp": "2026-08-23T08:16:02+00:00",
+  "power": 153.0,
+  "heart_rate": 163.8,
+  "cadence": 82.2,
+  "speed": 9.24,
+  "altitude": 13.2
+ },
+ {
+  "t": 1340,
+  "timestamp": "2026-08-23T08:16:07+00:00",
+  "power": 160.8,
+  "heart_rate": 164.0,
+  "cadence": 87.4,
+  "speed": 9.26,
+  "altitude": 13.2
+ },
+ {
+  "t": 1345,
+  "timestamp": "2026-08-23T08:16:12+00:00",
+  "power": 135.2,
+  "heart_rate": 164.0,
+  "cadence": 91.8,
+  "speed": 9.14,
+  "altitude": 13.2
+ },
+ {
+  "t": 1350,
+  "timestamp": "2026-08-23T08:16:17+00:00",
+  "power": 136.2,
+  "heart_rate": 163.6,
+  "cadence": 84.8,
+  "speed": 8.89,
+  "altitude": 13.2
+ },
+ {
+  "t": 1355,
+  "timestamp": "2026-08-23T08:16:22+00:00",
+  "power": 152.6,
+  "heart_rate": 163.0,
+  "cadence": 85.8,
+  "speed": 8.74,
+  "altitude": 13.32
+ },
+ {
+  "t": 1360,
+  "timestamp": "2026-08-23T08:16:27+00:00",
+  "power": 142.4,
+  "heart_rate": 162.0,
+  "cadence": 88.4,
+  "speed": 8.6,
+  "altitude": 13.52
+ },
+ {
+  "t": 1365,
+  "timestamp": "2026-08-23T08:16:32+00:00",
+  "power": 133.0,
+  "heart_rate": 161.0,
+  "cadence": 88.6,
+  "speed": 8.63,
+  "altitude": 13.44
+ },
+ {
+  "t": 1370,
+  "timestamp": "2026-08-23T08:16:37+00:00",
+  "power": 154.4,
+  "heart_rate": 160.8,
+  "cadence": 85.4,
+  "speed": 8.81,
+  "altitude": 13.4
+ },
+ {
+  "t": 1375,
+  "timestamp": "2026-08-23T08:16:42+00:00",
+  "power": 154.0,
+  "heart_rate": 159.8,
+  "cadence": 86.4,
+  "speed": 8.98,
+  "altitude": 13.2
+ },
+ {
+  "t": 1380,
+  "timestamp": "2026-08-23T08:16:47+00:00",
+  "power": 137.4,
+  "heart_rate": 159.0,
+  "cadence": 89.4,
+  "speed": 9.01,
+  "altitude": 13.08
+ },
+ {
+  "t": 1385,
+  "timestamp": "2026-08-23T08:16:52+00:00",
+  "power": 153.0,
+  "heart_rate": 159.0,
+  "cadence": 61.2,
+  "speed": 8.91,
+  "altitude": 13.08
+ },
+ {
+  "t": 1390,
+  "timestamp": "2026-08-23T08:16:57+00:00",
+  "power": 142.2,
+  "heart_rate": 157.2,
+  "cadence": 96.8,
+  "speed": 9.0,
+  "altitude": 13.2
+ },
+ {
+  "t": 1395,
+  "timestamp": "2026-08-23T08:17:02+00:00",
+  "power": 121.4,
+  "heart_rate": 156.0,
+  "cadence": 95.0,
+  "speed": 8.82,
+  "altitude": 13.2
+ },
+ {
+  "t": 1400,
+  "timestamp": "2026-08-23T08:17:07+00:00",
+  "power": 101.0,
+  "heart_rate": 156.0,
+  "cadence": 49.6,
+  "speed": 8.48,
+  "altitude": 13.2
+ },
+ {
+  "t": 1405,
+  "timestamp": "2026-08-23T08:17:12+00:00",
+  "power": 117.2,
+  "heart_rate": 155.0,
+  "cadence": 93.8,
+  "speed": 8.43,
+  "altitude": 13.2
+ },
+ {
+  "t": 1410,
+  "timestamp": "2026-08-23T08:17:17+00:00",
+  "power": 122.0,
+  "heart_rate": 154.2,
+  "cadence": 90.0,
+  "speed": 8.4,
+  "altitude": 13.2
+ },
+ {
+  "t": 1415,
+  "timestamp": "2026-08-23T08:17:22+00:00",
+  "power": 125.6,
+  "heart_rate": 153.8,
+  "cadence": 91.8,
+  "speed": 8.51,
+  "altitude": 13.2
+ },
+ {
+  "t": 1420,
+  "timestamp": "2026-08-23T08:17:27+00:00",
+  "power": 122.2,
+  "heart_rate": 151.6,
+  "cadence": 93.2,
+  "speed": 8.63,
+  "altitude": 13.2
+ },
+ {
+  "t": 1425,
+  "timestamp": "2026-08-23T08:17:32+00:00",
+  "power": 124.4,
+  "heart_rate": 148.4,
+  "cadence": 91.0,
+  "speed": 8.79,
+  "altitude": 13.2
+ },
+ {
+  "t": 1430,
+  "timestamp": "2026-08-23T08:17:37+00:00",
+  "power": 138.0,
+  "heart_rate": 147.0,
+  "cadence": 90.0,
+  "speed": 9.02,
+  "altitude": 13.2
+ },
+ {
+  "t": 1435,
+  "timestamp": "2026-08-23T08:17:42+00:00",
+  "power": 130.8,
+  "heart_rate": 147.2,
+  "cadence": 93.4,
+  "speed": 9.51,
+  "altitude": 13.2
+ },
+ {
+  "t": 1440,
+  "timestamp": "2026-08-23T08:17:47+00:00",
+  "power": 133.6,
+  "heart_rate": 148.8,
+  "cadence": 94.2,
+  "speed": 9.43,
+  "altitude": 13.04
+ },
+ {
+  "t": 1445,
+  "timestamp": "2026-08-23T08:17:52+00:00",
+  "power": 136.8,
+  "heart_rate": 149.2,
+  "cadence": 94.6,
+  "speed": 9.6,
+  "altitude": 13.08
+ },
+ {
+  "t": 1450,
+  "timestamp": "2026-08-23T08:17:57+00:00",
+  "power": 138.2,
+  "heart_rate": 148.8,
+  "cadence": 94.6,
+  "speed": 9.42,
+  "altitude": 13.2
+ },
+ {
+  "t": 1455,
+  "timestamp": "2026-08-23T08:18:02+00:00",
+  "power": 131.4,
+  "heart_rate": 148.4,
+  "cadence": 95.4,
+  "speed": 9.06,
+  "altitude": 13.36
+ },
+ {
+  "t": 1460,
+  "timestamp": "2026-08-23T08:18:07+00:00",
+  "power": 140.6,
+  "heart_rate": 149.0,
+  "cadence": 93.0,
+  "speed": 9.07,
+  "altitude": 13.56
+ },
+ {
+  "t": 1465,
+  "timestamp": "2026-08-23T08:18:12+00:00",
+  "power": 135.4,
+  "heart_rate": 148.0,
+  "cadence": 93.2,
+  "speed": 9.09,
+  "altitude": 13.6
+ },
+ {
+  "t": 1470,
+  "timestamp": "2026-08-23T08:18:17+00:00",
+  "power": 128.8,
+  "heart_rate": 148.0,
+  "cadence": 93.4,
+  "speed": 8.96,
+  "altitude": 13.6
+ },
+ {
+  "t": 1475,
+  "timestamp": "2026-08-23T08:18:22+00:00",
+  "power": 129.8,
+  "heart_rate": 148.0,
+  "cadence": 92.2,
+  "speed": 8.8,
+  "altitude": 13.6
+ },
+ {
+  "t": 1480,
+  "timestamp": "2026-08-23T08:18:27+00:00",
+  "power": 129.0,
+  "heart_rate": 147.0,
+  "cadence": 91.4,
+  "speed": 8.76,
+  "altitude": 13.8
+ },
+ {
+  "t": 1485,
+  "timestamp": "2026-08-23T08:18:32+00:00",
+  "power": 130.0,
+  "heart_rate": 146.8,
+  "cadence": 91.0,
+  "speed": 8.65,
+  "altitude": 13.8
+ },
+ {
+  "t": 1490,
+  "timestamp": "2026-08-23T08:18:37+00:00",
+  "power": 129.0,
+  "heart_rate": 145.8,
+  "cadence": 88.8,
+  "speed": 8.58,
+  "altitude": 13.8
+ },
+ {
+  "t": 1495,
+  "timestamp": "2026-08-23T08:18:42+00:00",
+  "power": 129.8,
+  "heart_rate": 145.2,
+  "cadence": 87.2,
+  "speed": 8.55,
+  "altitude": 13.76
+ },
+ {
+  "t": 1500,
+  "timestamp": "2026-08-23T08:18:47+00:00",
+  "power": 94.8,
+  "heart_rate": 146.0,
+  "cadence": 69.6,
+  "speed": 8.45,
+  "altitude": 13.76
+ },
+ {
+  "t": 1505,
+  "timestamp": "2026-08-23T08:18:52+00:00",
+  "power": 0.0,
+  "heart_rate": 145.4,
+  "cadence": 0.0,
+  "speed": 7.54,
+  "altitude": 13.96
+ },
+ {
+  "t": 1510,
+  "timestamp": "2026-08-23T08:18:57+00:00",
+  "power": 0.0,
+  "heart_rate": 142.75,
+  "cadence": 0.0,
+  "speed": 6.68,
+  "altitude": 14.1
+ }
+]
