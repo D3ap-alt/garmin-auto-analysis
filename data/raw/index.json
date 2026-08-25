@@ -2,7 +2,7 @@
  "repo": "D3ap-alt/garmin-auto-analysis",
  "branch": "main",
  "base_url": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/",
- "count": 44,
+ "count": 45,
  "dates": [
   "2026-07-01",
   "2026-07-03",
@@ -910,6 +910,26 @@
     "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-25_24104277115_meta.json",
     "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-25_24104277115_laps.json",
     "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-25_24104277115_series_5s.json"
+   }
+  },
+  {
+   "date": "2026-08-25",
+   "activity_id": "24107241989",
+   "sport": "run",
+   "brick_key": null,
+   "stem": "2026-08-25_24107241989",
+   "start_time": "2026-08-25T07:46:48+00:00",
+   "distance_m": 10008.01,
+   "duration_s": 2869.914,
+   "avg_hr": 171,
+   "lap_count": 11,
+   "length_count": 0,
+   "record_count": 2878,
+   "urls": {
+    "fit": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/fit/2026-08-25_24107241989.fit",
+    "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-25_24107241989_meta.json",
+    "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-25_24107241989_laps.json",
+    "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-08-25_24107241989_series_5s.json"
    }
   }
  ]
