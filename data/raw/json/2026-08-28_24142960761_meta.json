@@ -1,0 +1,30 @@
+{
+ "activity_id": "24142960761",
+ "date": "2026-08-28",
+ "sport": "run",
+ "brick_key": null,
+ "session": {
+  "start_time": "2026-08-28T00:01:39+00:00",
+  "sport": "running",
+  "sub_sport": "generic",
+  "total_elapsed_time": 1411.573,
+  "total_timer_time": 1377.957,
+  "total_distance": 5011.33,
+  "total_calories": 304,
+  "avg_heart_rate": 174,
+  "max_heart_rate": 186,
+  "avg_power": 338,
+  "max_power": 455,
+  "normalized_power": 342,
+  "avg_cadence": 88,
+  "total_ascent": 9,
+  "total_descent": 7,
+  "avg_temperature": 29,
+  "max_temperature": 31,
+  "avg_stance_time": 234.4,
+  "avg_vertical_ratio": 7.47
+ },
+ "lap_count": 6,
+ "length_count": 0,
+ "record_count": 1380
+}
