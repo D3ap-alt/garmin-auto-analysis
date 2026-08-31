@@ -1,0 +1,23 @@
+{
+ "activity_id": "24189835020",
+ "date": "2026-09-01",
+ "sport": "swim",
+ "brick_key": null,
+ "session": {
+  "start_time": "2026-08-31T21:45:38+00:00",
+  "sport": "swimming",
+  "sub_sport": "lap_swimming",
+  "total_elapsed_time": 4476.123,
+  "total_timer_time": 2892.823,
+  "total_distance": 3400.0,
+  "total_calories": 687,
+  "avg_heart_rate": 148,
+  "max_heart_rate": 189,
+  "avg_cadence": 27,
+  "pool_length": 25.0,
+  "num_lengths": 136
+ },
+ "lap_count": 36,
+ "length_count": 136,
+ "record_count": 2928
+}
