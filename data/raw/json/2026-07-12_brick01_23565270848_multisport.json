@@ -1,0 +1,39 @@
+{
+ "activity_id": "23565270848",
+ "date": "2026-07-12",
+ "brick_key": "brick01",
+ "fit_stem": "2026-07-12_brick01_23565270848",
+ "leg_count": 3,
+ "legs": [
+  {
+   "leg": 1,
+   "sport": "ows",
+   "stem": "2026-07-12_brick01_23565270848_l1_ows",
+   "distance_m": 1446.85,
+   "duration_s": 1453.04,
+   "laps": 3,
+   "lengths": 0,
+   "transition_before_s": null
+  },
+  {
+   "leg": 2,
+   "sport": "bike",
+   "stem": "2026-07-12_brick01_23565270848_l2_bike",
+   "distance_m": 40497.59,
+   "duration_s": 4055.079,
+   "laps": 9,
+   "lengths": 0,
+   "transition_before_s": 127.987
+  },
+  {
+   "leg": 3,
+   "sport": "run",
+   "stem": "2026-07-12_brick01_23565270848_l3_run",
+   "distance_m": 10112.27,
+   "duration_s": 2802.57,
+   "laps": 11,
+   "lengths": 0,
+   "transition_before_s": 64.933
+  }
+ ]
+}

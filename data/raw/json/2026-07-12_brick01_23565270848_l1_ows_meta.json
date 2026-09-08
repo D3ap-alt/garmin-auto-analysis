@@ -1,8 +1,16 @@
 {
  "activity_id": "23565270848",
  "date": "2026-07-12",
- "sport": "ows",
  "brick_key": "brick01",
+ "fit_stem": "2026-07-12_brick01_23565270848",
+ "multisport": true,
+ "parent_stem": "2026-07-12_brick01_23565270848",
+ "leg": 1,
+ "leg_count": 3,
+ "transition_before_s": null,
+ "repaired_by": "repair_multisport.py",
+ "stem": "2026-07-12_brick01_23565270848_l1_ows",
+ "sport": "ows",
  "session": {
   "start_time": "2026-07-11T23:15:02+00:00",
   "sport": "swimming",
@@ -17,9 +25,11 @@
   "total_ascent": 0,
   "total_descent": 0,
   "avg_temperature": 26,
-  "max_temperature": 27
+  "max_temperature": 27,
+  "first_lap_index": 0,
+  "num_laps": 3
  },
- "lap_count": 25,
+ "lap_count": 3,
  "length_count": 0,
- "record_count": 8341
+ "record_count": 1427
 }

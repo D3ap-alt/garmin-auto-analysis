@@ -1,0 +1,50 @@
+[
+ {
+  "message_index": 0,
+  "start_time": "2026-07-19T00:00:01+00:00",
+  "total_elapsed_time": 536.76,
+  "total_timer_time": 536.76,
+  "total_distance": 500.0,
+  "avg_heart_rate": 128,
+  "max_heart_rate": 146,
+  "avg_cadence": 30,
+  "max_cadence": 38,
+  "avg_temperature": 25,
+  "total_calories": 87,
+  "total_strokes": 270,
+  "intensity": "active",
+  "lap_trigger": "distance"
+ },
+ {
+  "message_index": 1,
+  "start_time": "2026-07-19T00:08:58+00:00",
+  "total_elapsed_time": 499.007,
+  "total_timer_time": 499.007,
+  "total_distance": 500.0,
+  "avg_heart_rate": 132,
+  "max_heart_rate": 146,
+  "avg_cadence": 29,
+  "max_cadence": 32,
+  "avg_temperature": 25,
+  "total_calories": 82,
+  "total_strokes": 247,
+  "intensity": "active",
+  "lap_trigger": "distance"
+ },
+ {
+  "message_index": 2,
+  "start_time": "2026-07-19T00:17:17+00:00",
+  "total_elapsed_time": 326.277,
+  "total_timer_time": 326.277,
+  "total_distance": 303.35,
+  "avg_heart_rate": 127,
+  "max_heart_rate": 138,
+  "avg_cadence": 29,
+  "max_cadence": 32,
+  "avg_temperature": 25,
+  "total_calories": 46,
+  "total_strokes": 162,
+  "intensity": "active",
+  "lap_trigger": "session_end"
+ }
+]
