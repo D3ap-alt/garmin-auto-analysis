@@ -1,0 +1,23 @@
+[
+ {
+  "message_index": 0,
+  "start_time": "2026-09-11T07:37:18+00:00",
+  "total_elapsed_time": 1960.0,
+  "total_timer_time": 1629.0,
+  "total_distance": 14156.99,
+  "avg_speed": 8.69,
+  "max_speed": 17.472,
+  "avg_heart_rate": 149,
+  "max_heart_rate": 171,
+  "avg_power": 178,
+  "max_power": 350,
+  "avg_cadence": 80,
+  "max_cadence": 108,
+  "total_ascent": 0,
+  "total_descent": 0,
+  "total_calories": 0,
+  "total_strokes": 0,
+  "intensity": "active",
+  "lap_trigger": "manual"
+ }
+]
