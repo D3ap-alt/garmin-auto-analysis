@@ -1,0 +1,31 @@
+{
+ "activity_id": "24328059936",
+ "date": "2026-09-12",
+ "brick_key": null,
+ "fit_stem": "2026-09-12_24328059936",
+ "stem": "2026-09-12_24328059936",
+ "sport": "bike",
+ "session": {
+  "start_time": "2026-09-12T00:27:37+00:00",
+  "sport": "cycling",
+  "sub_sport": "virtual_activity",
+  "total_elapsed_time": 9999.0,
+  "total_timer_time": 9026.0,
+  "total_distance": 55613.42,
+  "total_calories": 1330,
+  "avg_speed": 6.161,
+  "max_speed": 23.774,
+  "avg_heart_rate": 150,
+  "max_heart_rate": 172,
+  "avg_power": 154,
+  "max_power": 542,
+  "avg_cadence": 71,
+  "total_ascent": 1265,
+  "total_descent": 0,
+  "first_lap_index": 0,
+  "num_laps": 1
+ },
+ "lap_count": 1,
+ "length_count": 0,
+ "record_count": 9026
+}
