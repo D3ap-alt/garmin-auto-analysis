@@ -2,7 +2,7 @@
  "repo": "D3ap-alt/garmin-auto-analysis",
  "branch": "main",
  "base_url": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/",
- "count": 78,
+ "count": 79,
  "duplicate_groups": [
   "dup01_2026-07-12_bike",
   "dup02_2026-07-19_bike",
@@ -54,7 +54,8 @@
   "2026-09-11",
   "2026-09-12",
   "2026-09-14",
-  "2026-09-15"
+  "2026-09-15",
+  "2026-09-16"
  ],
  "activities": [
   {
@@ -1935,6 +1936,30 @@
     "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-15_24368494071_meta.json",
     "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-15_24368494071_laps.json",
     "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-15_24368494071_series_5s.json"
+   }
+  },
+  {
+   "date": "2026-09-16",
+   "activity_id": "24377131586",
+   "sport": "swim",
+   "brick_key": null,
+   "stem": "2026-09-16_24377131586",
+   "multisport": null,
+   "parent_stem": null,
+   "leg": null,
+   "transition_before_s": null,
+   "start_time": "2026-09-15T21:42:31+00:00",
+   "distance_m": 3275.0,
+   "duration_s": 3151.91,
+   "avg_hr": 140,
+   "lap_count": 25,
+   "length_count": 136,
+   "record_count": 3179,
+   "urls": {
+    "fit": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/fit/2026-09-16_24377131586.fit",
+    "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-16_24377131586_meta.json",
+    "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-16_24377131586_laps.json",
+    "lengths": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-16_24377131586_lengths.json"
    }
   }
  ]
