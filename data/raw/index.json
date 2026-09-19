@@ -2,7 +2,7 @@
  "repo": "D3ap-alt/garmin-auto-analysis",
  "branch": "main",
  "base_url": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/",
- "count": 82,
+ "count": 84,
  "duplicate_groups": [
   "dup01_2026-07-12_bike",
   "dup02_2026-07-19_bike",
@@ -57,7 +57,8 @@
   "2026-09-15",
   "2026-09-16",
   "2026-09-17",
-  "2026-09-18"
+  "2026-09-18",
+  "2026-09-19"
  ],
  "activities": [
   {
@@ -2034,6 +2035,54 @@
     "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-18_24401815643_meta.json",
     "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-18_24401815643_laps.json",
     "lengths": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-18_24401815643_lengths.json"
+   }
+  },
+  {
+   "date": "2026-09-19",
+   "activity_id": "24413788980",
+   "sport": "run",
+   "brick_key": "brick01",
+   "stem": "2026-09-19_brick01_24413788980",
+   "multisport": null,
+   "parent_stem": null,
+   "leg": null,
+   "transition_before_s": null,
+   "start_time": "2026-09-18T23:46:25+00:00",
+   "distance_m": 4630.28,
+   "duration_s": 1198.777,
+   "avg_hr": 166,
+   "lap_count": 5,
+   "length_count": 0,
+   "record_count": 1202,
+   "urls": {
+    "fit": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/fit/2026-09-19_brick01_24413788980.fit",
+    "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-19_brick01_24413788980_meta.json",
+    "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-19_brick01_24413788980_laps.json",
+    "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-19_brick01_24413788980_series_5s.json"
+   }
+  },
+  {
+   "date": "2026-09-19",
+   "activity_id": "24413798865",
+   "sport": "bike",
+   "brick_key": "brick01",
+   "stem": "2026-09-19_brick01_24413798865",
+   "multisport": null,
+   "parent_stem": null,
+   "leg": null,
+   "transition_before_s": null,
+   "start_time": "2026-09-18T23:53:25+00:00",
+   "distance_m": 21537.07,
+   "duration_s": 2236.13,
+   "avg_hr": 162,
+   "lap_count": 5,
+   "length_count": 0,
+   "record_count": 2238,
+   "urls": {
+    "fit": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/fit/2026-09-19_brick01_24413798865.fit",
+    "meta": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-19_brick01_24413798865_meta.json",
+    "laps": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-19_brick01_24413798865_laps.json",
+    "series_5s": "https://raw.githubusercontent.com/D3ap-alt/garmin-auto-analysis/main/data/raw/json/2026-09-19_brick01_24413798865_series_5s.json"
    }
   }
  ]
