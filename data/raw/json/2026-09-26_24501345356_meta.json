@@ -1,0 +1,33 @@
+{
+ "activity_id": "24501345356",
+ "date": "2026-09-26",
+ "brick_key": null,
+ "fit_stem": "2026-09-26_24501345356",
+ "stem": "2026-09-26_24501345356",
+ "sport": "bike",
+ "session": {
+  "start_time": "2026-09-26T07:07:28+00:00",
+  "sport": "cycling",
+  "sub_sport": "road",
+  "total_elapsed_time": 3506.79,
+  "total_timer_time": 2492.799,
+  "total_distance": 14331.81,
+  "total_calories": 256,
+  "avg_power": 81,
+  "max_power": 416,
+  "normalized_power": 106,
+  "training_stress_score": 18.2,
+  "intensity_factor": 0.515,
+  "threshold_power": 205,
+  "avg_cadence": 69,
+  "total_ascent": 34,
+  "total_descent": 32,
+  "avg_temperature": 22,
+  "max_temperature": 23,
+  "first_lap_index": 0,
+  "num_laps": 3
+ },
+ "lap_count": 3,
+ "length_count": 0,
+ "record_count": 2513
+}
